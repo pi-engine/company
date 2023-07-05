@@ -33,17 +33,10 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $account     = $request->getAttribute('account');
-        $requestBody = $request->getParsedBody();
+        $companyCheck = $request->getAttribute('company_check');
+        $requestBody  = $request->getParsedBody();
 
-        // Set result
-        $result = [
-            'result' => true,
-            'data'   => [
-                'message' => 'profile update !'
-            ],
-            'error'  => [],
-        ];
+        $result = $this->companyService->updateCompany($companyCheck, $requestBody);
 
         return new JsonResponse($result);
     }

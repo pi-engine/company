@@ -2,6 +2,7 @@
 
 namespace Company;
 
+use Company\Middleware\CheckMiddleware;
 use Laminas\Mvc\Middleware\PipeSpec;
 use Laminas\Router\Http\Literal;
 use User\Middleware\AuthenticationMiddleware;
@@ -15,6 +16,7 @@ return [
         'factories' => [
             Repository\CompanyRepository::class            => Factory\Repository\CompanyRepositoryFactory::class,
             Service\CompanyService::class                  => Factory\Service\CompanyServiceFactory::class,
+            Middleware\CheckMiddleware::class              => Factory\Middleware\CheckMiddlewareFactory::class,
             Handler\Api\Authentication\CheckHandler::class => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
             Handler\Api\Member\ListHandler::class          => Factory\Handler\Api\Member\ListHandlerFactory::class,
             Handler\Api\Member\AddHandler::class           => Factory\Handler\Api\Member\AddHandlerFactory::class,
@@ -83,6 +85,7 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            CheckMiddleware::class,
                                             Handler\Api\Member\ListHandler::class
                                         ),
                                     ],
@@ -101,12 +104,13 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            CheckMiddleware::class,
                                             Handler\Api\Member\AddHandler::class
                                         ),
                                     ],
                                 ],
                             ],
-                            'view' => [
+                            'view'   => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/view',
@@ -119,6 +123,7 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            CheckMiddleware::class,
                                             Handler\Api\Member\ViewHandler::class
                                         ),
                                     ],
@@ -137,6 +142,7 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            CheckMiddleware::class,
                                             Handler\Api\Member\UpdateHandler::class
                                         ),
                                     ],
@@ -165,6 +171,7 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            CheckMiddleware::class,
                                             Handler\Api\Profile\ViewHandler::class
                                         ),
                                     ],
@@ -183,6 +190,7 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            CheckMiddleware::class,
                                             Handler\Api\Profile\UpdateHandler::class
                                         ),
                                     ],

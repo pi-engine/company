@@ -8,6 +8,7 @@ use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Notification\Service\NotificationService;
 use User\Service\AccountService;
+use User\Service\RoleService;
 use User\Service\UtilityService;
 
 class CompanyServiceFactory implements FactoryInterface
@@ -20,6 +21,7 @@ class CompanyServiceFactory implements FactoryInterface
         return new CompanyService(
             $container->get(CompanyRepositoryInterface::class),
             $container->get(AccountService::class),
+            $container->get(RoleService::class),
             $container->get(NotificationService::class),
             $container->get(UtilityService::class),
             $config

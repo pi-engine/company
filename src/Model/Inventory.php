@@ -26,7 +26,6 @@ class Inventory
     private mixed  $website;
     private mixed  $email;
 
-
     public function __construct(
         $title,
         $text_description,

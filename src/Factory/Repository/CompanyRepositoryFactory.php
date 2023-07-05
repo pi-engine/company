@@ -18,7 +18,7 @@ class CompanyRepositoryFactory implements FactoryInterface
             $container->get(AdapterInterface::class),
             new ReflectionHydrator(),
             new Inventory('','','', 0,0,0,0, 0, 0, '','','','','','','','','', 0),
-            new Member(0,0,0,0,0,0)
+            new Member(0,0,0,0,0,'', '', '', '', 0)
         );
     }
 }

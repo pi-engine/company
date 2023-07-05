@@ -36,14 +36,7 @@ class CheckHandler implements RequestHandlerInterface
         $account     = $request->getAttribute('account');
         $requestBody = $request->getParsedBody();
 
-        // Set result
-        $result = [
-            'result' => true,
-            'data'   => [
-                'message' => 'authentication check !'
-            ],
-            'error'  => [],
-        ];
+        $result = $this->companyService->check($account, $requestBody);
 
         return new JsonResponse($result);
     }
