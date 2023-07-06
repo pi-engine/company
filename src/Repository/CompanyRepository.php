@@ -209,7 +209,6 @@ class CompanyRepository implements CompanyRepositoryInterface
             $where['account.name like ?'] = '%' . $params['name'] . '%';
         }
 
-
         $sql    = new Sql($this->db);
         $from   = ['member' => $this->tableMember];
         $select = $sql->select()->from($from)->where($where)->order($params['order'])->offset($params['offset'])->limit($params['limit']);

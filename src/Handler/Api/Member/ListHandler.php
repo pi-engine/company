@@ -37,12 +37,16 @@ class ListHandler implements RequestHandlerInterface
         $requestBody  = $request->getParsedBody();
 
         $params = [
-            'limit'   => $requestBody['limit'] ?? 25,
-            'page'    => $requestBody['page'] ?? 1,
+            'company_id' => $companyCheck['data']['company_id'],
+            'limit'      => $requestBody['limit'] ?? 25,
+            'page'       => $requestBody['page'] ?? 1,
+            'mobile'     => $requestBody['mobile'] ?? '',
+            'email'      => $requestBody['email'] ?? '',
+            'name'       => $requestBody['name'] ?? '',
         ];
 
         // Set result
-        $result = $this->companyService->getMemberList($companyCheck, $params);
+        $result = $this->companyService->getMemberList($params);
 
         return new JsonResponse($result);
     }

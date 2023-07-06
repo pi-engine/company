@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AddHandler  implements RequestHandlerInterface
+class AddHandler implements RequestHandlerInterface
 {
     /** @var ResponseFactoryInterface */
     protected ResponseFactoryInterface $responseFactory;
@@ -37,14 +37,18 @@ class AddHandler  implements RequestHandlerInterface
         $companyCheck = $request->getAttribute('company_check');
         $requestBody  = $request->getParsedBody();
 
-        // Set result
-        $result = [
-            'result' => true,
-            'data'   => [
-                'message' => 'member add !'
-            ],
-            'error'  => [],
+        $params = [
+            'company_id' => $companyCheck['data']['company_id'],
+            'first_name' => $requestBody['first_name'] ?? '',
+            'last_name'  => $requestBody['last_name'] ?? '',
+            //'mobile'     => $requestBody['mobile'] ?? '',
+            'email'      => $requestBody['email'] ?? '',
+            'role'       => $requestBody['role'] ?? '',
+            'added_by'   => $account
         ];
+
+        // Set result
+        $result = $this->companyService->addMember($params);
 
         return new JsonResponse($result);
     }

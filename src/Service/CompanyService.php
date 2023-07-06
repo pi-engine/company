@@ -240,7 +240,7 @@ class CompanyService implements ServiceInterface
         return $this->canonizeMember($member);
     }
 
-    public function getMemberList($companyCheck, $params): array
+    public function getMemberList($params): array
     {
         $limit  = $params['limit'] ?? 25;
         $page   = $params['page'] ?? 1;
@@ -248,11 +248,26 @@ class CompanyService implements ServiceInterface
         $offset = ($page - 1) * $limit;
 
         $listParams = [
-            'order'      => $order,
-            'offset'     => $offset,
-            'limit'      => $limit,
-            'company_id' => $companyCheck['data']['company_id'],
+            'order'  => $order,
+            'offset' => $offset,
+            'limit'  => $limit,
         ];
+
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $listParams['company_id'] = $params['company_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $listParams['user_id'] = $params['user_id'];
+        }
+        if (isset($params['mobile']) && !empty($params['mobile'])) {
+            $listParams['mobile'] = $params['mobile'];
+        }
+        if (isset($params['email']) && !empty($params['email'])) {
+            $listParams['email'] = $params['email'];
+        }
+        if (isset($params['name']) && !empty($params['name'])) {
+            $listParams['name'] = $params['name'];
+        }
 
         // Get list
         $list   = [];
@@ -278,8 +293,36 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function addMember()
-    {}
+    public function addMember($params): array
+    {
+        // Add or Get account
+        $account = $this->accountService->addOrGetAccount($params);
+
+        // Set member params
+        $addParams = [
+            'company_id'  => $params['company_id'],
+            'user_id'     => $account['id'],
+            'time_create' => time(),
+            'time_update' => time(),
+            'status'      => 1,
+        ];
+
+        // Add member
+        $member = $this->companyRepository->addMember($addParams);
+        $member = $this->canonizeMember($member);
+
+        // Add role
+        $this->roleService->addRoleAccount((int)$account['id'], $this->companyAdminRole);
+
+        return [
+            'result' => true,
+            'data'   => [
+                'account' => $account,
+                'member'  => $member,
+            ],
+            'error'  => [],
+        ];
+    }
 
     public function canonizeCompany($company): array
     {
