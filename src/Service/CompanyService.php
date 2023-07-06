@@ -298,8 +298,22 @@ class CompanyService implements ServiceInterface
         // Add or Get account
         $account = $this->accountService->addOrGetAccount($params);
 
+        // Check member not exist
+        $member = $this->getMember($account['id'], ['company_id' => $params['company_id']]);
+
+        // Add member if not exist
+        if (!empty($member)) {
+            return [
+                'result' => false,
+                'data'   => $member,
+                'error'  => [
+                    'message' => 'This member added before in your company !'
+                ],
+            ];
+        }
+
         // Set member params
-        $addParams = [
+        $memberParams = [
             'company_id'  => $params['company_id'],
             'user_id'     => $account['id'],
             'time_create' => time(),
@@ -308,18 +322,15 @@ class CompanyService implements ServiceInterface
         ];
 
         // Add member
-        $member = $this->companyRepository->addMember($addParams);
+        $member = $this->companyRepository->addMember($memberParams);
         $member = $this->canonizeMember($member);
 
         // Add role
-        $this->roleService->addRoleAccount((int)$account['id'], $this->companyAdminRole);
+        $this->roleService->addRoleAccount((int)$account['id'], $params['role'] ?? $this->companyMemberRole);
 
         return [
             'result' => true,
-            'data'   => [
-                'account' => $account,
-                'member'  => $member,
-            ],
+            'data'   => $member,
             'error'  => [],
         ];
     }

@@ -133,23 +133,36 @@ class CompanyRepository implements CompanyRepositoryInterface
         // Set
         $where = [];
         if (isset($params['id']) && !empty($params['id'])) {
-            $where['id'] = (int)$params['id'];
+            $where['member.id'] = (int)$params['id'];
         }
         if (isset($params['company_id']) && !empty($params['company_id'])) {
-            $where['company_id'] = $params['company_id'];
+            $where['member.company_id'] = $params['company_id'];
         }
         if (isset($params['user_id']) && !empty($params['user_id'])) {
-            $where['user_id'] = $params['user_id'];
+            $where['member.user_id'] = $params['user_id'];
         }
         if (isset($params['status']) && (int)$params['status'] > 0) {
-            $where['status'] = (int)$params['status'];
+            $where['member.status'] = (int)$params['status'];
         }
 
         $limit = 1;
         $order = ['time_create DESC', 'id DESC'];
 
-        $sql       = new Sql($this->db);
-        $select    = $sql->select($this->tableMember)->where($where)->order($order)->limit($limit);
+        $sql    = new Sql($this->db);
+        $from   = ['member' => $this->tableMember];
+        $select = $sql->select()->from($from)->where($where)->order($order)->limit($limit);
+        $select->join(
+            ['account' => $this->tableAccount],
+            'member.user_id=account.id',
+            [
+                'user_identity' => 'identity',
+                'user_name'     => 'name',
+                'user_email'    => 'email',
+                'user_mobile'   => 'mobile',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+
         $statement = $sql->prepareStatementForSqlObject($select);
         $result    = $statement->execute();
 

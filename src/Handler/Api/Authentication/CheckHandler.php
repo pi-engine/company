@@ -33,11 +33,8 @@ class CheckHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $account     = $request->getAttribute('account');
-        $requestBody = $request->getParsedBody();
+        $companyCheck = $request->getAttribute('company_check');
 
-        $result = $this->companyService->check($account, $requestBody);
-
-        return new JsonResponse($result);
+        return new JsonResponse($companyCheck);
     }
 }

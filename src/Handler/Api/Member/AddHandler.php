@@ -41,7 +41,6 @@ class AddHandler implements RequestHandlerInterface
             'company_id' => $companyCheck['data']['company_id'],
             'first_name' => $requestBody['first_name'] ?? '',
             'last_name'  => $requestBody['last_name'] ?? '',
-            //'mobile'     => $requestBody['mobile'] ?? '',
             'email'      => $requestBody['email'] ?? '',
             'role'       => $requestBody['role'] ?? '',
             'added_by'   => $account
