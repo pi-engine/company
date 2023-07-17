@@ -33,11 +33,11 @@ class ListHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $companyCheck = $request->getAttribute('company_check');
+        $authentication = $request->getAttribute('company_authentication');
         $requestBody  = $request->getParsedBody();
 
         $params = [
-            'company_id' => $companyCheck['data']['company_id'],
+            'company_id' => $authentication['company_id'],
             'limit'      => $requestBody['limit'] ?? 25,
             'page'       => $requestBody['page'] ?? 1,
             'mobile'     => $requestBody['mobile'] ?? '',

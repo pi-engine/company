@@ -56,7 +56,7 @@ class CheckMiddleware implements MiddlewareInterface
             return $this->errorHandler->handle($request);
         }
 
-        $request = $request->withAttribute('company_check', $checkResult);
+        $request = $request->withAttribute('company_authentication', $checkResult['data']);
 
         return $handler->handle($request);
     }

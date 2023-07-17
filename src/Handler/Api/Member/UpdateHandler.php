@@ -34,7 +34,7 @@ class UpdateHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $account      = $request->getAttribute('account');
-        $companyCheck = $request->getAttribute('company_check');
+        $authentication = $request->getAttribute('company_authentication');
         $requestBody  = $request->getParsedBody();
 
         // Set result

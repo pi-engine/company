@@ -33,12 +33,12 @@ class ViewHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $companyCheck = $request->getAttribute('company_check');
+        $authentication = $request->getAttribute('company_authentication');
 
         // Set result
         $result = [
             'result' => true,
-            'data'   => $companyCheck['data']['company'],
+            'data'   => $authentication['company'],
             'error'  => [],
         ];
 

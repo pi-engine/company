@@ -199,7 +199,7 @@ class CompanyService implements ServiceInterface
         return $this->canonizeCompany($member);
     }
 
-    public function updateCompany($companyCheck, $requestBody): array
+    public function updateCompany($authentication, $requestBody): array
     {
         $profileParams = [];
         foreach ($requestBody as $key => $value) {
@@ -216,7 +216,7 @@ class CompanyService implements ServiceInterface
         $profileParams['time_update'] = time();
 
         // Update company
-        $this->companyRepository->updateCompany((int)$companyCheck['data']['company_id'], $profileParams);
+        $this->companyRepository->updateCompany((int)$authentication['company_id'], $profileParams);
 
         // Set result
         return [
@@ -242,8 +242,8 @@ class CompanyService implements ServiceInterface
 
     public function getMemberList($params): array
     {
-        $limit  = $params['limit'] ?? 25;
-        $page   = $params['page'] ?? 1;
+        $limit  = (int)($params['limit'] ?? 25);
+        $page   = (int)($params['page'] ?? 1);
         $order  = $params['order'] ?? ['time_create DESC'];
         $offset = ($page - 1) * $limit;
 
@@ -345,7 +345,7 @@ class CompanyService implements ServiceInterface
             $company = [
                 'id'               => $company->getId(),
                 'title'            => $company->getTitle(),
-                'setting'          => $company->getTitle(),
+                'setting'          => $company->getSetting(),
                 'text_description' => $company->getTextDescription(),
                 'user_id'          => $company->getUserId(),
                 'reseller_id'      => $company->getResellerId(),
