@@ -13,10 +13,10 @@ use User\Middleware\SecurityMiddleware;
 return [
     'service_manager' => [
         'aliases'   => [
-            Repository\HiveRepositoryInterface::class => Repository\HiveRepository::class,
+            Repository\HiveRepositoryInterface::class => Repository\CompanyRepository::class,
         ],
         'factories' => [
-            Repository\HiveRepository::class               => Factory\Repository\CompanyRepositoryFactory::class,
+            Repository\CompanyRepository::class            => Factory\Repository\CompanyRepositoryFactory::class,
             Service\CompanyService::class                  => Factory\Service\CompanyServiceFactory::class,
             Middleware\CheckMiddleware::class              => Factory\Middleware\CheckMiddlewareFactory::class,
             Handler\Api\Authentication\CheckHandler::class => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
