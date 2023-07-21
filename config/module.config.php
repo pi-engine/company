@@ -13,7 +13,7 @@ use User\Middleware\SecurityMiddleware;
 return [
     'service_manager' => [
         'aliases'   => [
-            Repository\HiveRepositoryInterface::class => Repository\CompanyRepository::class,
+            Repository\CompanyRepositoryInterface::class => Repository\CompanyRepository::class,
         ],
         'factories' => [
             Repository\CompanyRepository::class            => Factory\Repository\CompanyRepositoryFactory::class,
