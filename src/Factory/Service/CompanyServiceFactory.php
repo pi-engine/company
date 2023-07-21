@@ -2,7 +2,7 @@
 
 namespace Company\Factory\Service;
 
-use Company\Repository\CompanyRepositoryInterface;
+use Company\Repository\HiveRepositoryInterface;
 use Company\Service\CompanyService;
 use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -19,7 +19,7 @@ class CompanyServiceFactory implements FactoryInterface
         $config = $config['company'] ?? [];
 
         return new CompanyService(
-            $container->get(CompanyRepositoryInterface::class),
+            $container->get(HiveRepositoryInterface::class),
             $container->get(AccountService::class),
             $container->get(RoleService::class),
             $container->get(NotificationService::class),

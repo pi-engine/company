@@ -14,7 +14,7 @@ use Laminas\Db\Sql\Update;
 use Laminas\Hydrator\HydratorInterface;
 use RuntimeException;
 
-class CompanyRepository implements CompanyRepositoryInterface
+class HiveRepository implements HiveRepositoryInterface
 {
     /**
      * Inventory Table name

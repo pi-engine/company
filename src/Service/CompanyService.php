@@ -2,7 +2,7 @@
 
 namespace Company\Service;
 
-use Company\Repository\CompanyRepositoryInterface;
+use Company\Repository\HiveRepositoryInterface;
 use Notification\Service\NotificationService;
 use User\Service\AccountService;
 use User\Service\RoleService;
@@ -22,8 +22,8 @@ class CompanyService implements ServiceInterface
     /** @var NotificationService */
     protected NotificationService $notificationService;
 
-    /** @var CompanyRepositoryInterface */
-    protected CompanyRepositoryInterface $companyRepository;
+    /** @var HiveRepositoryInterface */
+    protected HiveRepositoryInterface $companyRepository;
 
     /* @var array */
     protected array $config;
@@ -48,7 +48,7 @@ class CompanyService implements ServiceInterface
         ];
 
     public function __construct(
-        CompanyRepositoryInterface $companyRepository,
+        HiveRepositoryInterface $companyRepository,
         AccountService $accountService,
         RoleService $roleService,
         NotificationService $notificationService,
