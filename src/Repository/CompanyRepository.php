@@ -42,7 +42,6 @@ class CompanyRepository implements CompanyRepositoryInterface
      */
     private AdapterInterface $db;
 
-
     private Inventory $inventoryPrototype;
 
     private Member $memberPrototype;
