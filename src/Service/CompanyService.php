@@ -387,6 +387,7 @@ class CompanyService implements ServiceInterface
         }
 
         $company['setting'] = json_decode($company['setting'], true);
+        $company['hash'] = md5(sprintf('%s-%s', $company['id'], $company['time_create']));
 
         return $company;
     }
