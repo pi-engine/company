@@ -29,6 +29,7 @@ class CompanyService implements ServiceInterface
     protected array $config;
 
     protected string $companyAdminRole  = 'companyadmin';
+    protected string $companyAuditRole = 'companyaudit';
     protected string $companyMemberRole = 'companymember';
 
     protected array $profileFields
