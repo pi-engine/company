@@ -168,8 +168,9 @@ class CompanyService implements ServiceInterface
         ];
 
         // Add company
-        $company = $this->companyRepository->addCompany($addParams);
-        $company = $this->canonizeCompany($company);
+        //$company = $this->companyRepository->addCompany($addParams);
+        //$company = $this->canonizeCompany($company);
+        $company = $this->addCompany($addParams);
 
         // Set member params
         $addParams = [
@@ -191,6 +192,12 @@ class CompanyService implements ServiceInterface
         // Todo: add it
 
         return $member;
+    }
+
+    public function addCompany($params): array
+    {
+        $company = $this->companyRepository->addCompany($params);
+        return $this->canonizeCompany($company);
     }
 
     public function getCompany(int $companyId): array
