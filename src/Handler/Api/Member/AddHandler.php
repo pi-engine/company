@@ -34,11 +34,11 @@ class AddHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $account        = $request->getAttribute('account');
-        $authentication = $request->getAttribute('company_authentication');
+        $authorization = $request->getAttribute('company_authorization');
         $requestBody    = $request->getParsedBody();
 
         $params = [
-            'company_id' => $authentication['company_id'],
+            'company_id' => $authorization['company_id'],
             'first_name' => $requestBody['first_name'] ?? '',
             'last_name'  => $requestBody['last_name'] ?? '',
             'email'      => $requestBody['email'] ?? '',

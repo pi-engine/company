@@ -34,7 +34,7 @@ class ViewHandler  implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $account      = $request->getAttribute('account');
-        $authentication = $request->getAttribute('company_authentication');
+        $authorization = $request->getAttribute('company_authorization');
         $requestBody  = $request->getParsedBody();
 
         // Set result

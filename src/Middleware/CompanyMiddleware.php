@@ -42,7 +42,7 @@ class CompanyMiddleware implements MiddlewareInterface
     {
         $account     = $request->getAttribute('account');
         $requestBody = $request->getParsedBody();
-        $checkResult = $this->companyService->check($account, $requestBody);
+        $checkResult = $this->companyService->authorization($account, $requestBody);
 
         if (!$checkResult['result']) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_UNAUTHORIZED);
@@ -56,7 +56,7 @@ class CompanyMiddleware implements MiddlewareInterface
             return $this->errorHandler->handle($request);
         }
 
-        $request = $request->withAttribute('company_authentication', $checkResult['data']);
+        $request = $request->withAttribute('company_authorization', $checkResult['data']);
 
         return $handler->handle($request);
     }

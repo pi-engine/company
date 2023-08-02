@@ -64,7 +64,7 @@ class CompanyService implements ServiceInterface
         $this->config              = $config;
     }
 
-    public function check($account, $params): array
+    public function authorization($account, $params): array
     {
         // Set result
         $result = [
@@ -207,7 +207,7 @@ class CompanyService implements ServiceInterface
         return $this->canonizeCompany($member);
     }
 
-    public function updateCompany($authentication, $requestBody): array
+    public function updateCompany($authorization, $requestBody): array
     {
         $profileParams = [];
         foreach ($requestBody as $key => $value) {
@@ -224,7 +224,7 @@ class CompanyService implements ServiceInterface
         $profileParams['time_update'] = time();
 
         // Update company
-        $this->companyRepository->updateCompany((int)$authentication['company_id'], $profileParams);
+        $this->companyRepository->updateCompany((int)$authorization['company_id'], $profileParams);
 
         // Set result
         return [

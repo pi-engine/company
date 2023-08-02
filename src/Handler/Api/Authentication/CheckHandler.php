@@ -33,8 +33,8 @@ class CheckHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $authentication = $request->getAttribute('company_authentication');
+        $authorization = $request->getAttribute('company_authorization');
 
-        return new JsonResponse($authentication);
+        return new JsonResponse($authorization);
     }
 }
