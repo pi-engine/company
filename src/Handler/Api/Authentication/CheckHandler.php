@@ -35,6 +35,13 @@ class CheckHandler implements RequestHandlerInterface
     {
         $authorization = $request->getAttribute('company_authorization');
 
-        return new JsonResponse($authorization);
+        // Set result
+        $result = [
+            'result' => true,
+            'data'   => $authorization,
+            'error'  => [],
+        ];
+
+        return new JsonResponse($result);
     }
 }
