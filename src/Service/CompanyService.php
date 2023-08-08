@@ -281,7 +281,13 @@ class CompanyService implements ServiceInterface
         $list   = [];
         $rowSet = $this->companyRepository->getMemberList($listParams);
         foreach ($rowSet as $row) {
-            $list[] = $this->canonizeMember($row);
+            $list[$row->getUserId()] = $this->canonizeMember($row);
+        }
+
+        // Get roles
+        $roleList = $this->roleService->getRoleAccountList(array_keys($list), 'api');
+        foreach ($roleList as $key => $roleUser) {
+            $list[$key]['roles'] = $roleUser;
         }
 
         // Get count
@@ -290,7 +296,7 @@ class CompanyService implements ServiceInterface
         return [
             'result' => true,
             'data'   => [
-                'list'      => $list,
+                'list'      => array_values($list),
                 'paginator' => [
                     'count' => $count,
                     'limit' => $limit,
@@ -433,6 +439,9 @@ class CompanyService implements ServiceInterface
                 'user_mobile'   => $member['user_mobile'],
             ];
         }
+
+        // Set role array
+        $member['roles'] = [];
 
         return $member;
     }
