@@ -34,7 +34,7 @@ class ListHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $authorization = $request->getAttribute('company_authorization');
-        $requestBody  = $request->getParsedBody();
+        $requestBody   = $request->getParsedBody();
 
         $params = [
             'company_id' => $authorization['company_id'],
@@ -43,6 +43,7 @@ class ListHandler implements RequestHandlerInterface
             'mobile'     => $requestBody['mobile'] ?? '',
             'email'      => $requestBody['email'] ?? '',
             'name'       => $requestBody['name'] ?? '',
+            'user_id'    => $requestBody['user_id'] ?? '',
         ];
 
         // Set result
