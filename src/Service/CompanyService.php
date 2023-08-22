@@ -29,7 +29,7 @@ class CompanyService implements ServiceInterface
     protected array $config;
 
     protected string $companyAdminRole  = 'companyadmin';
-    protected string $companyAuditRole = 'companyaudit';
+    protected string $companyAuditRole  = 'companyaudit';
     protected string $companyMemberRole = 'companymember';
 
     protected array $profileFields
@@ -321,7 +321,7 @@ class CompanyService implements ServiceInterface
                 'result' => false,
                 'data'   => $member,
                 'error'  => [
-                    'message' => 'This member added before in your company !'
+                    'message' => 'This member added before in your company !',
                 ],
             ];
         }
@@ -401,7 +401,7 @@ class CompanyService implements ServiceInterface
         }
 
         $company['setting'] = json_decode($company['setting'], true);
-        $company['hash'] = md5(sprintf('%s-%s', $company['id'], $company['time_create']));
+        $company['hash']    = md5(sprintf('%s-%s', $company['id'], $company['time_create']));
 
         return $company;
     }
