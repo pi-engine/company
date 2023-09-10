@@ -207,10 +207,10 @@ class CompanyService implements ServiceInterface
         return $this->canonizeCompany($member);
     }
 
-    public function updateCompany($authorization, $requestBody): array
+    public function updateCompany($authorization, $params): array
     {
         $profileParams = [];
-        foreach ($requestBody as $key => $value) {
+        foreach ($params as $key => $value) {
             if (in_array($key, $this->profileFields)) {
                 if (empty($value)) {
                     $profileParams[$key] = null;
@@ -231,6 +231,34 @@ class CompanyService implements ServiceInterface
             'result' => true,
             'data'   => [
                 'message' => 'Company profile updated successfully !',
+            ],
+            'error'  => [],
+        ];
+    }
+
+    public function updateCompanyContext($authorization, $params): array
+    {
+        // Set context
+        $setting            = $authorization['company']['setting'] ?? [];
+        $setting['context'] = $setting['context'] ?? [];
+        foreach ($params as $key => $value) {
+            $setting['context'][$key] = $value;
+        }
+
+        // Set update update
+        $profileParams = [
+            'time_update' => time(),
+            'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+        ];
+
+        // Update company
+        $this->companyRepository->updateCompany((int)$authorization['company_id'], $profileParams);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Context data updated successfully !',
             ],
             'error'  => [],
         ];
@@ -400,8 +428,8 @@ class CompanyService implements ServiceInterface
             ];
         }
 
-        $company['setting'] = json_decode($company['setting'], true);
-        $company['hash']    = md5(sprintf('%s-%s', $company['id'], $company['time_create']));
+        $company['setting'] = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
+        $company['hash']    = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
 
         return $company;
     }

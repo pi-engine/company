@@ -7,7 +7,7 @@ class Inventory
     private mixed  $id;
     private string $title;
     private string  $text_description;
-    private string $setting;
+    private mixed $setting;
     private int    $user_id;
     private int    $reseller_id;
     private int    $industry_id;
@@ -91,9 +91,9 @@ class Inventory
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSetting(): string
+    public function getSetting(): ?string
     {
         return $this->setting;
     }
