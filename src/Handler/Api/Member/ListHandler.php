@@ -3,6 +3,7 @@
 namespace Company\Handler\Api\Member;
 
 use Company\Service\CompanyService;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -49,6 +50,6 @@ class ListHandler implements RequestHandlerInterface
         // Set result
         $result = $this->companyService->getMemberList($params);
 
-        return new JsonResponse($result);
+        return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
 }

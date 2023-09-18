@@ -3,6 +3,7 @@
 namespace Company\Handler\Api\Member;
 
 use Company\Service\CompanyService;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,11 +42,11 @@ class UpdateHandler implements RequestHandlerInterface
         $result = [
             'result' => true,
             'data'   => [
-                'message' => 'member update !'
+                'message' => 'member data update successfully !'
             ],
             'error'  => [],
         ];
 
-        return new JsonResponse($result);
+        return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
 }

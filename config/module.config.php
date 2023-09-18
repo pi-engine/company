@@ -5,6 +5,7 @@ namespace Company;
 use Company\Middleware\CompanyMiddleware;
 use Laminas\Mvc\Middleware\PipeSpec;
 use Laminas\Router\Http\Literal;
+use Logger\Middleware\LoggerRequestMiddleware;
 use User\Middleware\AuthenticationMiddleware;
 use User\Middleware\AuthorizationMiddleware;
 use User\Middleware\InstallerMiddleware;
@@ -62,6 +63,7 @@ return [
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Authentication\CheckHandler::class
                                         ),
                                     ],
@@ -93,6 +95,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Member\ListHandler::class
                                         ),
                                     ],
@@ -114,6 +117,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Member\AddHandler::class
                                         ),
                                     ],
@@ -135,6 +139,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Member\ViewHandler::class
                                         ),
                                     ],
@@ -156,6 +161,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Member\UpdateHandler::class
                                         ),
                                     ],
@@ -185,6 +191,7 @@ return [
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\ViewHandler::class
                                         ),
                                     ],
@@ -206,6 +213,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\UpdateHandler::class
                                         ),
                                     ],
@@ -227,6 +235,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\ContextHandler::class
                                         ),
                                     ],
@@ -261,6 +270,7 @@ return [
                                     SecurityMiddleware::class,
                                     AuthenticationMiddleware::class,
                                     InstallerMiddleware::class,
+                                    LoggerRequestMiddleware::class,
                                     Handler\InstallerHandler::class
                                 ),
                             ],

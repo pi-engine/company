@@ -3,6 +3,7 @@
 namespace Company\Service;
 
 use Company\Repository\CompanyRepositoryInterface;
+use Fig\Http\Message\StatusCodeInterface;
 use Notification\Service\NotificationService;
 use User\Service\AccountService;
 use User\Service\RoleService;
@@ -83,9 +84,9 @@ class CompanyService implements ServiceInterface
                 'result' => false,
                 'data'   => [],
                 'error'  => [
-                    'code'    => 1,
                     'message' => 'No user id is selected',
                 ],
+                'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
         }
 
@@ -102,9 +103,9 @@ class CompanyService implements ServiceInterface
                 'result' => false,
                 'data'   => [],
                 'error'  => [
-                    'code'    => 4,
                     'message' => 'You account is inactive by admin',
                 ],
+                'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
         }
 
@@ -118,9 +119,9 @@ class CompanyService implements ServiceInterface
                 'result' => false,
                 'data'   => [],
                 'error'  => [
-                    'code'    => 5,
                     'message' => 'No company found for selected user',
                 ],
+                'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
         }
 
@@ -146,6 +147,13 @@ class CompanyService implements ServiceInterface
                 // Get user roles
                 $result['data']['roles'] = $cacheUser['roles'];
             }
+        }
+
+
+        // Check admin access
+        $result['data']['is_admin'] = 0;
+        if (in_array('companyadmin', $result['data']['roles'])) {
+            $result['data']['is_admin'] = 1;
         }
 
         return $result;
@@ -351,6 +359,7 @@ class CompanyService implements ServiceInterface
                 'error'  => [
                     'message' => 'This member added before in your company !',
                 ],
+                'status' => StatusCodeInterface::STATUS_FORBIDDEN,
             ];
         }
 

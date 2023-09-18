@@ -3,6 +3,7 @@
 namespace Company\Handler\Api\Profile;
 
 use Company\Service\CompanyService;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -44,17 +45,19 @@ class ContextHandler implements RequestHandlerInterface
         // Check if decoding was successful
         if (json_last_error() !== JSON_ERROR_NONE) {
             // JSON decoding failed
-            $errorMessage  = 'Invalid JSON data';
             $errorResponse = [
                 'result' => false,
                 'data'   => null,
-                'error'  => $errorMessage,
+                'error'  => [
+                    'message' => 'Invalid JSON data'
+                ],
+                'status' => StatusCodeInterface::STATUS_FORBIDDEN,
             ];
-            return new JsonResponse($errorResponse, 400);
+            return new JsonResponse($errorResponse, StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
         $result = $this->companyService->updateCompanyContext($authorization, $requestBody);
 
-        return new JsonResponse($result);
+        return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
 }
