@@ -6,7 +6,7 @@ CREATE TABLE `company_inventory`
     `text_description`                TEXT,
     `user_id`                         INT(10) UNSIGNED    NOT NULL DEFAULT '0',
     `reseller_id`                     INT(10) UNSIGNED    NOT NULL DEFAULT '0',
-    `industry_id`                     INT(10) UNSIGNED    NOT NULL DEFAULT '0',
+    `industry_id`                     INT(10) UNSIGNED    NOT NULL DEFAULT '1',
     `time_create`                     INT(10) UNSIGNED    NOT NULL DEFAULT '0',
     `time_update`                     INT(10) UNSIGNED    NOT NULL DEFAULT '0',
     `status`                          TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
