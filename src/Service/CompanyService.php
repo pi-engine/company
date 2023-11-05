@@ -256,7 +256,7 @@ class CompanyService implements ServiceInterface
         // Set update update
         $profileParams = [
             'time_update' => time(),
-            'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+            'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
         ];
 
         // Update company
