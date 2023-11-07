@@ -290,9 +290,9 @@ class CompanyService implements ServiceInterface
     {
         // Get list
         $list   = [];
-        $rowSet = $this->companyRepository->getMemberList(['user_id' => $userId]);
+        $rowSet = $this->companyRepository->getMemberListByCompany(['user_id' => $userId]);
         foreach ($rowSet as $row) {
-            $list[] = $this->canonizeMember($row);
+            $list[] = $this->canonizeMemberCompany($row);
         }
 
         return $list;
@@ -515,6 +515,39 @@ class CompanyService implements ServiceInterface
 
         // Set role array
         $member['roles'] = [];
+
+        return $member;
+    }
+
+    public function canonizeMemberCompany($member): array
+    {
+        if (empty($member)) {
+            return [];
+        }
+
+        if (is_object($member)) {
+            $member = [
+                'id'            => $member->getId(),
+                'company_id'    => $member->getCompanyId(),
+                'user_id'       => $member->getUserId(),
+                'time_create'   => $member->getTimeCreate(),
+                'time_update'   => $member->getTimeUpdate(),
+                'status'        => $member->getStatus(),
+                'is_default'    => $member->getIsDefault(),
+                'title' => $member->getTitle(),
+            ];
+        } else {
+            $member = [
+                'id'            => $member['id'],
+                'company_id'    => $member['company_id'],
+                'user_id'       => $member['user_id'],
+                'time_create'   => $member['time_create'],
+                'time_update'   => $member['time_update'],
+                'status'        => $member['status'],
+                'is_default'    => $member['is_default'],
+                'title' => $member['title'],
+            ];
+        }
 
         return $member;
     }

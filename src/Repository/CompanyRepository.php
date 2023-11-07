@@ -4,6 +4,7 @@ namespace Company\Repository;
 
 use Company\Model\Inventory;
 use Company\Model\Member;
+use Company\Model\MemberCompany;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
@@ -46,6 +47,8 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     private Member $memberPrototype;
 
+    private MemberCompany $memberCompanyPrototype;
+
     /**
      * @var HydratorInterface
      */
@@ -55,12 +58,14 @@ class CompanyRepository implements CompanyRepositoryInterface
         AdapterInterface $db,
         HydratorInterface $hydrator,
         Inventory $inventoryPrototype,
-        Member $memberPrototype
+        Member $memberPrototype,
+        MemberCompany $memberCompanyPrototype
     ) {
         $this->db                 = $db;
         $this->hydrator           = $hydrator;
         $this->inventoryPrototype = $inventoryPrototype;
         $this->memberPrototype    = $memberPrototype;
+        $this->memberCompanyPrototype    = $memberCompanyPrototype;
     }
 
     public function getCompany(array $params = []): array|Inventory
@@ -256,6 +261,50 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
 
         $resultSet = new HydratingResultSet($this->hydrator, $this->memberPrototype);
+        $resultSet->initialize($result);
+
+        return $resultSet;
+    }
+
+    public function getMemberListByCompany($params = []): HydratingResultSet
+    {
+        $where = [];
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $where['member.company_id'] = $params['company_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $where['member.user_id'] = $params['user_id'];
+        }
+
+        $sql    = new Sql($this->db);
+        $from   = ['member' => $this->tableMember];
+        $select = $sql->select()->from($from)->where($where);
+        $select->join(
+            ['company' => $this->tableInventory],
+            'member.company_id=company.id',
+            [
+                'title',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        if (isset($params['order']) && !empty($params['order'])) {
+            $select->order($params['order']);
+        }
+        if (isset($params['offset']) && !empty($params['offset'])) {
+            $select->offset($params['offset']);
+        }
+        if (isset($params['limit']) && !empty($params['limit'])) {
+            $select->limit($params['limit']);
+        }
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            return [];
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->memberCompanyPrototype);
         $resultSet->initialize($result);
 
         return $resultSet;

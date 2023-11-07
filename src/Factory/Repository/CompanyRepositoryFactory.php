@@ -4,6 +4,7 @@ namespace Company\Factory\Repository;
 
 use Company\Model\Inventory;
 use Company\Model\Member;
+use Company\Model\MemberCompany;
 use Company\Repository\CompanyRepository;
 use Interop\Container\Containerinterface;
 use Laminas\Db\Adapter\AdapterInterface;
@@ -18,7 +19,8 @@ class CompanyRepositoryFactory implements FactoryInterface
             $container->get(AdapterInterface::class),
             new ReflectionHydrator(),
             new Inventory('', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', 0),
-            new Member(0, 0, 0, 0, 0, 0, '', '', '', '', 0)
+            new Member(0, 0, 0, 0, 0, 0, '', '', '', '', 0),
+            new MemberCompany(0, 0, 0, 0, 0, 0, '', 0)
         );
     }
 }
