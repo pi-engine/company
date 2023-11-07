@@ -35,7 +35,6 @@ class ContextHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $authorization = $request->getAttribute('company_authorization');
-        // $requestBody  = $request->getParsedBody();
 
         // Retrieve the raw JSON data from the request body
         $stream      = $this->streamFactory->createStreamFromFile('php://input');
@@ -49,14 +48,14 @@ class ContextHandler implements RequestHandlerInterface
                 'result' => false,
                 'data'   => null,
                 'error'  => [
-                    'message' => 'Invalid JSON data'
+                    'message' => 'Invalid JSON data',
                 ],
                 'status' => StatusCodeInterface::STATUS_FORBIDDEN,
             ];
             return new JsonResponse($errorResponse, StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        $result = $this->companyService->updateCompanyContext($authorization, $requestBody);
+        $result = $this->companyService->updateCompanySetting($authorization, $requestBody, 'context');
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

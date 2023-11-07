@@ -10,6 +10,7 @@ class Member
     private int   $time_create;
     private int   $time_update;
     private int   $status;
+    private int   $is_default;
     private mixed $user_identity;
     private mixed $user_name;
     private mixed $user_email;
@@ -21,22 +22,24 @@ class Member
         $time_create,
         $time_update,
         $status,
+        $is_default,
         $user_identity = null,
         $user_name = null,
         $user_email = null,
         $user_mobile = null,
         $id = null
     ) {
-        $this->company_id  = $company_id;
-        $this->user_id     = $user_id;
-        $this->time_create = $time_create;
-        $this->time_update = $time_update;
-        $this->status      = $status;
-        $this->user_identity       = $user_identity;
-        $this->user_name           = $user_name;
-        $this->user_email          = $user_email;
-        $this->user_mobile         = $user_mobile;
-        $this->id          = $id;
+        $this->company_id    = $company_id;
+        $this->user_id       = $user_id;
+        $this->time_create   = $time_create;
+        $this->time_update   = $time_update;
+        $this->status        = $status;
+        $this->is_default        = $is_default;
+        $this->user_identity = $user_identity;
+        $this->user_name     = $user_name;
+        $this->user_email    = $user_email;
+        $this->user_mobile   = $user_mobile;
+        $this->id            = $id;
     }
 
     /**
@@ -85,6 +88,11 @@ class Member
     public function getStatus(): int
     {
         return $this->status;
+    }
+
+    public function getIsDefault(): int
+    {
+        return $this->is_default;
     }
 
     public function getUserIdentity(): ?string

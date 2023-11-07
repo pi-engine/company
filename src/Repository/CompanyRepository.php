@@ -66,7 +66,7 @@ class CompanyRepository implements CompanyRepositoryInterface
     public function getCompany(array $params = []): array|Inventory
     {
         // Set
-        $where = [            'id' => (int)$params['id']        ];
+        $where = ['id' => (int)$params['id']];
 
         $sql       = new Sql($this->db);
         $select    = $sql->select($this->tableInventory)->where($where);
@@ -142,6 +142,9 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
         if (isset($params['status']) && (int)$params['status'] > 0) {
             $where['member.status'] = (int)$params['status'];
+        }
+        if (isset($params['is_default']) && (int)$params['is_default'] > 0) {
+            $where['member.is_default'] = (int)$params['is_default'];
         }
 
         $limit = 1;
@@ -223,7 +226,7 @@ class CompanyRepository implements CompanyRepositoryInterface
 
         $sql    = new Sql($this->db);
         $from   = ['member' => $this->tableMember];
-        $select = $sql->select()->from($from)->where($where)->order($params['order'])->offset($params['offset'])->limit($params['limit']);
+        $select = $sql->select()->from($from)->where($where);
         $select->join(
             ['account' => $this->tableAccount],
             'member.user_id=account.id',
@@ -235,6 +238,15 @@ class CompanyRepository implements CompanyRepositoryInterface
             ],
             $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
         );
+        if (isset($params['order']) && !empty($params['order'])) {
+            $select->order($params['order']);
+        }
+        if (isset($params['offset']) && !empty($params['offset'])) {
+            $select->offset($params['offset']);
+        }
+        if (isset($params['limit']) && !empty($params['limit'])) {
+            $select->limit($params['limit']);
+        }
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result    = $statement->execute();
@@ -253,7 +265,7 @@ class CompanyRepository implements CompanyRepositoryInterface
     {
         // Set where
         $columns = ['count' => new Expression('count(*)')];
-        $where = [];
+        $where   = [];
         if (isset($params['company_id']) && !empty($params['company_id'])) {
             $where['member.company_id'] = $params['company_id'];
         }
@@ -270,7 +282,7 @@ class CompanyRepository implements CompanyRepositoryInterface
             $where['account.name like ?'] = '%' . $params['name'] . '%';
         }
 
-        $sql       = new Sql($this->db);
+        $sql    = new Sql($this->db);
         $from   = ['member' => $this->tableMember];
         $select = $sql->select()->from($from)->columns($columns)->where($where);
         $select->join(

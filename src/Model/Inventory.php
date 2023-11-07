@@ -6,25 +6,25 @@ class Inventory
 {
     private mixed  $id;
     private string $title;
-    private string  $text_description;
-    private mixed $setting;
+    private string $text_description;
+    private mixed  $setting;
     private int    $user_id;
     private int    $reseller_id;
     private int    $industry_id;
     private int    $time_create;
     private int    $time_update;
 
-    private int    $status;
+    private int $status;
 
-    private mixed  $address_1;
-    private mixed  $address_2;
-    private mixed  $country;
-    private mixed  $state;
-    private mixed  $city;
-    private mixed  $zip_code;
-    private mixed  $phone;
-    private mixed  $website;
-    private mixed  $email;
+    private mixed $address_1;
+    private mixed $address_2;
+    private mixed $country;
+    private mixed $state;
+    private mixed $city;
+    private mixed $zip_code;
+    private mixed $phone;
+    private mixed $website;
+    private mixed $email;
 
     public function __construct(
         $title,

@@ -17,18 +17,20 @@ return [
             Repository\CompanyRepositoryInterface::class => Repository\CompanyRepository::class,
         ],
         'factories' => [
-            Repository\CompanyRepository::class            => Factory\Repository\CompanyRepositoryFactory::class,
-            Service\CompanyService::class                  => Factory\Service\CompanyServiceFactory::class,
-            Middleware\CompanyMiddleware::class            => Factory\Middleware\CompanyMiddlewareFactory::class,
-            Handler\Api\Authentication\CheckHandler::class => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
-            Handler\Api\Member\ListHandler::class          => Factory\Handler\Api\Member\ListHandlerFactory::class,
-            Handler\Api\Member\AddHandler::class           => Factory\Handler\Api\Member\AddHandlerFactory::class,
-            Handler\Api\Member\ViewHandler::class          => Factory\Handler\Api\Member\ViewHandlerFactory::class,
-            Handler\Api\Member\UpdateHandler::class        => Factory\Handler\Api\Member\UpdateHandlerFactory::class,
-            Handler\Api\Profile\ViewHandler::class         => Factory\Handler\Api\Profile\ViewHandlerFactory::class,
-            Handler\Api\Profile\UpdateHandler::class       => Factory\Handler\Api\Profile\UpdateHandlerFactory::class,
-            Handler\Api\Profile\ContextHandler::class      => Factory\Handler\Api\Profile\ContextHandlerFactory::class,
-            Handler\InstallerHandler::class                => Factory\Handler\InstallerHandlerFactory::class,
+            Repository\CompanyRepository::class             => Factory\Repository\CompanyRepositoryFactory::class,
+            Service\CompanyService::class                   => Factory\Service\CompanyServiceFactory::class,
+            Middleware\CompanyMiddleware::class             => Factory\Middleware\CompanyMiddlewareFactory::class,
+            Handler\Api\Authentication\CheckHandler::class  => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
+            Handler\Api\Authentication\ListHandler::class   => Factory\Handler\Api\Authentication\ListHandlerFactory::class,
+            Handler\Api\Authentication\SwitchHandler::class => Factory\Handler\Api\Authentication\SwitchHandlerFactory::class,
+            Handler\Api\Member\ListHandler::class           => Factory\Handler\Api\Member\ListHandlerFactory::class,
+            Handler\Api\Member\AddHandler::class            => Factory\Handler\Api\Member\AddHandlerFactory::class,
+            Handler\Api\Member\ViewHandler::class           => Factory\Handler\Api\Member\ViewHandlerFactory::class,
+            Handler\Api\Member\UpdateHandler::class         => Factory\Handler\Api\Member\UpdateHandlerFactory::class,
+            Handler\Api\Profile\ViewHandler::class          => Factory\Handler\Api\Profile\ViewHandlerFactory::class,
+            Handler\Api\Profile\UpdateHandler::class        => Factory\Handler\Api\Profile\UpdateHandlerFactory::class,
+            Handler\Api\Profile\ContextHandler::class       => Factory\Handler\Api\Profile\ContextHandlerFactory::class,
+            Handler\InstallerHandler::class                 => Factory\Handler\InstallerHandlerFactory::class,
         ],
     ],
     'router'          => [
@@ -49,7 +51,7 @@ return [
                             'defaults' => [],
                         ],
                         'child_routes' => [
-                            'check' => [
+                            'check'  => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/check',
@@ -65,6 +67,46 @@ return [
                                             CompanyMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Authentication\CheckHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'list'   => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'module'     => 'company',
+                                        'section'    => 'api',
+                                        'package'    => 'authentication',
+                                        'handler'    => 'list',
+                                        'controller' => PipeSpec::class,
+                                        'middleware' => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Authentication\ListHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'switch' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/switch',
+                                    'defaults' => [
+                                        'module'     => 'company',
+                                        'section'    => 'api',
+                                        'package'    => 'authentication',
+                                        'handler'    => 'switch',
+                                        'controller' => PipeSpec::class,
+                                        'middleware' => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Authentication\SwitchHandler::class
                                         ),
                                     ],
                                 ],
@@ -177,7 +219,7 @@ return [
                             'defaults' => [],
                         ],
                         'child_routes' => [
-                            'view'   => [
+                            'view'    => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/view',
@@ -197,7 +239,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'update' => [
+                            'update'  => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/update',

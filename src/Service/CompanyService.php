@@ -90,7 +90,16 @@ class CompanyService implements ServiceInterface
             ];
         }
 
-        $result['data']['member'] = $this->getMember($result['data']['user_id'], $params);
+        // Set member params
+        $memberParams = [
+            'is_default' => 1
+        ];
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $memberParams['company_id'] = $params['company_id'];
+        }
+
+        // Get member
+        $result['data']['member'] = $this->getMember($result['data']['user_id'], $memberParams);
 
         // Check member and register if not found
         if (empty($result['data']['member'])) {
@@ -244,13 +253,18 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function updateCompanyContext($authorization, $params): array
+    public function updateCompanySetting($authorization, $params, $type = 'context'): array
     {
         // Set context
-        $setting            = $authorization['company']['setting'] ?? [];
+        $setting = $authorization['company']['setting'] ?? [];
+
+        // Set sub params
+        $setting['general'] = $setting['general'] ?? [];
         $setting['context'] = $setting['context'] ?? [];
+
+        // Update data
         foreach ($params as $key => $value) {
-            $setting['context'][$key] = $value;
+            $setting[$type][$key] = $value;
         }
 
         // Set update update
@@ -272,12 +286,27 @@ class CompanyService implements ServiceInterface
         ];
     }
 
+    public function getCompanyListByUser(int $userId): array
+    {
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getMemberList(['user_id' => $userId]);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizeMember($row);
+        }
+
+        return $list;
+    }
+
     public function getMember(int $userId, $params): array
     {
         // Set where
         $where = ['user_id' => $userId];
         if (isset($params['company_id']) && !empty($params['company_id'])) {
             $where['company_id'] = $params['company_id'];
+        }
+        if (isset($params['is_default']) && !empty($params['is_default'])) {
+            $where['is_default'] = $params['is_default'];
         }
 
         $member = $this->companyRepository->getMember($where);
@@ -386,6 +415,11 @@ class CompanyService implements ServiceInterface
         ];
     }
 
+    public function switchCompany($authorization, $params)
+    {
+
+    }
+
     public function canonizeCompany($company): array
     {
         if (empty($company)) {
@@ -457,6 +491,7 @@ class CompanyService implements ServiceInterface
                 'time_create'   => $member->getTimeCreate(),
                 'time_update'   => $member->getTimeUpdate(),
                 'status'        => $member->getStatus(),
+                'is_default'    => $member->getIsDefault(),
                 'user_identity' => $member->getUserIdentity(),
                 'user_name'     => $member->getUserName(),
                 'user_email'    => $member->getUserEmail(),
@@ -470,6 +505,7 @@ class CompanyService implements ServiceInterface
                 'time_create'   => $member['time_create'],
                 'time_update'   => $member['time_update'],
                 'status'        => $member['status'],
+                'is_default'    => $member['is_default'],
                 'user_identity' => $member['user_identity'],
                 'user_name'     => $member['user_name'],
                 'user_email'    => $member['user_email'],

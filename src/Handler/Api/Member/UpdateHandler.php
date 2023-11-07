@@ -34,15 +34,15 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $account      = $request->getAttribute('account');
+        $account       = $request->getAttribute('account');
         $authorization = $request->getAttribute('company_authorization');
-        $requestBody  = $request->getParsedBody();
+        $requestBody   = $request->getParsedBody();
 
         // Set result
         $result = [
             'result' => true,
             'data'   => [
-                'message' => 'member data update successfully !'
+                'message' => 'member data update successfully !',
             ],
             'error'  => [],
         ];

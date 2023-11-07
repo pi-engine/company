@@ -1,6 +1,6 @@
 <?php
 
-namespace Company\Handler\Api\Profile;
+namespace Company\Handler\Api\Authentication;
 
 use Company\Service\CompanyService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class UpdateHandler implements RequestHandlerInterface
+class SwitchHandler implements RequestHandlerInterface
 {
     /** @var ResponseFactoryInterface */
     protected ResponseFactoryInterface $responseFactory;
@@ -37,7 +37,16 @@ class UpdateHandler implements RequestHandlerInterface
         $authorization = $request->getAttribute('company_authorization');
         $requestBody   = $request->getParsedBody();
 
-        $result = $this->companyService->updateCompany($authorization, $requestBody);
+        $this->companyService->switchCompany($authorization, $requestBody);
+
+        // Set result
+        $result = [
+            'result' => true,
+            'data'   => [
+                'message' => 'OK !'
+            ],
+            'error'  => [],
+        ];
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

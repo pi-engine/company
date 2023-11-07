@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class ViewHandler  implements RequestHandlerInterface
+class ViewHandler implements RequestHandlerInterface
 {
     /** @var ResponseFactoryInterface */
     protected ResponseFactoryInterface $responseFactory;
@@ -34,15 +34,15 @@ class ViewHandler  implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $account      = $request->getAttribute('account');
+        $account       = $request->getAttribute('account');
         $authorization = $request->getAttribute('company_authorization');
-        $requestBody  = $request->getParsedBody();
+        $requestBody   = $request->getParsedBody();
 
         // Set result
         $result = [
             'result' => true,
             'data'   => [
-                'message' => 'member view !'
+                'message' => 'member view !',
             ],
             'error'  => [],
         ];
