@@ -36,6 +36,7 @@ class ListHandler implements RequestHandlerInterface
     {
         $authorization = $request->getAttribute('company_authorization');
 
+        // Get list
         $list = $this->companyService->getCompanyListByUser((int)$authorization['user_id']);
 
         // Set result
@@ -44,6 +45,7 @@ class ListHandler implements RequestHandlerInterface
             'data'   => [
                 'list'   => $list,
                 'active' => $authorization['company_id'],
+                'cont'   => count($list),
             ],
             'error'  => [],
         ];

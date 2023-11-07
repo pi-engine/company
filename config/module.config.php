@@ -91,7 +91,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'switch' => [
+                            'switch'   => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/switch',
@@ -104,7 +104,7 @@ return [
                                         'middleware' => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
-                                            CompanyMiddleware::class,
+                                            //CompanyMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Authentication\SwitchHandler::class
                                         ),

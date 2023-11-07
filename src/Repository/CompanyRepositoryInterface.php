@@ -23,4 +23,6 @@ interface CompanyRepositoryInterface
     public function getMemberCount(array $params = []): int;
 
     public function addMember(array $params = []): Member;
+
+    public function setDefault(int $userId, int $companyId): void;
 }

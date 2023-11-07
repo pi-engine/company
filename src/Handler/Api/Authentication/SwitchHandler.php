@@ -34,19 +34,12 @@ class SwitchHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $authorization = $request->getAttribute('company_authorization');
+        $account = $request->getAttribute('account');
         $requestBody   = $request->getParsedBody();
 
-        $this->companyService->switchCompany($authorization, $requestBody);
+        $result = $this->companyService->switchCompany((int)$account['id'], (int)$requestBody['company_id']);
 
-        // Set result
-        $result = [
-            'result' => true,
-            'data'   => [
-                'message' => 'OK !'
-            ],
-            'error'  => [],
-        ];
+
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

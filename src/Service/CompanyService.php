@@ -415,9 +415,37 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function switchCompany($authorization, $params)
+    public function switchCompany(int $userId, int $companyId): array
     {
+        // Make all user company list
+        $companyList = [];
+        $list = $this->getCompanyListByUser($userId);
+        foreach ($list as $single) {
+            $companyList[] = $single['company_id'];
+        }
 
+        // Check user have access to select company
+        if (!in_array($companyId, $companyList)) {
+            return [
+                'result' => false,
+                'data'   => [],
+                'error'  => [
+                    'message' => 'Please select a company !'
+                ],
+            ];
+        }
+
+        // set selected company as default
+        $this->companyRepository->setDefault($userId, $companyId);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Your company has been changed successfully !',
+            ],
+            'error'  => [],
+        ];
     }
 
     public function canonizeCompany($company): array
