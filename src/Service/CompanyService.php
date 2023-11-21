@@ -92,7 +92,7 @@ class CompanyService implements ServiceInterface
 
         // Set member params
         $memberParams = [
-            'is_default' => 1
+            'is_default' => 1,
         ];
         if (isset($params['company_id']) && !empty($params['company_id'])) {
             $memberParams['company_id'] = $params['company_id'];
@@ -419,7 +419,7 @@ class CompanyService implements ServiceInterface
     {
         // Make all user company list
         $companyList = [];
-        $list = $this->getCompanyListByUser($userId);
+        $list        = $this->getCompanyListByUser($userId);
         foreach ($list as $single) {
             $companyList[] = $single['company_id'];
         }
@@ -430,7 +430,7 @@ class CompanyService implements ServiceInterface
                 'result' => false,
                 'data'   => [],
                 'error'  => [
-                    'message' => 'Please select a company !'
+                    'message' => 'Please select a company !',
                 ],
             ];
         }
@@ -501,6 +501,7 @@ class CompanyService implements ServiceInterface
 
         $company['setting'] = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
         $company['hash']    = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
+        $company['slug']    = hash('md5', $company['id']);
 
         return $company;
     }
@@ -555,25 +556,25 @@ class CompanyService implements ServiceInterface
 
         if (is_object($member)) {
             $member = [
-                'id'            => $member->getId(),
-                'company_id'    => $member->getCompanyId(),
-                'user_id'       => $member->getUserId(),
-                'time_create'   => $member->getTimeCreate(),
-                'time_update'   => $member->getTimeUpdate(),
-                'status'        => $member->getStatus(),
-                'is_default'    => $member->getIsDefault(),
-                'title' => $member->getTitle(),
+                'id'          => $member->getId(),
+                'company_id'  => $member->getCompanyId(),
+                'user_id'     => $member->getUserId(),
+                'time_create' => $member->getTimeCreate(),
+                'time_update' => $member->getTimeUpdate(),
+                'status'      => $member->getStatus(),
+                'is_default'  => $member->getIsDefault(),
+                'title'       => $member->getTitle(),
             ];
         } else {
             $member = [
-                'id'            => $member['id'],
-                'company_id'    => $member['company_id'],
-                'user_id'       => $member['user_id'],
-                'time_create'   => $member['time_create'],
-                'time_update'   => $member['time_update'],
-                'status'        => $member['status'],
-                'is_default'    => $member['is_default'],
-                'title' => $member['title'],
+                'id'          => $member['id'],
+                'company_id'  => $member['company_id'],
+                'user_id'     => $member['user_id'],
+                'time_create' => $member['time_create'],
+                'time_update' => $member['time_update'],
+                'status'      => $member['status'],
+                'is_default'  => $member['is_default'],
+                'title'       => $member['title'],
             ];
         }
 
