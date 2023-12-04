@@ -567,7 +567,8 @@ class CompanyService implements ServiceInterface
         }
 
         // Set role array
-        $member['roles'] = [];
+        $member['roles'] = null;
+        $member['roles_responsibilities'] = null;
 
         return $member;
     }
