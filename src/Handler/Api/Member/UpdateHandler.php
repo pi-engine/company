@@ -34,16 +34,15 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $account       = $request->getAttribute('account');
         $authorization = $request->getAttribute('company_authorization');
         $requestBody   = $request->getParsedBody();
+
+        $member = $this->companyService->updateMember($authorization, $requestBody);
 
         // Set result
         $result = [
             'result' => true,
-            'data'   => [
-                'message' => 'member data update successfully !',
-            ],
+            'data'   => $member,
             'error'  => [],
         ];
 

@@ -298,7 +298,7 @@ class CompanyService implements ServiceInterface
         return $list;
     }
 
-    public function getMember(int $userId, $params): array
+    public function getMember(int $userId, $params = []): array
     {
         // Set where
         $where = ['user_id' => $userId];
@@ -413,6 +413,30 @@ class CompanyService implements ServiceInterface
             'data'   => $member,
             'error'  => [],
         ];
+    }
+
+    public function updateMember($authorization, $params): array
+    {
+        // Get member
+        $member = $this->getMember($params['user_id'], ['company_id' => $authorization['company_id']]);
+
+        // Update account
+        $account = ['id' => $params['user_id']];
+        $account = $this->accountService->updateAccount($params, $account);
+
+        // Set update params
+        $updateParams = [
+            'time_update' => time(),
+            'status'      => $params['status'] ?? $member['status'],
+        ];
+
+        // Update member
+        $this->companyRepository->updateMember((int)$member['id'], $updateParams);
+
+        // Manage role
+        // ToDo
+
+        return $account;
     }
 
     public function switchCompany(int $userId, int $companyId): array

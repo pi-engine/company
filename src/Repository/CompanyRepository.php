@@ -351,6 +351,23 @@ class CompanyRepository implements CompanyRepositoryInterface
         return (int)$row['count'];
     }
 
+    public function updateMember(int $memberId, array $params = []): void
+    {
+        $update = new Update($this->tableMember);
+        $update->set($params);
+        $update->where(['id' => $memberId]);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during update operation'
+            );
+        }
+    }
+
     public function setDefault(int $userId, int $companyId): void
     {
         $update = new Update($this->tableMember);

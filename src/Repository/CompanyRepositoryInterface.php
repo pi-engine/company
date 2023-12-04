@@ -24,5 +24,7 @@ interface CompanyRepositoryInterface
 
     public function addMember(array $params = []): Member;
 
+    public function updateMember(int $memberId, array $params = []): void;
+
     public function setDefault(int $userId, int $companyId): void;
 }
