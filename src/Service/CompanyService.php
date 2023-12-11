@@ -229,10 +229,12 @@ class CompanyService implements ServiceInterface
         $profileParams = [];
         foreach ($params as $key => $value) {
             if (in_array($key, $this->profileFields)) {
-                if (empty($value)) {
-                    $profileParams[$key] = null;
+                if (is_numeric($value)) {
+                    $profileParams[$key] = (int)$value;
                 } elseif (is_string($value)) {
                     $profileParams[$key] = $value;
+                } elseif (empty($value)) {
+                    $profileParams[$key] = null;
                 }
             }
         }
@@ -549,6 +551,8 @@ class CompanyService implements ServiceInterface
                 'user_name'     => $member->getUserName(),
                 'user_email'    => $member->getUserEmail(),
                 'user_mobile'   => $member->getUserMobile(),
+                'first_name'   => $member->getFirstName(),
+                'last_name'   => $member->getLastName(),
             ];
         } else {
             $member = [
@@ -563,6 +567,8 @@ class CompanyService implements ServiceInterface
                 'user_name'     => $member['user_name'],
                 'user_email'    => $member['user_email'],
                 'user_mobile'   => $member['user_mobile'],
+                'first_name'   => $member['first_name'],
+                'last_name'   => $member['last_name'],
             ];
         }
 

@@ -15,6 +15,8 @@ class Member
     private mixed $user_name;
     private mixed $user_email;
     private mixed $user_mobile;
+    private mixed $first_name;
+    private mixed $last_name;
 
     public function __construct(
         $company_id,
@@ -27,6 +29,8 @@ class Member
         $user_name = null,
         $user_email = null,
         $user_mobile = null,
+        $first_name = null,
+        $last_name = null,
         $id = null
     ) {
         $this->company_id    = $company_id;
@@ -39,6 +43,8 @@ class Member
         $this->user_name     = $user_name;
         $this->user_email    = $user_email;
         $this->user_mobile   = $user_mobile;
+        $this->first_name   = $first_name;
+        $this->last_name   = $last_name;
         $this->id            = $id;
     }
 
@@ -113,5 +119,15 @@ class Member
     public function getUserMobile(): ?string
     {
         return $this->user_mobile;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
     }
 }

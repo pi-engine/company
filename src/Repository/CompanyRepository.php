@@ -37,6 +37,7 @@ class CompanyRepository implements CompanyRepositoryInterface
      * @var string
      */
     private string $tableAccount = 'user_account';
+    private string $tableProfile   = 'user_profile';
 
     /**
      * @var AdapterInterface
@@ -240,6 +241,15 @@ class CompanyRepository implements CompanyRepositoryInterface
                 'user_name'     => 'name',
                 'user_email'    => 'email',
                 'user_mobile'   => 'mobile',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $select->join(
+            ['profile' => $this->tableProfile],
+            'member.user_id=profile.user_id',
+            [
+                'first_name',
+                'last_name',
             ],
             $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
         );

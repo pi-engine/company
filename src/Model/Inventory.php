@@ -13,9 +13,7 @@ class Inventory
     private int    $industry_id;
     private int    $time_create;
     private int    $time_update;
-
     private int $status;
-
     private mixed $address_1;
     private mixed $address_2;
     private mixed $country;
