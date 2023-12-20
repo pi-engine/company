@@ -145,9 +145,9 @@ class CompanyService implements ServiceInterface
             if (!in_array('companymember', $result['data']['roles'])) {
                 // Set roles
                 if ((int)$result['data']['member']['user_id'] == (int)$result['data']['company']['user_id']) {
-                    $this->roleService->addRoleAccount((int)$account['id'], $this->companyAdminRole);
+                    $this->roleService->addRoleAccount($account, $this->companyAdminRole);
                 } else {
-                    $this->roleService->addRoleAccount((int)$account['id'], $this->companyMemberRole);
+                    $this->roleService->addRoleAccount($account, $this->companyMemberRole);
                 }
 
                 // Get cached user
@@ -203,7 +203,7 @@ class CompanyService implements ServiceInterface
         $member = $this->canonizeMember($member);
 
         // Add role
-        $this->roleService->addRoleAccount((int)$account['id'], $this->companyAdminRole);
+        $this->roleService->addRoleAccount($account, $this->companyAdminRole);
 
         // Send notification
         // Todo: add it
@@ -408,7 +408,7 @@ class CompanyService implements ServiceInterface
         $member = $this->canonizeMember($member);
 
         // Add role
-        $this->roleService->addRoleAccount((int)$account['id'], $params['role'] ?? $this->companyMemberRole);
+        $this->roleService->addRoleAccount($account, $params['role'] ?? $this->companyMemberRole);
 
         return [
             'result' => true,
