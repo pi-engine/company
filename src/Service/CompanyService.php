@@ -300,6 +300,20 @@ class CompanyService implements ServiceInterface
         return $list;
     }
 
+    public function getUserIdListByCompany(int $companyId): array
+    {
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getMemberListByCompany(['company_id' => $companyId]);
+        foreach ($rowSet as $row) {
+            $member = $this->canonizeMemberCompany($row);
+
+            $list[$member['user_id']] = $member['user_id'];
+        }
+
+        return array_values($list);
+    }
+
     public function getMember(int $userId, $params = []): array
     {
         // Set where
