@@ -43,7 +43,7 @@ class AddHandler implements RequestHandlerInterface
             'first_name' => $requestBody['first_name'] ?? '',
             'last_name'  => $requestBody['last_name'] ?? '',
             'email'      => $requestBody['email'] ?? '',
-            'role'       => $requestBody['role'] ?? '',
+            'roles'      => $requestBody['roles'] ?? '',
             'added_by'   => $account,
         ];
 

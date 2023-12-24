@@ -3,6 +3,7 @@
 namespace Company;
 
 use Company\Middleware\CompanyMiddleware;
+use Company\Middleware\MemberAccessMiddleware;
 use Laminas\Mvc\Middleware\PipeSpec;
 use Laminas\Router\Http\Literal;
 use Logger\Middleware\LoggerRequestMiddleware;
@@ -20,6 +21,7 @@ return [
             Repository\CompanyRepository::class             => Factory\Repository\CompanyRepositoryFactory::class,
             Service\CompanyService::class                   => Factory\Service\CompanyServiceFactory::class,
             Middleware\CompanyMiddleware::class             => Factory\Middleware\CompanyMiddlewareFactory::class,
+            Middleware\MemberAccessMiddleware::class        => Factory\Middleware\MemberAccessMiddlewareFactory::class,
             Handler\Api\Authentication\CheckHandler::class  => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
             Handler\Api\Authentication\ListHandler::class   => Factory\Handler\Api\Authentication\ListHandlerFactory::class,
             Handler\Api\Authentication\SwitchHandler::class => Factory\Handler\Api\Authentication\SwitchHandlerFactory::class,
@@ -91,7 +93,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'switch'   => [
+                            'switch' => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/switch',
@@ -181,6 +183,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            MemberAccessMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Member\ViewHandler::class
                                         ),
@@ -203,8 +206,34 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
+                                            MemberAccessMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Member\UpdateHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+
+
+
+                            'role'   => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/role',
+                                    'defaults' => [
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'member',
+                                        'handler'     => 'role',
+                                        'permissions' => 'company-member-role',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Member\RoleHandler::class
                                         ),
                                     ],
                                 ],

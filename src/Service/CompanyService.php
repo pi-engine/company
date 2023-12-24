@@ -421,8 +421,11 @@ class CompanyService implements ServiceInterface
         $member = $this->companyRepository->addMember($memberParams);
         $member = $this->canonizeMember($member);
 
-        // Add role
-        $this->roleService->addRoleAccount($account, $params['role'] ?? $this->companyMemberRole);
+        // Add roles
+        $roles = $params['roles'] ?? [$this->companyMemberRole];
+        foreach ($roles as $role) {
+            $this->roleService->addRoleAccount($account, $role);
+        }
 
         return [
             'result' => true,
@@ -431,10 +434,10 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function updateMember($authorization, $params): array
+    public function updateMember($authorization, $params, $member): array
     {
         // Get member
-        $member = $this->getMember($params['user_id'], ['company_id' => $authorization['company_id']]);
+        $member = $member ?? $this->getMember($params['user_id'], ['company_id' => $authorization['company_id']]);
 
         // Update account
         $account = ['id' => $params['user_id']];
@@ -450,7 +453,9 @@ class CompanyService implements ServiceInterface
         $this->companyRepository->updateMember((int)$member['id'], $updateParams);
 
         // Manage role
-        // ToDo
+        if (isset($params['roles']) && !empty($params['roles'])) {
+            $this->accountService->updateAccountRoles($params['roles'], $account, 'api', $authorization['member']);
+        }
 
         return $account;
     }
@@ -565,8 +570,8 @@ class CompanyService implements ServiceInterface
                 'user_name'     => $member->getUserName(),
                 'user_email'    => $member->getUserEmail(),
                 'user_mobile'   => $member->getUserMobile(),
-                'first_name'   => $member->getFirstName(),
-                'last_name'   => $member->getLastName(),
+                'first_name'    => $member->getFirstName(),
+                'last_name'     => $member->getLastName(),
             ];
         } else {
             $member = [
@@ -581,13 +586,13 @@ class CompanyService implements ServiceInterface
                 'user_name'     => $member['user_name'],
                 'user_email'    => $member['user_email'],
                 'user_mobile'   => $member['user_mobile'],
-                'first_name'   => $member['first_name'],
-                'last_name'   => $member['last_name'],
+                'first_name'    => $member['first_name'],
+                'last_name'     => $member['last_name'],
             ];
         }
 
         // Set role array
-        $member['roles'] = null;
+        $member['roles']                  = null;
         $member['roles_responsibilities'] = null;
 
         return $member;

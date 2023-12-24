@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class UpdateHandler implements RequestHandlerInterface
+class RoleHandler implements RequestHandlerInterface
 {
     /** @var ResponseFactoryInterface */
     protected ResponseFactoryInterface $responseFactory;
@@ -34,16 +34,31 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $authorization = $request->getAttribute('company_authorization');
-        $member        = $request->getAttribute('member');
-        $requestBody   = $request->getParsedBody();
-
-        $member = $this->companyService->updateMember($authorization, $requestBody, $member);
-
         // Set result
         $result = [
             'result' => true,
-            'data'   => $member,
+            'data'   => [
+                [
+                    'key' => 'companymember',
+                    'value' => 'User (Internal)',
+                ],
+                [
+                    'key' => 'companyexternal',
+                    'value' => 'User (External)',
+                ],
+                [
+                    'key' => 'companymanager',
+                    'value' => 'Manager',
+                ],
+                [
+                    'key' => 'companyaudit',
+                    'value' => 'Auditor',
+                ],
+                [
+                    'key' => 'companyadmin',
+                    'value' => 'Full Admin',
+                ]
+            ],
             'error'  => [],
         ];
 

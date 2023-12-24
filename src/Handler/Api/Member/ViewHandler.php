@@ -34,10 +34,7 @@ class ViewHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $authorization = $request->getAttribute('company_authorization');
-        $requestBody   = $request->getParsedBody();
-
-        $member = $this->companyService->getMember((int)$requestBody['user_id'], ['company_id' => $authorization['company_id']]);
+        $member = $request->getAttribute('member');
 
         // Set result
         $result = [
