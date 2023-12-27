@@ -213,9 +213,6 @@ return [
                                     ],
                                 ],
                             ],
-
-
-
                             'role'   => [
                                 'type'    => Literal::class,
                                 'options' => [
@@ -253,14 +250,16 @@ return [
                                 'options' => [
                                     'route'    => '/view',
                                     'defaults' => [
-                                        'module'     => 'company',
-                                        'section'    => 'api',
-                                        'package'    => 'profile',
-                                        'handler'    => 'view',
-                                        'controller' => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'profile',
+                                        'handler'     => 'view',
+                                        'permissions' => 'company-profile-view',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\ViewHandler::class

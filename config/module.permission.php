@@ -45,6 +45,26 @@ return [
         [
             'module'      => 'company',
             'section'     => 'api',
+            'package'     => 'member',
+            'handler'     => 'role',
+            'permissions' => 'company-member-role',
+            'role'        => [
+                'companyadmin',
+            ],
+        ],
+        [
+            'module'      => 'company',
+            'section'     => 'api',
+            'package'     => 'profile',
+            'handler'     => 'view',
+            'permissions' => 'company-profile-view',
+            'role'        => [
+                'companyadmin',
+            ],
+        ],
+        [
+            'module'      => 'company',
+            'section'     => 'api',
             'package'     => 'profile',
             'handler'     => 'update',
             'permissions' => 'company-profile-update',
