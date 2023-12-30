@@ -128,6 +128,7 @@ return [
                                 'options' => [
                                     'route'    => '/list',
                                     'defaults' => [
+                                        'title'       => 'Company member list',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'member',
@@ -150,6 +151,7 @@ return [
                                 'options' => [
                                     'route'    => '/add',
                                     'defaults' => [
+                                        'title'       => 'Company member add',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'member',
@@ -172,6 +174,7 @@ return [
                                 'options' => [
                                     'route'    => '/view',
                                     'defaults' => [
+                                        'title'       => 'Company member view',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'member',
@@ -195,6 +198,7 @@ return [
                                 'options' => [
                                     'route'    => '/update',
                                     'defaults' => [
+                                        'title'       => 'Company member update',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'member',
@@ -218,6 +222,7 @@ return [
                                 'options' => [
                                     'route'    => '/role',
                                     'defaults' => [
+                                        'title'       => 'Company member role',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'member',
@@ -250,6 +255,7 @@ return [
                                 'options' => [
                                     'route'    => '/view',
                                     'defaults' => [
+                                        'title'       => 'Company profile view',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'profile',
@@ -272,6 +278,7 @@ return [
                                 'options' => [
                                     'route'    => '/update',
                                     'defaults' => [
+                                        'title'       => 'Company profile update',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'profile',
@@ -294,6 +301,7 @@ return [
                                 'options' => [
                                     'route'    => '/context',
                                     'defaults' => [
+                                        'title'       => 'Company profile update context',
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'profile',
@@ -315,7 +323,6 @@ return [
                     ],
                 ],
             ],
-
             // Admin section
             'admin_company' => [
                 'type'         => Literal::class,

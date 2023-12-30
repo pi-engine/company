@@ -3,6 +3,7 @@
 return [
     'api'   => [
         [
+            'title'       => 'Company member list',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'member',
@@ -10,9 +11,15 @@ return [
             'permissions' => 'company-member-list',
             'role'        => [
                 'companyadmin',
+                'companymanager',
+                'companyaudit',
+                'companymember',
+                'companyexternal',
+                'companyviewer',
             ],
         ],
         [
+            'title'       => 'Company member add',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'member',
@@ -20,9 +27,11 @@ return [
             'permissions' => 'company-member-add',
             'role'        => [
                 'companyadmin',
+                'companymanager',
             ],
         ],
         [
+            'title'       => 'Company member view',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'member',
@@ -30,9 +39,11 @@ return [
             'permissions' => 'company-member-view',
             'role'        => [
                 'companyadmin',
+                'companymanager',
             ],
         ],
         [
+            'title'       => 'Company member update',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'member',
@@ -40,9 +51,11 @@ return [
             'permissions' => 'company-member-update',
             'role'        => [
                 'companyadmin',
+                'companymanager',
             ],
         ],
         [
+            'title'       => 'Company member role',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'member',
@@ -50,9 +63,11 @@ return [
             'permissions' => 'company-member-role',
             'role'        => [
                 'companyadmin',
+                'companymanager',
             ],
         ],
         [
+            'title'       => 'Company profile view',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'profile',
@@ -60,9 +75,11 @@ return [
             'permissions' => 'company-profile-view',
             'role'        => [
                 'companyadmin',
+                'companymanager',
             ],
         ],
         [
+            'title'       => 'Company profile update',
             'module'      => 'company',
             'section'     => 'api',
             'package'     => 'profile',
@@ -70,6 +87,7 @@ return [
             'permissions' => 'company-profile-update',
             'role'        => [
                 'companyadmin',
+                'companymanager',
             ],
         ],
     ],

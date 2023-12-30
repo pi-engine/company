@@ -35,3 +35,11 @@ CREATE TABLE `company_member`
     KEY `company_id` (`company_id`),
     KEY `list` (`company_id`, `status`)
 );
+
+INSERT INTO `role_resource` (`id`, `name`, `title`, `status`, `section`)
+VALUES (NULL, 'companyadmin', 'Company Admin', '1', 'api'),
+       (NULL, 'companymanager', 'Company  Manager', '1', 'api'),
+       (NULL, 'companyaudit', 'Company Audit', '1', 'api'),
+       (NULL, 'companymember', 'Company Member', '1', 'api'),
+       (NULL, 'companyexternal', 'Company External', '1', 'api'),
+       (NULL, 'companyviewer', 'Company Viewer', '1', 'api');
