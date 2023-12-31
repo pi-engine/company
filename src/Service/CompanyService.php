@@ -598,6 +598,10 @@ class CompanyService implements ServiceInterface
         $member['roles']                  = null;
         $member['roles_responsibilities'] = null;
 
+        // Set time view
+        $member['time_create_view'] = $this->utilityService->date($member['time_create']);
+        $member['time_update_view'] = $this->utilityService->date($member['time_update']);
+
         return $member;
     }
 
@@ -630,6 +634,10 @@ class CompanyService implements ServiceInterface
                 'title'       => $member['title'],
             ];
         }
+
+        // Set time view
+        $member['time_create_view'] = $this->utilityService->date($member['time_create']);
+        $member['time_update_view'] = $this->utilityService->date($member['time_update']);
 
         return $member;
     }
