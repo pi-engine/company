@@ -29,12 +29,12 @@ class CompanyService implements ServiceInterface
     /* @var array */
     protected array $config;
 
-    protected string $companyAdminRole    = 'companyadmin';
-    protected string $companyManagerRole  = 'companymanager';
-    protected string $companyAuditRole    = 'companyaudit';
-    protected string $companyMemberRole   = 'companymember';
-    protected string $companyExternalRole = 'companyexternal';
-    protected string $companyViewerRole   = 'companyviewer';
+    public string $companyViewerRole   = 'companyviewer';
+    public string $companyMemberRole   = 'companymember';
+    public string $companyExternalRole = 'companyexternal';
+    public string $companyAuditRole    = 'companyaudit';
+    public string $companyManagerRole  = 'companymanager';
+    public string $companyAdminRole    = 'companyadmin';
 
     protected array $profileFields
         = [

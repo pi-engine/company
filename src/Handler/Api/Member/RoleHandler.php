@@ -39,25 +39,29 @@ class RoleHandler implements RequestHandlerInterface
             'result' => true,
             'data'   => [
                 [
-                    'key' => 'companymember',
+                    'key'   => $this->companyService->companyViewerRole,
+                    'value' => 'Viewer',
+                ],
+                [
+                    'key'   => $this->companyService->companyMemberRole,
                     'value' => 'User (Internal)',
                 ],
                 [
-                    'key' => 'companyexternal',
+                    'key'   => $this->companyService->companyExternalRole,
                     'value' => 'User (External)',
                 ],
                 [
-                    'key' => 'companymanager',
-                    'value' => 'Manager',
-                ],
-                [
-                    'key' => 'companyaudit',
+                    'key'   => $this->companyService->companyAuditRole,
                     'value' => 'Auditor',
                 ],
                 [
-                    'key' => 'companyadmin',
+                    'key'   => $this->companyService->companyManagerRole,
+                    'value' => 'Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyAdminRole,
                     'value' => 'Full Admin',
-                ]
+                ],
             ],
             'error'  => [],
         ];

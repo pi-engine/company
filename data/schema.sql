@@ -37,9 +37,9 @@ CREATE TABLE `company_member`
 );
 
 INSERT INTO `role_resource` (`id`, `name`, `title`, `status`, `section`)
-VALUES (NULL, 'companyadmin', 'Company Admin', '1', 'api'),
-       (NULL, 'companymanager', 'Company  Manager', '1', 'api'),
-       (NULL, 'companyaudit', 'Company Audit', '1', 'api'),
-       (NULL, 'companymember', 'Company Member', '1', 'api'),
-       (NULL, 'companyexternal', 'Company External', '1', 'api'),
-       (NULL, 'companyviewer', 'Company Viewer', '1', 'api');
+VALUES (NULL, 'companyadmin', 'Admin', '1', 'api'),
+       (NULL, 'companymanager', 'Manager', '1', 'api'),
+       (NULL, 'companyaudit', 'Auditor', '1', 'api'),
+       (NULL, 'companymember', 'User (Internal)', '1', 'api'),
+       (NULL, 'companyexternal', 'User (External)', '1', 'api'),
+       (NULL, 'companyviewer', 'Viewer', '1', 'api');
