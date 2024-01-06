@@ -144,8 +144,8 @@ class CompanyService implements ServiceInterface
         $result['data']['roles'] = $cacheUser['roles'];
 
         // Check company
-        if (!in_array('companyadmin', $result['data']['roles'])) {
-            if (!in_array('companymember', $result['data']['roles'])) {
+        if (!in_array($this->companyAdminRole, $result['data']['roles'])) {
+            if (!in_array($this->companyMemberRole, $result['data']['roles'])) {
                 // Set roles
                 if ((int)$result['data']['member']['user_id'] == (int)$result['data']['company']['user_id']) {
                     $this->roleService->addRoleAccount($account, $this->companyAdminRole);
@@ -164,7 +164,8 @@ class CompanyService implements ServiceInterface
 
         // Check admin access
         $result['data']['is_admin'] = 0;
-        if (in_array('companyadmin', $result['data']['roles'])) {
+        if (in_array($this->companyAdminRole, $result['data']['roles'])
+        || in_array($this->companyManagerRole, $result['data']['roles'])) {
             $result['data']['is_admin'] = 1;
         }
 
