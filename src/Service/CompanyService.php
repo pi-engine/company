@@ -76,6 +76,7 @@ class CompanyService implements ServiceInterface
             'data'   => [
                 'user_id'    => $account['id'],
                 'company_id' => 0,
+                'project_id' => 0,
                 'user'       => $account,
             ],
             'error'  => [],
