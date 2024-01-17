@@ -49,7 +49,7 @@ class PackageMiddleware implements MiddlewareInterface
         if (empty($package) || (int)$package['status'] !== 1) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
             $request = $request->withAttribute(
-                'error',
+                'ebrror',
                 [
                     'message' => 'The selected package does not activate or exist!',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
