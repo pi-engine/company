@@ -51,7 +51,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'Selected package not activate or exist !',
+                    'message' => 'The selected package does not activate or exist!',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
@@ -65,7 +65,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'Your selected service dose not have a true permissions !',
+                    'message' => 'Your selected service does not have true permissions!',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
@@ -79,7 +79,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'Your package dose not have a access to this area, for upgrade your package please contact to system admin !',
+                    'message' => 'Your package does not have access to this area, To upgrade your package please contact to system admin!',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
