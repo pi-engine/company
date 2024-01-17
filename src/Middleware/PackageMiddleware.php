@@ -46,7 +46,7 @@ class PackageMiddleware implements MiddlewareInterface
 
         // Get and check package
         $package = $this->companyService->getPackage($authorization['package_id']);
-        if (empty($package) || empty($package['information']) || (int)$package['status'] !== 1) {
+        if (empty($package) || (int)$package['status'] !== 1) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
             $request = $request->withAttribute(
                 'error',
