@@ -5,6 +5,7 @@ namespace Company\Repository;
 use Company\Model\Inventory;
 use Company\Model\Member;
 use Company\Model\MemberCompany;
+use Company\Model\Package;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
@@ -32,12 +33,19 @@ class CompanyRepository implements CompanyRepositoryInterface
     private string $tableMember = 'company_member';
 
     /**
+     * Package Table name
+     *
+     * @var string
+     */
+    private string $tablePackage = 'company_package';
+
+    /**
      * Account Table name
      *
      * @var string
      */
     private string $tableAccount = 'user_account';
-    private string $tableProfile   = 'user_profile';
+    private string $tableProfile = 'user_profile';
 
     /**
      * @var AdapterInterface
@@ -50,6 +58,8 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     private MemberCompany $memberCompanyPrototype;
 
+    private Package $packagePrototype;
+
     /**
      * @var HydratorInterface
      */
@@ -60,13 +70,15 @@ class CompanyRepository implements CompanyRepositoryInterface
         HydratorInterface $hydrator,
         Inventory $inventoryPrototype,
         Member $memberPrototype,
-        MemberCompany $memberCompanyPrototype
+        MemberCompany $memberCompanyPrototype,
+        Package $packagePrototype
     ) {
-        $this->db                 = $db;
-        $this->hydrator           = $hydrator;
-        $this->inventoryPrototype = $inventoryPrototype;
-        $this->memberPrototype    = $memberPrototype;
-        $this->memberCompanyPrototype    = $memberCompanyPrototype;
+        $this->db                     = $db;
+        $this->hydrator               = $hydrator;
+        $this->inventoryPrototype     = $inventoryPrototype;
+        $this->memberPrototype        = $memberPrototype;
+        $this->memberCompanyPrototype = $memberCompanyPrototype;
+        $this->packagePrototype       = $packagePrototype;
     }
 
     public function getCompany(array $params = []): array|Inventory
@@ -393,5 +405,32 @@ class CompanyRepository implements CompanyRepositoryInterface
                 'Database error occurred during update operation'
             );
         }
+    }
+
+    public function getPackage(array $params = []): array|Package
+    {
+        // Set
+        $where = ['id' => (int)$params['id']];
+
+        $sql       = new Sql($this->db);
+        $select    = $sql->select($this->tablePackage)->where($where);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            throw new RuntimeException(
+                'Failed retrieving row with identifier; unknown database error.',
+            );
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->packagePrototype);
+        $resultSet->initialize($result);
+        $package = $resultSet->current();
+
+        if (!$package) {
+            return [];
+        }
+
+        return $package;
     }
 }

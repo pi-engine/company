@@ -4,6 +4,7 @@ namespace Company\Repository;
 
 use Company\Model\Inventory;
 use Company\Model\Member;
+use Company\Model\Package;
 use Laminas\Db\ResultSet\HydratingResultSet;
 
 interface CompanyRepositoryInterface
@@ -27,4 +28,6 @@ interface CompanyRepositoryInterface
     public function updateMember(int $memberId, array $params = []): void;
 
     public function setDefault(int $userId, int $companyId): void;
+
+    public function getPackage(array $params = []): array|Package;
 }

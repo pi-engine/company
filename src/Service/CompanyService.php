@@ -76,6 +76,7 @@ class CompanyService implements ServiceInterface
             'data'   => [
                 'user_id'    => $account['id'],
                 'company_id' => 0,
+                'package_id' => 0,
                 'project_id' => 0,
                 'user'       => $account,
             ],
@@ -124,7 +125,8 @@ class CompanyService implements ServiceInterface
 
         // Get company info
         $result['data']['company']    = $this->getCompany($result['data']['member']['company_id']);
-        $result['data']['company_id'] = $result['data']['member']['company_id'];
+        $result['data']['company_id'] = $result['data']['company']['id'];
+        $result['data']['package_id'] = $result['data']['company']['package_id'];
 
         // Check
         if (empty($result['data']['company']) || $result['data']['company']['status'] != 1) {
@@ -166,7 +168,8 @@ class CompanyService implements ServiceInterface
         // Check admin access
         $result['data']['is_admin'] = 0;
         if (in_array($this->companyAdminRole, $result['data']['roles'])
-        || in_array($this->companyManagerRole, $result['data']['roles'])) {
+            || in_array($this->companyManagerRole, $result['data']['roles'])
+        ) {
             $result['data']['is_admin'] = 1;
         }
 
@@ -498,6 +501,13 @@ class CompanyService implements ServiceInterface
         ];
     }
 
+    public function getPackage(int $packageId): array
+    {
+        $where  = ['id' => $packageId];
+        $package = $this->companyRepository->getPackage($where);
+        return $this->canonizePackage($package);
+    }
+
     public function canonizeCompany($company): array
     {
         if (empty($company)) {
@@ -511,6 +521,7 @@ class CompanyService implements ServiceInterface
                 'setting'          => $company->getSetting(),
                 'text_description' => $company->getTextDescription(),
                 'user_id'          => $company->getUserId(),
+                'package_id'       => $company->getPackageId(),
                 'reseller_id'      => $company->getResellerId(),
                 'industry_id'      => $company->getIndustryId(),
                 'time_create'      => $company->getTimeCreate(),
@@ -533,6 +544,7 @@ class CompanyService implements ServiceInterface
                 'setting'          => $company['setting'],
                 'text_description' => $company['text_description'],
                 'user_id'          => $company['user_id'],
+                'package_id'       => $company['package_id'],
                 'reseller_id'      => $company['reseller_id'],
                 'time_create'      => $company['time_create'],
                 'time_update'      => $company['time_update'],
@@ -642,5 +654,32 @@ class CompanyService implements ServiceInterface
         $member['time_update_view'] = $this->utilityService->date($member['time_update']);
 
         return $member;
+    }
+
+    public function canonizePackage($package): array
+    {
+        if (empty($package)) {
+            return [];
+        }
+
+        if (is_object($package)) {
+            $package = [
+                'id'          => $package->getId(),
+                'title'       => $package->getTitle(),
+                'status'      => $package->getStatus(),
+                'information' => $package->getInformation(),
+            ];
+        } else {
+            $package = [
+                'id'          => $package['id'],
+                'title'       => $package['title'],
+                'status'      => $package['status'],
+                'information' => $package['information'],
+            ];
+        }
+
+        $package['information'] = !empty($package['information']) ? json_decode($package['information'], true) : [];
+
+        return $package;
     }
 }

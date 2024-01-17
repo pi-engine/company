@@ -5,6 +5,7 @@ CREATE TABLE `company_inventory`
     `setting`          JSON,
     `text_description` TEXT,
     `user_id`          INT(10) UNSIGNED    NOT NULL DEFAULT '0',
+    `package_id`       INT(10) UNSIGNED    NOT NULL DEFAULT '0',
     `reseller_id`      INT(10) UNSIGNED    NOT NULL DEFAULT '0',
     `industry_id`      INT(10) UNSIGNED    NOT NULL DEFAULT '1',
     `time_create`      INT(10) UNSIGNED    NOT NULL DEFAULT '0',
@@ -36,10 +37,20 @@ CREATE TABLE `company_member`
     KEY `list` (`company_id`, `status`)
 );
 
-INSERT INTO `role_resource` (`id`, `name`, `title`, `status`, `section`)
+CREATE TABLE `company_package`
+(
+    `id`          INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
+    `title`       VARCHAR(255)        NOT NULL DEFAULT '',
+    `status`      TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    `information` JSON,
+    PRIMARY KEY (`id`)
+);
+
+# default roles for manage company RBAC
+/* INSERT INTO `role_resource` (`id`, `name`, `title`, `status`, `section`)
 VALUES (NULL, 'companyadmin', 'Admin', '1', 'api'),
        (NULL, 'companymanager', 'Manager', '1', 'api'),
        (NULL, 'companyaudit', 'Auditor', '1', 'api'),
        (NULL, 'companymember', 'User (Internal)', '1', 'api'),
        (NULL, 'companyexternal', 'User (External)', '1', 'api'),
-       (NULL, 'companyviewer', 'Viewer', '1', 'api');
+       (NULL, 'companyviewer', 'Viewer', '1', 'api'); */

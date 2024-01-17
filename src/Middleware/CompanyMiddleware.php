@@ -57,7 +57,6 @@ class CompanyMiddleware implements MiddlewareInterface
         }
 
         $request = $request->withAttribute('company_authorization', $checkResult['data']);
-
         return $handler->handle($request);
     }
 }

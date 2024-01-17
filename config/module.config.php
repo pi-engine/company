@@ -22,6 +22,7 @@ return [
             Service\CompanyService::class                   => Factory\Service\CompanyServiceFactory::class,
             Middleware\CompanyMiddleware::class             => Factory\Middleware\CompanyMiddlewareFactory::class,
             Middleware\MemberAccessMiddleware::class        => Factory\Middleware\MemberAccessMiddlewareFactory::class,
+            Middleware\PackageMiddleware::class             => Factory\Middleware\PackageMiddlewareFactory::class,
             Handler\Api\Authentication\CheckHandler::class  => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
             Handler\Api\Authentication\ListHandler::class   => Factory\Handler\Api\Authentication\ListHandlerFactory::class,
             Handler\Api\Authentication\SwitchHandler::class => Factory\Handler\Api\Authentication\SwitchHandlerFactory::class,
