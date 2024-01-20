@@ -35,6 +35,9 @@ class CompanyService implements ServiceInterface
     public string $companyAuditRole    = 'companyaudit';
     public string $companyManagerRole  = 'companymanager';
     public string $companyAdminRole    = 'companyadmin';
+    public int    $industryId          = 1;
+    public int    $packageId           = 1;
+    public string $packageExpire       = '+2 weeks';
 
     protected array $profileFields
         = [
@@ -187,9 +190,17 @@ class CompanyService implements ServiceInterface
             'phone'            => $account['mobile'] ?? null,
             'email'            => $account['email'] ?? null,
             'status'           => 1,
-            'industry_id'      => $account['industry_id'] ?? 0,
+            'industry_id'      => $this->industryId,
+            'package_id'       => $this->packageId,
             'text_description' => '',
-            'setting'          => json_encode([]),
+            'setting'          => json_encode([
+                'package' => [
+                    'time_start'  => time(),
+                    'time_renew'  => time(),
+                    'time_expire' => strtotime($this->packageExpire),
+                    'renew_count' => 1,
+                ],
+            ]),
         ];
 
         // Add company
@@ -503,7 +514,7 @@ class CompanyService implements ServiceInterface
 
     public function getPackage(int $packageId): array
     {
-        $where  = ['id' => $packageId];
+        $where   = ['id' => $packageId];
         $package = $this->companyRepository->getPackage($where);
         return $this->canonizePackage($package);
     }

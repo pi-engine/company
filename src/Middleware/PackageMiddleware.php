@@ -49,7 +49,7 @@ class PackageMiddleware implements MiddlewareInterface
         if (empty($package) || (int)$package['status'] !== 1) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
             $request = $request->withAttribute(
-                'ebrror',
+                'error',
                 [
                     'message' => 'The selected package does not activate or exist!',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
@@ -73,18 +73,40 @@ class PackageMiddleware implements MiddlewareInterface
             return $this->errorHandler->handle($request);
         }
 
-        // Check package access
-        if (!in_array($routeParams['permissions'], $package['information']['access'])) {
+        // Check package time
+        if (
+            !isset($authorization['setting']['package']['time_expire'])
+            || (int)$authorization['setting']['package']['time_expire'] < time()
+        ) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'Your package does not have access to this area, To upgrade your package please contact to system admin!',
+                    'message' => sprintf(
+                        'Your subscription time to use the %s package has ended, To upgrade your package please contact to system admin!',
+                        $package['title']
+                    ),
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
             );
             return $this->errorHandler->handle($request);
+        }
+
+        // Check package access
+        if (!isset($package['information']['type']) || $package['information']['type'] != 'full') {
+            if (!in_array($routeParams['permissions'], $package['information']['access'])) {
+                $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
+                $request = $request->withAttribute(
+                    'error',
+                    [
+                        'message' => 'Your package does not have access to this area, To upgrade your package please contact to system admin!',
+                        'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
+                        'type'    => 'package',
+                    ]
+                );
+                return $this->errorHandler->handle($request);
+            }
         }
 
         $request = $request->withAttribute('package', $package);
