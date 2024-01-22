@@ -33,6 +33,7 @@ return [
             Handler\Api\Profile\ViewHandler::class          => Factory\Handler\Api\Profile\ViewHandlerFactory::class,
             Handler\Api\Profile\UpdateHandler::class        => Factory\Handler\Api\Profile\UpdateHandlerFactory::class,
             Handler\Api\Profile\ContextHandler::class       => Factory\Handler\Api\Profile\ContextHandlerFactory::class,
+            Handler\Api\Profile\SettingHandler::class       => Factory\Handler\Api\Profile\SettingHandlerFactory::class,
             Handler\InstallerHandler::class                 => Factory\Handler\InstallerHandlerFactory::class,
         ],
     ],
@@ -306,7 +307,7 @@ return [
                                         'module'      => 'company',
                                         'section'     => 'api',
                                         'package'     => 'profile',
-                                        'handler'     => 'update',
+                                        'handler'     => 'context',
                                         'permissions' => 'company-profile-update',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
@@ -316,6 +317,29 @@ return [
                                             CompanyMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\ContextHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'setting' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/setting',
+                                    'defaults' => [
+                                        'title'       => 'Company profile update setting',
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'profile',
+                                        'handler'     => 'setting',
+                                        'permissions' => 'company-profile-update',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Profile\SettingHandler::class
                                         ),
                                     ],
                                 ],

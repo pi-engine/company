@@ -38,6 +38,12 @@ class CompanyService implements ServiceInterface
     public int    $industryId          = 1;
     public int    $packageId           = 1;
     public string $packageExpire       = '+2 weeks';
+    public array  $wizardSteps
+                                       = [
+            'user_profile'    => false,
+            'company_profile' => false,
+            'voucher'         => false,
+        ];
 
     protected array $profileFields
         = [
@@ -194,6 +200,14 @@ class CompanyService implements ServiceInterface
             'package_id'       => $this->packageId,
             'text_description' => '',
             'setting'          => json_encode([
+                'general' => [],
+                'context' => [],
+                'wizard'  => [
+                    'is_completed' => false,
+                    'time_start'   => time(),
+                    'time_end'     => 0,
+                    'steps'        => $this->wizardSteps,
+                ],
                 'package' => [
                     'time_start'  => time(),
                     'time_renew'  => time(),
@@ -204,8 +218,6 @@ class CompanyService implements ServiceInterface
         ];
 
         // Add company
-        //$company = $this->companyRepository->addCompany($addParams);
-        //$company = $this->canonizeCompany($company);
         $company = $this->addCompany($addParams);
 
         // Set member params
@@ -279,17 +291,61 @@ class CompanyService implements ServiceInterface
         // Set context
         $setting = $authorization['company']['setting'] ?? [];
 
-        // Set sub params
+        // Set default params
         $setting['general'] = $setting['general'] ?? [];
         $setting['context'] = $setting['context'] ?? [];
+        $setting['wizard']  = $setting['wizard'] ?? [];
+        $setting['package'] = $setting['package'] ?? [
+            'time_start'  => time(),
+            'time_renew'  => time(),
+            'time_expire' => strtotime($this->packageExpire),
+            'renew_count' => 1,
+        ];
 
-        // Update data
-        foreach ($params as $key => $value) {
-            $setting[$type][$key] = $value;
+        switch ($type) {
+            case 'wizard':
+
+                // Update data
+                foreach ($params as $key => $value) {
+                    if (in_array($key, array_keys($this->wizardSteps))) {
+                        $setting['wizard']['steps'][$key] = $value;
+                    }
+                }
+
+                // update wizard
+                if (isset($setting['wizard']['steps'])
+                    && is_array($setting['wizard']['steps'])
+                    && !empty($setting['wizard']['steps'])
+                    && $setting['wizard']['is_completed'] === false
+                ) {
+                    $totalTrue = 0;
+                    foreach ($setting['wizard']['steps'] as $step) {
+                        if ($step === true) {
+                            $totalTrue = $totalTrue + 1;
+                        }
+                    }
+
+                    if (count($setting['wizard']['steps']) === $totalTrue) {
+                        $setting['wizard']['is_completed'] = true;
+                        $setting['wizard']['time_end']     = time();
+                    }
+                }
+                break;
+
+            case 'general':
+            case 'context':
+            case 'package':
+            default:
+                // Update data
+                foreach ($params as $key => $value) {
+                    $setting[$type][$key] = $value;
+                }
+                break;
         }
 
         // Set update update
-        $profileParams = [
+        $profileParams
+            = [
             'time_update' => time(),
             'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
         ];
@@ -300,9 +356,7 @@ class CompanyService implements ServiceInterface
         // Set result
         return [
             'result' => true,
-            'data'   => [
-                'message' => 'Context data updated successfully !',
-            ],
+            'data'   => ['message' => 'Context data updated successfully !',],
             'error'  => [],
         ];
     }
@@ -572,9 +626,10 @@ class CompanyService implements ServiceInterface
             ];
         }
 
-        $company['setting'] = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
-        $company['hash']    = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
-        $company['slug']    = hash('md5', $company['id']);
+        $company['setting']          = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
+        $company['hash']             = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
+        $company['slug']             = hash('md5', $company['id']);
+        $company['is_company_setup'] = $company['setting']['wizard']['is_completed'] ?? false;
 
         return $company;
     }
