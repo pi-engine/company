@@ -35,27 +35,9 @@ class SettingHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $authorization = $request->getAttribute('company_authorization');
+        $requestBody   = $request->getParsedBody();
 
-        // Retrieve the raw JSON data from the request body
-        $stream      = $this->streamFactory->createStreamFromFile('php://input');
-        $rawData     = $stream->getContents();
-        $requestBody = json_decode($rawData, true);
-
-        // Check if decoding was successful
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            // JSON decoding failed
-            $errorResponse = [
-                'result' => false,
-                'data'   => null,
-                'error'  => [
-                    'message' => 'Invalid JSON data',
-                ],
-                'status' => StatusCodeInterface::STATUS_FORBIDDEN,
-            ];
-            return new JsonResponse($errorResponse, StatusCodeInterface::STATUS_FORBIDDEN);
-        }
-
-        $result = $this->companyService->updateCompanySetting($authorization, $requestBody, 'context');
+        $result = $this->companyService->updateCompanySetting($authorization, $requestBody);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

@@ -55,7 +55,9 @@ class ContextHandler implements RequestHandlerInterface
             return new JsonResponse($errorResponse, StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        $result = $this->companyService->updateCompanySetting($authorization, $requestBody, 'context');
+        $requestBody['type'] = 'context';
+
+        $result = $this->companyService->updateCompanySetting($authorization, $requestBody);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

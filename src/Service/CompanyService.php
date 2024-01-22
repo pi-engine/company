@@ -286,8 +286,12 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function updateCompanySetting($authorization, $params, $type = 'context'): array
+    public function updateCompanySetting($authorization, $params): array
     {
+        // Set type
+        $type = $params['type'];
+        unset($params['type']);
+
         // Set context
         $setting = $authorization['company']['setting'] ?? [];
 
