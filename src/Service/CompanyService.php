@@ -4,6 +4,7 @@ namespace Company\Service;
 
 use Company\Repository\CompanyRepositoryInterface;
 use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Math\Rand;
 use Notification\Service\NotificationService;
 use User\Service\AccountService;
 use User\Service\CacheService;
@@ -201,7 +202,7 @@ class CompanyService implements ServiceInterface
     {
         // Set company params
         $addParams = [
-            'title'            => $account['company'] ?? sprintf('%s company', $account['name']),
+            'title'            => $account['company'] ?? sprintf('%s company', Rand::getString('8', 'abcdefghijklmnopqrstuvwxyz0123456789')),
             'user_id'          => $account['id'],
             'time_create'      => time(),
             'time_update'      => time(),

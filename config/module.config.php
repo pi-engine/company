@@ -70,7 +70,6 @@ return [
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Authentication\CheckHandler::class
                                         ),
@@ -91,7 +90,6 @@ return [
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Authentication\ListHandler::class
                                         ),
