@@ -188,8 +188,11 @@ class CompanyService implements ServiceInterface
             $result['data']['is_admin'] = 1;
         }
 
-        // Update cache
+        // Update user cache
         $this->cacheService->setUser($account['id'], ['authorization' => $result['data']]);
+
+        // Set company cache
+        $this->cacheService->setItem(sprintf('company-%s', $result['data']['company_id']), $result['data']['company']);
 
         return $result;
     }
@@ -254,14 +257,19 @@ class CompanyService implements ServiceInterface
     public function addCompany($params): array
     {
         $company = $this->companyRepository->addCompany($params);
-        return $this->canonizeCompany($company);
+        $company =  $this->canonizeCompany($company);
+
+        // Set company cache
+        $this->cacheService->setItem(sprintf('company-%s', $company['id']), $company);
+
+        return $company;
     }
 
     public function getCompany(int $companyId): array
     {
         $where  = ['id' => $companyId];
-        $member = $this->companyRepository->getCompany($where);
-        return $this->canonizeCompany($member);
+        $company = $this->companyRepository->getCompany($where);
+        return $this->canonizeCompany($company);
     }
 
     public function updateCompany($authorization, $params): array
@@ -284,6 +292,10 @@ class CompanyService implements ServiceInterface
 
         // Update company
         $this->companyRepository->updateCompany((int)$authorization['company_id'], $profileParams);
+
+        // Set company cache
+        $company = $this->getCompany((int)$authorization['company_id']);
+        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
 
         // Set result
         return [
@@ -365,6 +377,10 @@ class CompanyService implements ServiceInterface
 
         // Update company
         $this->companyRepository->updateCompany((int)$authorization['company_id'], $profileParams);
+
+        // Set company cache
+        $company = $this->getCompany((int)$authorization['company_id']);
+        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
 
         // Set result
         return [
