@@ -6,25 +6,29 @@ use Company\Repository\CompanyRepositoryInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Notification\Service\NotificationService;
 use User\Service\AccountService;
+use User\Service\CacheService;
 use User\Service\RoleService;
 use User\Service\UtilityService;
 
 class CompanyService implements ServiceInterface
 {
+    /** @var CompanyRepositoryInterface */
+    protected CompanyRepositoryInterface $companyRepository;
+
     /** @var AccountService */
     protected AccountService $accountService;
 
     /* @var RoleService */
     protected RoleService $roleService;
 
+    /* @var CacheService */
+    protected CacheService $cacheService;
+
     /** @var UtilityService */
     protected UtilityService $utilityService;
 
     /** @var NotificationService */
     protected NotificationService $notificationService;
-
-    /** @var CompanyRepositoryInterface */
-    protected CompanyRepositoryInterface $companyRepository;
 
     /* @var array */
     protected array $config;
@@ -65,6 +69,7 @@ class CompanyService implements ServiceInterface
         CompanyRepositoryInterface $companyRepository,
         AccountService $accountService,
         RoleService $roleService,
+        CacheService $cacheService,
         NotificationService $notificationService,
         UtilityService $utilityService,
         $config
@@ -72,6 +77,7 @@ class CompanyService implements ServiceInterface
         $this->companyRepository   = $companyRepository;
         $this->accountService      = $accountService;
         $this->roleService         = $roleService;
+        $this->cacheService        = $cacheService;
         $this->notificationService = $notificationService;
         $this->utilityService      = $utilityService;
         $this->config              = $config;
@@ -181,6 +187,9 @@ class CompanyService implements ServiceInterface
         ) {
             $result['data']['is_admin'] = 1;
         }
+
+        // Update cache
+        $this->cacheService->setUser($account['id'], ['authorization' => $result['data']]);
 
         return $result;
     }
