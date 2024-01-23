@@ -317,7 +317,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'profile',
                                         'handler'     => 'context',
-                                        'permissions' => 'company-profile-update',
+                                        'permissions' => 'company-profile-context',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             SecurityMiddleware::class,
@@ -341,7 +341,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'profile',
                                         'handler'     => 'setting',
-                                        'permissions' => 'company-profile-update',
+                                        'permissions' => 'company-profile-setting',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             SecurityMiddleware::class,

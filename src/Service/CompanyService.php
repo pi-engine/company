@@ -257,7 +257,7 @@ class CompanyService implements ServiceInterface
     public function addCompany($params): array
     {
         $company = $this->companyRepository->addCompany($params);
-        $company =  $this->canonizeCompany($company);
+        $company = $this->canonizeCompany($company);
 
         // Set company cache
         $this->cacheService->setItem(sprintf('company-%s', $company['id']), $company);
@@ -267,7 +267,7 @@ class CompanyService implements ServiceInterface
 
     public function getCompany(int $companyId): array
     {
-        $where  = ['id' => $companyId];
+        $where   = ['id' => $companyId];
         $company = $this->companyRepository->getCompany($where);
         return $this->canonizeCompany($company);
     }
@@ -332,8 +332,8 @@ class CompanyService implements ServiceInterface
 
                 // Update data
                 foreach ($params as $key => $value) {
-                    if (in_array($key, array_keys($this->wizardSteps))) {
-                        $setting['wizard']['steps'][$key] = $value;
+                    if (in_array($key, array_keys($this->wizardSteps)) && in_array($value, ['true', 'false'])) {
+                        $setting['wizard']['steps'][$key] = (bool)$value;
                     }
                 }
 
@@ -350,16 +350,20 @@ class CompanyService implements ServiceInterface
                         }
                     }
 
+                    // Update data
                     if (count($setting['wizard']['steps']) === $totalTrue) {
                         $setting['wizard']['is_completed'] = true;
                         $setting['wizard']['time_end']     = time();
+                    } else {
+                        $setting['wizard']['is_completed'] = false;
+                        $setting['wizard']['time_end']     = 0;
                     }
                 }
                 break;
 
             case 'general':
             case 'context':
-            case 'package':
+                //case 'package':
             default:
                 // Update data
                 foreach ($params as $key => $value) {
@@ -385,7 +389,10 @@ class CompanyService implements ServiceInterface
         // Set result
         return [
             'result' => true,
-            'data'   => ['message' => 'Context data updated successfully !',],
+            'data'   => [
+                'message' => 'Company data updated successfully !',
+                'company' => $company,
+            ],
             'error'  => [],
         ];
     }
