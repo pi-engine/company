@@ -75,8 +75,8 @@ class PackageMiddleware implements MiddlewareInterface
 
         // Check package time
         if (
-            !isset($authorization['setting']['package']['time_expire'])
-            || (int)$authorization['setting']['package']['time_expire'] < time()
+            !isset($authorization['company']['setting']['package']['time_expire'])
+            || (int)$authorization['company']['setting']['package']['time_expire'] < time()
         ) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
             $request = $request->withAttribute(
