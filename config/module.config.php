@@ -142,7 +142,6 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Member\ListHandler::class
                                         ),
@@ -274,7 +273,6 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\ViewHandler::class
                                         ),
@@ -298,7 +296,6 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\UpdateHandler::class
                                         ),
@@ -322,7 +319,6 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\ContextHandler::class
                                         ),
@@ -346,7 +342,6 @@ return [
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
-                                            PackageMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\SettingHandler::class
                                         ),
