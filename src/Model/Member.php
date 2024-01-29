@@ -38,13 +38,13 @@ class Member
         $this->time_create   = $time_create;
         $this->time_update   = $time_update;
         $this->status        = $status;
-        $this->is_default        = $is_default;
+        $this->is_default    = $is_default;
         $this->user_identity = $user_identity;
         $this->user_name     = $user_name;
         $this->user_email    = $user_email;
         $this->user_mobile   = $user_mobile;
-        $this->first_name   = $first_name;
-        $this->last_name   = $last_name;
+        $this->first_name    = $first_name;
+        $this->last_name     = $last_name;
         $this->id            = $id;
     }
 

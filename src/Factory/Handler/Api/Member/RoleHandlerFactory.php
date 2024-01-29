@@ -3,7 +3,6 @@
 namespace Company\Factory\Handler\Api\Member;
 
 use Company\Handler\Api\Member\RoleHandler;
-use Company\Handler\Api\Member\ViewHandler;
 use Company\Service\CompanyService;
 use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;

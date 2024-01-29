@@ -4,13 +4,13 @@ namespace Company\Model;
 
 class MemberCompany
 {
-    private mixed $id;
-    private int   $company_id;
-    private int   $user_id;
-    private int   $time_create;
-    private int   $time_update;
-    private int   $status;
-    private int   $is_default;
+    private mixed  $id;
+    private int    $company_id;
+    private int    $user_id;
+    private int    $time_create;
+    private int    $time_update;
+    private int    $status;
+    private int    $is_default;
     private string $title;
 
     public function __construct(
@@ -23,14 +23,14 @@ class MemberCompany
         $title,
         $id = null
     ) {
-        $this->company_id    = $company_id;
-        $this->user_id       = $user_id;
-        $this->time_create   = $time_create;
-        $this->time_update   = $time_update;
-        $this->status        = $status;
-        $this->is_default        = $is_default;
-        $this->title = $title;
-        $this->id            = $id;
+        $this->company_id  = $company_id;
+        $this->user_id     = $user_id;
+        $this->time_create = $time_create;
+        $this->time_update = $time_update;
+        $this->status      = $status;
+        $this->is_default  = $is_default;
+        $this->title       = $title;
+        $this->id          = $id;
     }
 
     /**

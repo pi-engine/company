@@ -9,21 +9,21 @@ class Inventory
     private string $text_description;
     private mixed  $setting;
     private int    $user_id;
-    private int $package_id;
+    private int    $package_id;
     private int    $reseller_id;
     private int    $industry_id;
     private int    $time_create;
     private int    $time_update;
-    private int $status;
-    private mixed $address_1;
-    private mixed $address_2;
-    private mixed $country;
-    private mixed $state;
-    private mixed $city;
-    private mixed $zip_code;
-    private mixed $phone;
-    private mixed $website;
-    private mixed $email;
+    private int    $status;
+    private mixed  $address_1;
+    private mixed  $address_2;
+    private mixed  $country;
+    private mixed  $state;
+    private mixed  $city;
+    private mixed  $zip_code;
+    private mixed  $phone;
+    private mixed  $website;
+    private mixed  $email;
 
     public function __construct(
         $title,
@@ -52,7 +52,7 @@ class Inventory
         $this->text_description = $text_description;
         $this->setting          = $setting;
         $this->user_id          = $user_id;
-        $this->package_id = $package_id;
+        $this->package_id       = $package_id;
         $this->reseller_id      = $reseller_id;
         $this->industry_id      = $industry_id;
         $this->time_create      = $time_create;

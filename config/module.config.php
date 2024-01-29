@@ -383,7 +383,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'list' => [
+                            'list'    => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/list',

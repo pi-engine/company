@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'api'   => [
+    'api' => [
         [
             'title'       => 'Company member list',
             'module'      => 'company',
