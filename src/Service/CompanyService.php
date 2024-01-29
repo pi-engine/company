@@ -610,6 +610,18 @@ class CompanyService implements ServiceInterface
         return $this->canonizePackage($package);
     }
 
+    public function getPackageList($params): array
+    {
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getPackageList($params);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizePackage($row);
+        }
+
+        return $list;
+    }
+
     public function canonizeCompany($company): array
     {
         if (empty($company)) {
@@ -667,6 +679,12 @@ class CompanyService implements ServiceInterface
         $company['hash']             = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
         $company['slug']             = hash('md5', $company['id']);
         $company['is_company_setup'] = $company['setting']['wizard']['is_completed'] ?? false;
+
+        if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
+            $company['setting']['package']['time_start_view']  = $this->utilityService->date($company['setting']['package']['time_start']);
+            $company['setting']['package']['time_renew_view']  = $this->utilityService->date($company['setting']['package']['time_renew']);
+            $company['setting']['package']['time_expire_view'] = $this->utilityService->date($company['setting']['package']['time_expire']);
+        }
 
         return $company;
     }

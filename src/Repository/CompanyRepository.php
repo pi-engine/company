@@ -433,4 +433,29 @@ class CompanyRepository implements CompanyRepositoryInterface
 
         return $package;
     }
+
+    public function getPackageList($params = []): HydratingResultSet
+    {
+        $where = [];
+        if (isset($params['state']) && !empty($params['state'])) {
+            $where['state'] = $params['state'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $where['id'] = $params['id'];
+        }
+
+        $sql       = new Sql($this->db);
+        $select    = $sql->select($this->tablePackage)->where($where);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            return [];
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->packagePrototype);
+        $resultSet->initialize($result);
+
+        return $resultSet;
+    }
 }

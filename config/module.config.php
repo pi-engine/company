@@ -35,6 +35,8 @@ return [
             Handler\Api\Profile\UpdateHandler::class        => Factory\Handler\Api\Profile\UpdateHandlerFactory::class,
             Handler\Api\Profile\ContextHandler::class       => Factory\Handler\Api\Profile\ContextHandlerFactory::class,
             Handler\Api\Profile\SettingHandler::class       => Factory\Handler\Api\Profile\SettingHandlerFactory::class,
+            Handler\Api\Package\CurrentHandler::class       => Factory\Handler\Api\Package\CurrentHandlerFactory::class,
+            Handler\Api\Package\ListHandler::class          => Factory\Handler\Api\Package\ListHandlerFactory::class,
             Handler\InstallerHandler::class                 => Factory\Handler\InstallerHandlerFactory::class,
         ],
     ],
@@ -344,6 +346,62 @@ return [
                                             CompanyMiddleware::class,
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Profile\SettingHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    // package section
+                    'package'        => [
+                        'type'         => Literal::class,
+                        'options'      => [
+                            'route'    => '/package',
+                            'defaults' => [],
+                        ],
+                        'child_routes' => [
+                            'current' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/current',
+                                    'defaults' => [
+                                        'title'       => 'Company package current',
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'package',
+                                        'handler'     => 'current',
+                                        'permissions' => 'company-package-current',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Package\CurrentHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'list' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'title'       => 'Company package list',
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'package',
+                                        'handler'     => 'list',
+                                        'permissions' => 'company-package-list',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Package\ListHandler::class
                                         ),
                                     ],
                                 ],

@@ -30,4 +30,6 @@ interface CompanyRepositoryInterface
     public function setDefault(int $userId, int $companyId): void;
 
     public function getPackage(array $params = []): array|Package;
+
+    public function getPackageList($params = []): HydratingResultSet;
 }
