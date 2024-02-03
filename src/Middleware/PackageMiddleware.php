@@ -51,7 +51,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'The selected package does not activate or exist!',
+                    'message' => 'Package unavailable or non-existent.',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
@@ -65,7 +65,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'Your selected service does not have true permissions!',
+                    'message' => 'Apologies, but the selected service lacks proper permissions.',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
@@ -82,10 +82,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => sprintf(
-                        'Your subscription time to use the %s package has ended, To upgrade your package please contact to system admin!',
-                        $package['title']
-                    ),
+                    'message' => 'Your subscription has ended.<br />Please upgrade your license on the License page.',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
@@ -100,7 +97,7 @@ class PackageMiddleware implements MiddlewareInterface
                 $request = $request->withAttribute(
                     'error',
                     [
-                        'message' => 'Your package does not have access to this area, To upgrade your package please contact to system admin!',
+                        'message' => 'Access denied.<br />Please upgrade your license on the License page.',
                         'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                         'type'    => 'package',
                     ]
