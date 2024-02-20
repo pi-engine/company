@@ -35,6 +35,9 @@ class CheckHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $authorization = $request->getAttribute('company_authorization');
+        if (isset($authorization['package_id']) && $authorization['package_id'] > 0) {
+            $authorization['package'] = $this->companyService->getPackage($authorization['package_id']);
+        }
 
         // Set result
         $result = [
