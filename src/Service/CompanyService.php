@@ -90,11 +90,13 @@ class CompanyService implements ServiceInterface
         $result = [
             'result' => true,
             'data'   => [
-                'user_id'    => $account['id'],
-                'company_id' => 0,
-                'package_id' => 0,
-                'project_id' => 0,
-                'user'       => $account,
+                'user_id'        => $account['id'],
+                'company_id'     => 0,
+                'package_id'     => 0,
+                'project_id'     => 0,
+                'user'           => $account,
+                'standard_count' => 1,
+                'user_count'  => 100,
             ],
             'error'  => [],
         ];
@@ -226,6 +228,7 @@ class CompanyService implements ServiceInterface
                     'time_renew'  => time(),
                     'time_expire' => strtotime($this->packageExpire),
                     'renew_count' => 1,
+                    'user_count'  => 100,
                 ],
             ]),
         ];
@@ -326,6 +329,7 @@ class CompanyService implements ServiceInterface
             'time_renew'  => time(),
             'time_expire' => strtotime($this->packageExpire),
             'renew_count' => 1,
+            'user_count'  => 100,
         ];
 
         switch ($type) {
