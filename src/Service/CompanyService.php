@@ -96,7 +96,7 @@ class CompanyService implements ServiceInterface
                 'project_id'     => 0,
                 'user'           => $account,
                 'standard_count' => 1,
-                'user_count'  => 100,
+                'user_count'     => 100,
             ],
             'error'  => [],
         ];
@@ -215,15 +215,16 @@ class CompanyService implements ServiceInterface
             'package_id'       => $this->packageId,
             'text_description' => '',
             'setting'          => json_encode([
-                'general' => [],
-                'context' => [],
-                'wizard'  => [
+                'analytic' => [],
+                'general'  => [],
+                'context'  => [],
+                'wizard'   => [
                     'is_completed' => false,
                     'time_start'   => time(),
                     'time_end'     => 0,
                     'steps'        => $this->wizardSteps,
                 ],
-                'package' => [
+                'package'  => [
                     'time_start'  => time(),
                     'time_renew'  => time(),
                     'time_expire' => strtotime($this->packageExpire),
@@ -321,10 +322,11 @@ class CompanyService implements ServiceInterface
         $setting = $authorization['company']['setting'] ?? [];
 
         // Set default params
-        $setting['general'] = $setting['general'] ?? [];
-        $setting['context'] = $setting['context'] ?? [];
-        $setting['wizard']  = $setting['wizard'] ?? [];
-        $setting['package'] = $setting['package'] ?? [
+        $setting['analytic'] = $setting['analytic'] ?? [];
+        $setting['general']  = $setting['general'] ?? [];
+        $setting['context']  = $setting['context'] ?? [];
+        $setting['wizard']   = $setting['wizard'] ?? [];
+        $setting['package']  = $setting['package'] ?? [
             'time_start'  => time(),
             'time_renew'  => time(),
             'time_expire' => strtotime($this->packageExpire),
@@ -366,6 +368,7 @@ class CompanyService implements ServiceInterface
                 }
                 break;
 
+            case 'analytic':
             case 'general':
             case 'context':
                 //case 'package':
@@ -683,6 +686,13 @@ class CompanyService implements ServiceInterface
         $company['hash']             = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
         $company['slug']             = hash('md5', $company['id']);
         $company['is_company_setup'] = $company['setting']['wizard']['is_completed'] ?? false;
+
+        // Set default params
+        $company['setting']['analytic'] = $company['setting']['analytic'] ?? [];
+        $company['setting']['general']  = $company['setting']['general'] ?? [];
+        $company['setting']['context']  = $company['setting']['context'] ?? [];
+        $company['setting']['wizard']   = $company['setting']['wizard'] ?? [];
+        $company['setting']['package']  = $company['setting']['package'] ?? [];
 
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
             $company['setting']['package']['time_start_view']  = $this->utilityService->date($company['setting']['package']['time_start']);
