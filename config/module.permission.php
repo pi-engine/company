@@ -1,6 +1,86 @@
 <?php
 
 return [
+    'admin' => [
+        [
+            'title'       => 'Company list',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'general',
+            'handler'     => 'list',
+            'permissions' => 'company-list',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company add',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'general',
+            'handler'     => 'add',
+            'permissions' => 'company-add',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company update',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'general',
+            'handler'     => 'update',
+            'permissions' => 'company-update',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company update time and status',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'general',
+            'handler'     => 'package',
+            'permissions' => 'company-time-status',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company package add',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'package',
+            'handler'     => 'add',
+            'permissions' => 'company-package-add',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company package update',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'package',
+            'handler'     => 'update',
+            'permissions' => 'company-package-update',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company package list',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'package',
+            'handler'     => 'list',
+            'permissions' => 'company-package-list',
+            'role'        => [
+                'admin',
+            ],
+        ],
+    ],
+
     'api' => [
         [
             'title'       => 'Company member list',

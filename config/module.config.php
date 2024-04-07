@@ -24,6 +24,13 @@ return [
             Middleware\CompanyMiddleware::class             => Factory\Middleware\CompanyMiddlewareFactory::class,
             Middleware\MemberAccessMiddleware::class        => Factory\Middleware\MemberAccessMiddlewareFactory::class,
             Middleware\PackageMiddleware::class             => Factory\Middleware\PackageMiddlewareFactory::class,
+            Handler\Admin\AddHandler::class                 => Factory\Handler\Admin\AddHandlerFactory::class,
+            Handler\Admin\UpdateHandler::class              => Factory\Handler\Admin\UpdateHandlerFactory::class,
+            Handler\Admin\ListHandler::class                => Factory\Handler\Admin\ListHandlerFactory::class,
+            Handler\Admin\PackageUpdateHandler::class       => Factory\Handler\Admin\PackageHandler::class,
+            Handler\Admin\Package\AddHandler::class         => Factory\Handler\Admin\Package\AddHandlerFactory::class,
+            Handler\Admin\Package\ListHandler::class        => Factory\Handler\Admin\Package\ListHandlerFactory::class,
+            Handler\Admin\Package\UpdateHandler::class      => Factory\Handler\Admin\Package\UpdateHandlerFactory::class,
             Handler\Api\Authentication\CheckHandler::class  => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
             Handler\Api\Authentication\ListHandler::class   => Factory\Handler\Api\Authentication\ListHandlerFactory::class,
             Handler\Api\Authentication\SwitchHandler::class => Factory\Handler\Api\Authentication\SwitchHandlerFactory::class,
@@ -418,9 +425,167 @@ return [
                     'defaults' => [],
                 ],
                 'child_routes' => [
+                    // Admin general section
+                    'list'           => [
+                        'type'    => Literal::class,
+                        'options' => [
+                            'route'    => '/list',
+                            'defaults' => [
+                                'title'       => 'Company list',
+                                'module'      => 'company',
+                                'section'     => 'admin',
+                                'package'     => 'general',
+                                'handler'     => 'list',
+                                'permissions' => 'company-list',
+                                'controller'  => PipeSpec::class,
+                                'middleware'  => new PipeSpec(
+                                    SecurityMiddleware::class,
+                                    AuthenticationMiddleware::class,
+                                    AuthorizationMiddleware::class,
+                                    Handler\Admin\ListHandler::class
+                                ),
+                            ],
+                        ],
+                    ],
+                    'add'            => [
+                        'type'    => Literal::class,
+                        'options' => [
+                            'route'    => '/add',
+                            'defaults' => [
+                                'title'       => 'Company add',
+                                'module'      => 'company',
+                                'section'     => 'admin',
+                                'package'     => 'general',
+                                'handler'     => 'add',
+                                'permissions' => 'company-add',
+                                'controller'  => PipeSpec::class,
+                                'middleware'  => new PipeSpec(
+                                    SecurityMiddleware::class,
+                                    AuthenticationMiddleware::class,
+                                    AuthorizationMiddleware::class,
+                                    Handler\Admin\AddHandler::class
+                                ),
+                            ],
+                        ],
+                    ],
+                    'update'         => [
+                        'type'    => Literal::class,
+                        'options' => [
+                            'route'    => '/update',
+                            'defaults' => [
+                                'title'       => 'Company update',
+                                'module'      => 'company',
+                                'section'     => 'admin',
+                                'package'     => 'general',
+                                'handler'     => 'update',
+                                'permissions' => 'company-update',
+                                'controller'  => PipeSpec::class,
+                                'middleware'  => new PipeSpec(
+                                    SecurityMiddleware::class,
+                                    AuthenticationMiddleware::class,
+                                    AuthorizationMiddleware::class,
+                                    Handler\Admin\UpdateHandler::class
+                                ),
+                            ],
+                        ],
+                    ],
+                    'package-update' => [
+                        'type'    => Literal::class,
+                        'options' => [
+                            'route'    => '/package-update',
+                            'defaults' => [
+                                'title'       => 'Company update time and status',
+                                'module'      => 'company',
+                                'section'     => 'admin',
+                                'package'     => 'general',
+                                'handler'     => 'package',
+                                'permissions' => 'company-time-status',
+                                'controller'  => PipeSpec::class,
+                                'middleware'  => new PipeSpec(
+                                    SecurityMiddleware::class,
+                                    AuthenticationMiddleware::class,
+                                    AuthorizationMiddleware::class,
+                                    Handler\Admin\PackageUpdateHandler::class
+                                ),
+                            ],
+                        ],
+                    ],
+                    // Admin package section
+                    'package'        => [
+                        'type'         => Literal::class,
+                        'options'      => [
+                            'route'    => '/package',
+                            'defaults' => [],
+                        ],
+                        'child_routes' => [
+                            'add'    => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/add',
+                                    'defaults' => [
+                                        'title'       => 'Company package add',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'package',
+                                        'handler'     => 'add',
+                                        'permissions' => 'company-package-add',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Package\AddHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'update' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/update',
+                                    'defaults' => [
+                                        'title'       => 'Company package update',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'package',
+                                        'handler'     => 'update',
+                                        'permissions' => 'company-package-update',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Package\UpdateHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'list'   => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'title'       => 'Company package list',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'package',
+                                        'handler'     => 'list',
+                                        'permissions' => 'company-package-list',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Package\ListHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
 
+                        ],
+                    ],
                     // Admin installer
-                    'installer' => [
+                    'installer'      => [
                         'type'    => Literal::class,
                         'options' => [
                             'route'    => '/installer',
