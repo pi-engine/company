@@ -405,6 +405,116 @@ class CompanyService implements ServiceInterface
         ];
     }
 
+    public function updateCompanyByAdmin($company, $type, $params): array
+    {
+        // Set context
+        $setting = $company['setting'] ?? [];
+
+        // Set default params
+        $setting['analytic'] = $setting['analytic'] ?? [];
+        $setting['general']  = $setting['general'] ?? [];
+        $setting['context']  = $setting['context'] ?? [];
+        $setting['wizard']   = $setting['wizard'] ?? [];
+        $setting['package']  = $setting['package'] ?? [
+            'time_start'  => time(),
+            'time_renew'  => time(),
+            'time_expire' => strtotime($this->packageExpire),
+            'renew_count' => 1,
+            'user_count'  => 100,
+        ];
+
+        switch ($type) {
+            case 'wizard':
+
+                // Update data
+                foreach ($params as $key => $value) {
+                    if (in_array($key, array_keys($this->wizardSteps)) && in_array($value, ['true', 'false'])) {
+                        $setting['wizard']['steps'][$key] = (bool)$value;
+                    }
+                }
+
+                // update wizard
+                if (isset($setting['wizard']['steps'])
+                    && is_array($setting['wizard']['steps'])
+                    && !empty($setting['wizard']['steps'])
+                    && $setting['wizard']['is_completed'] === false
+                ) {
+                    $totalTrue = 0;
+                    foreach ($setting['wizard']['steps'] as $step) {
+                        if ($step === true) {
+                            $totalTrue = $totalTrue + 1;
+                        }
+                    }
+
+                    // Update data
+                    if (count($setting['wizard']['steps']) === $totalTrue) {
+                        $setting['wizard']['is_completed'] = true;
+                        $setting['wizard']['time_end']     = time();
+                    } else {
+                        $setting['wizard']['is_completed'] = false;
+                        $setting['wizard']['time_end']     = 0;
+                    }
+                }
+                break;
+
+            case 'package':
+                $setting['package']['time_expire'] = $params['package_expire']
+                    ? strtotime(sprintf('%s 23:59:59', $params['package_expire']))
+                    : strtotime(
+                        $this->packageExpire
+                    );
+                $setting['package']['renew_count'] = $setting['package']['renew_count'] + 1;
+                break;
+
+            case 'analytic':
+            case 'general':
+            case 'context':
+            default:
+                // Update data
+                foreach ($params as $key => $value) {
+                    $setting[$type][$key] = $value;
+                }
+                break;
+        }
+
+        // Set update update
+        $companyParams
+            = [
+            'time_update' => time(),
+            'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
+        ];
+
+        // Update params
+        foreach ($params as $key => $value) {
+            if (in_array($key, $this->profileFields)) {
+                if (is_numeric($value)) {
+                    $profileParams[$key] = (int)$value;
+                } elseif (is_string($value)) {
+                    $profileParams[$key] = $value;
+                } elseif (empty($value)) {
+                    $profileParams[$key] = null;
+                }
+            }
+        }
+
+        // Update company
+        $this->companyRepository->updateCompany((int)$company['id'], $companyParams);
+
+        // Set company cache
+        $company = $this->getCompany((int)$company['id']);
+        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Company data updated successfully !',
+                'company' => $company,
+            ],
+            'error'  => [],
+        ];
+    }
+
     public function getCompanyListByUser(int $userId): array
     {
         // Get list
@@ -505,7 +615,7 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function addMember($params): array
+    public function addMember($authorization, $params): array
     {
         // Add or Get account
         $account = $this->accountService->addOrGetAccount($params);
@@ -543,6 +653,37 @@ class CompanyService implements ServiceInterface
         foreach ($roles as $role) {
             $this->roleService->addRoleAccount($account, $role);
         }
+
+        // Check admin for a cache
+        $isAdmin = 0;
+        if (in_array($this->companyAdminRole, $roles)
+            || in_array($this->companyManagerRole, $roles)
+        ) {
+            $isAdmin = 1;
+        }
+
+        // Set company setup
+        $account['is_company_setup'] = true;
+
+        // Set/Update user data to cache
+        $this->cacheService->setUser($account['id'], [
+            'account'       => $account,
+            'roles'         => $roles,
+            'authorization' => [
+                'user_id'        => (int)$account['id'],
+                'company_id'     => $authorization['company']['id'],
+                'package_id'     => $authorization['package_id'],
+                'project_id'     => $authorization['project_id'],
+                'user'           => $account,
+                'standard_count' => $authorization['standard_count'],
+                'user_count'     => $authorization['user_count'],
+                'member'         => $member,
+                'company'        => $authorization['company'],
+                'roles'          => $roles,
+                'is_admin'       => $isAdmin,
+                'package'        => $authorization['package'] ?? [],
+            ],
+        ]);
 
         return [
             'result' => true,

@@ -48,7 +48,7 @@ class AddHandler implements RequestHandlerInterface
         ];
 
         // Set result
-        $result = $this->companyService->addMember($params);
+        $result = $this->companyService->addMember($authorization, $params);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

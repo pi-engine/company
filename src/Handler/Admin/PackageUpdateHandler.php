@@ -34,11 +34,9 @@ class PackageUpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $result      = [
-            'result' => true,
-            'data'   => [],
-            'error'  => [],
-        ];
+        $requestBody = $request->getParsedBody();
+        $company     = $this->companyService->getCompany($requestBody['company_id']);
+        $result      = $this->companyService->updateCompanyByAdmin($company, 'package', $requestBody);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
