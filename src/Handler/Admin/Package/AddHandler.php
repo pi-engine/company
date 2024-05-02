@@ -34,7 +34,7 @@ class AddHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $result      = [
+        $result = [
             'result' => true,
             'data'   => [],
             'error'  => [],
