@@ -37,8 +37,8 @@ class SwitchHandler implements RequestHandlerInterface
         $account     = $request->getAttribute('account');
         $requestBody = $request->getParsedBody();
 
+        // Switch
         $result = $this->companyService->switchCompany((int)$account['id'], (int)$requestBody['company_id']);
-
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
