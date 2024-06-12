@@ -1,4 +1,4 @@
-CREATE TABLE `company_inventory`
+CREATE TABLE IF NOT EXISTS `company_inventory`
 (
     `id`               INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
     `title`            VARCHAR(255)        NOT NULL DEFAULT '',
@@ -23,7 +23,7 @@ CREATE TABLE `company_inventory`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `company_member`
+CREATE TABLE IF NOT EXISTS `company_member`
 (
     `id`          INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
     `company_id`  INT(10) UNSIGNED    NOT NULL DEFAULT '0',
@@ -37,7 +37,7 @@ CREATE TABLE `company_member`
     KEY `list` (`company_id`, `status`)
 );
 
-CREATE TABLE `company_package`
+CREATE TABLE IF NOT EXISTS `company_package`
 (
     `id`          INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
     `title`       VARCHAR(255)        NOT NULL DEFAULT '',
