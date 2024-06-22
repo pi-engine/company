@@ -91,11 +91,7 @@ return [
             'permissions' => 'company-member-list',
             'role'        => [
                 'companyadmin',
-                'companymanager',
-                'companyaudit',
-                'companymember',
-                'companyexternal',
-                'companyviewer',
+                'companysuperuser',
             ],
         ],
         [
@@ -107,7 +103,7 @@ return [
             'permissions' => 'company-member-add',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -119,7 +115,7 @@ return [
             'permissions' => 'company-member-view',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -131,7 +127,7 @@ return [
             'permissions' => 'company-member-update',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -143,7 +139,7 @@ return [
             'permissions' => 'company-member-role',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -155,7 +151,8 @@ return [
             'permissions' => 'company-profile-view',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
+                'member',
             ],
         ],
         [
@@ -167,7 +164,7 @@ return [
             'permissions' => 'company-profile-update',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -179,7 +176,7 @@ return [
             'permissions' => 'company-profile-context',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -191,7 +188,7 @@ return [
             'permissions' => 'company-profile-setting',
             'role'        => [
                 'companyadmin',
-                'companymanager',
+                'companysuperuser',
             ],
         ],
         [
@@ -203,11 +200,8 @@ return [
             'permissions' => 'company-package-current',
             'role'        => [
                 'companyadmin',
-                'companymanager',
-                'companyaudit',
-                'companymember',
-                'companyexternal',
-                'companyviewer',
+                'companysuperuser',
+                'member',
             ],
         ],
         [
@@ -219,11 +213,8 @@ return [
             'permissions' => 'company-package-list',
             'role'        => [
                 'companyadmin',
-                'companymanager',
-                'companyaudit',
-                'companymember',
-                'companyexternal',
-                'companyviewer',
+                'companysuperuser',
+                'member',
             ],
         ],
     ],

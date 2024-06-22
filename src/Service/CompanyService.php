@@ -34,17 +34,22 @@ class CompanyService implements ServiceInterface
     /* @var array */
     protected array $config;
 
-    public string $companyViewerRole   = 'companyviewer';
-    public string $companyMemberRole   = 'companymember';
-    public string $companyExternalRole = 'companyexternal';
-    public string $companyAuditRole    = 'companyaudit';
-    public string $companyManagerRole  = 'companymanager';
-    public string $companyAdminRole    = 'companyadmin';
-    public int    $industryId          = 1;
-    public int    $packageId           = 1;
-    public string $packageExpire       = '+2 weeks';
+    public string $companyAdminRole             = 'companyadmin';
+    public string $companySuperUserRole         = 'companysuperuser';
+    public string $companyAssessmentManagerRole = 'companyassessmentmanager';
+    public string $companyComplianceManagerRole = 'companycompliancemanager';
+    public string $companyRiskManagerRole       = 'companyriskmanager';
+    public string $companyAuditManagerRole      = 'companyauditmanager';
+    public string $companyComplianceOfficerRole = 'companycomplianceofficer';
+    public string $companyAuditorRole           = 'companyauditor';
+    public string $companyMemberRole            = 'companymember';
+    public string $companyExternalRole          = 'companyexternal';
+    public string $companyViewerRole            = 'companyviewer';
+    public int    $industryId                   = 1;
+    public int    $packageId                    = 1;
+    public string $packageExpire                = '+4 weeks';
     public array  $wizardSteps
-                                       = [
+                                                = [
             'user_profile'    => false,
             'company_profile' => false,
             'voucher'         => false,
@@ -186,7 +191,7 @@ class CompanyService implements ServiceInterface
         // Check admin access
         $result['data']['is_admin'] = 0;
         if (in_array($this->companyAdminRole, $result['data']['roles'])
-            || in_array($this->companyManagerRole, $result['data']['roles'])
+            || in_array($this->companySuperUserRole, $result['data']['roles'])
         ) {
             $result['data']['is_admin'] = 1;
         }
@@ -657,7 +662,7 @@ class CompanyService implements ServiceInterface
         // Check admin for a cache
         $isAdmin = 0;
         if (in_array($this->companyAdminRole, $roles)
-            || in_array($this->companyManagerRole, $roles)
+            || in_array($this->companySuperUserRole, $roles)
         ) {
             $isAdmin = 1;
         }

@@ -39,28 +39,48 @@ class RoleHandler implements RequestHandlerInterface
             'result' => true,
             'data'   => [
                 [
-                    'key'   => $this->companyService->companyViewerRole,
-                    'value' => 'Viewer',
+                    'key'   => $this->companyService->companyAdminRole,
+                    'value' => 'Full Admin',
                 ],
                 [
-                    'key'   => $this->companyService->companyMemberRole,
-                    'value' => 'User (Internal)',
+                    'key'   => $this->companyService->companySuperUserRole,
+                    'value' => 'Super User',
                 ],
                 [
-                    'key'   => $this->companyService->companyExternalRole,
-                    'value' => 'User (External)',
+                    'key'   => $this->companyService->companyAssessmentManagerRole,
+                    'value' => 'Assessment Manager',
                 ],
                 [
-                    'key'   => $this->companyService->companyAuditRole,
+                    'key'   => $this->companyService->companyComplianceManagerRole,
+                    'value' => 'Compliance Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyRiskManagerRole,
+                    'value' => 'Risk Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyAuditManagerRole,
+                    'value' => 'Audit Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyComplianceOfficerRole,
+                    'value' => 'Compliance Officer',
+                ],
+                [
+                    'key'   => $this->companyService->companyAuditorRole,
                     'value' => 'Auditor',
                 ],
                 [
-                    'key'   => $this->companyService->companyManagerRole,
-                    'value' => 'Manager',
+                    'key'   => $this->companyService->companyMemberRole,
+                    'value' => 'Internal Member',
                 ],
                 [
-                    'key'   => $this->companyService->companyAdminRole,
-                    'value' => 'Full Admin',
+                    'key'   => $this->companyService->companyExternalRole,
+                    'value' => 'External Member',
+                ],
+                [
+                    'key'   => $this->companyService->companyViewerRole,
+                    'value' => 'Viewer',
                 ],
             ],
             'error'  => [],
