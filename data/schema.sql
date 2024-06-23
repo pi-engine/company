@@ -60,6 +60,6 @@ CREATE TABLE IF NOT EXISTS `company_package`
 (9, 'companycomplianceofficer', 'Compliance Officer', 'api', 1),
 (10, 'companyauditor', 'Auditor', 'api', 1),
 (11, 'companymember', 'Team Member', 'api', 1),
-(12, 'companyvewer', 'Vewer', 'api', 1),
+(12, 'companyviewer', 'Vewer', 'api', 1),
 (13, 'companyexternal', 'External Member', 'api', 1);
  */
