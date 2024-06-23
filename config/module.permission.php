@@ -92,6 +92,7 @@ return [
             'role'        => [
                 'companyadmin',
                 'companysuperuser',
+                'member',
             ],
         ],
         [
