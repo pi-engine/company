@@ -464,7 +464,7 @@ class CompanyService implements ServiceInterface
 
             case 'package':
                 $setting['package']['time_expire'] = $params['package_expire']
-                    ? strtotime(sprintf('%s 23:59:59', $params['package_expire']))
+                    ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
                     : strtotime(
                         $this->packageExpire
                     );
