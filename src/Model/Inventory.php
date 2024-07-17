@@ -24,6 +24,11 @@ class Inventory
     private mixed  $phone;
     private mixed  $website;
     private mixed  $email;
+    private mixed $user_identity;
+    private mixed $user_name;
+    private mixed $user_email;
+    private mixed $user_mobile;
+    private mixed $package_title;
 
     public function __construct(
         $title,
@@ -45,7 +50,11 @@ class Inventory
         $phone,
         $website,
         $email,
-
+        $user_identity = null,
+        $user_name = null,
+        $user_email = null,
+        $user_mobile = null,
+        $package_title = null,
         $id = null
     ) {
         $this->title            = $title;
@@ -67,6 +76,11 @@ class Inventory
         $this->phone            = $phone;
         $this->website          = $website;
         $this->email            = $email;
+        $this->user_identity = $user_identity;
+        $this->user_name     = $user_name;
+        $this->user_email    = $user_email;
+        $this->user_mobile   = $user_mobile;
+        $this->package_title    = $package_title;
         $this->id               = $id;
     }
 
@@ -213,5 +227,30 @@ class Inventory
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function getUserIdentity(): ?string
+    {
+        return $this->user_identity;
+    }
+
+    public function getUserName(): ?string
+    {
+        return $this->user_name;
+    }
+
+    public function getUserEmail(): ?string
+    {
+        return $this->user_email;
+    }
+
+    public function getUserMobile(): ?string
+    {
+        return $this->user_mobile;
+    }
+
+    public function getPackageTitle(): ?string
+    {
+        return $this->package_title;
     }
 }

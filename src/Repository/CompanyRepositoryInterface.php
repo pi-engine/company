@@ -15,6 +15,8 @@ interface CompanyRepositoryInterface
 
     public function updateCompany(int $companyId, array $params = []): void;
 
+    public function getCompanyList($params = []): HydratingResultSet;
+
     public function getMember(array $params = []): array|Member;
 
     public function getMemberList($params = []): HydratingResultSet;

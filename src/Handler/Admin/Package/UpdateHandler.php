@@ -34,9 +34,11 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $requestBody = $request->getParsedBody();
+
         $result = [
             'result' => true,
-            'data'   => [],
+            'data'   => $requestBody,
             'error'  => [],
         ];
 

@@ -282,6 +282,18 @@ class CompanyService implements ServiceInterface
         return $this->canonizeCompany($company);
     }
 
+    public function getCompanyList($params): array
+    {
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getCompanyList($params);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizeCompany($row);
+        }
+
+        return $list;
+    }
+
     public function updateCompany($authorization, $params): array
     {
         $profileParams = [];
@@ -803,6 +815,11 @@ class CompanyService implements ServiceInterface
                 'phone'            => $company->getPhone(),
                 'website'          => $company->getWebsite(),
                 'email'            => $company->getEmail(),
+                'user_identity'    => $company->getUserIdentity(),
+                'user_name'        => $company->getUserName(),
+                'user_email'       => $company->getUserEmail(),
+                'user_mobile'      => $company->getUserMobile(),
+                'package_title'    => $company->getPackageTitle(),
             ];
         } else {
             $company = [
@@ -825,6 +842,10 @@ class CompanyService implements ServiceInterface
                 'phone'            => $company['phone'],
                 'website'          => $company['website'],
                 'email'            => $company['email'],
+                'user_name'        => $company['user_name'],
+                'user_email'       => $company['user_email'],
+                'user_mobile'      => $company['user_mobile'],
+                'package_title'    => $company['package_title'],
             ];
         }
 

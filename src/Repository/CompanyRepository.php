@@ -128,6 +128,52 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $this->getCompany(['id' => $id]);
     }
 
+    public function getCompanyList($params = []): HydratingResultSet
+    {
+        $where = [];
+        if (isset($params['state']) && !empty($params['state'])) {
+            $where['state'] = $params['state'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $where['id'] = $params['id'];
+        }
+
+        $sql    = new Sql($this->db);
+        $from   = ['company' => $this->tableInventory];
+        $select = $sql->select()->from($from)->where($where);
+        $select->join(
+            ['account' => $this->tableAccount],
+            'company.user_id=account.id',
+            [
+                'user_identity' => 'identity',
+                'user_name'     => 'name',
+                'user_email'    => 'email',
+                'user_mobile'   => 'mobile',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $select->join(
+            ['package' => $this->tablePackage],
+            'company.package_id=package.id',
+            [
+                'package_title' => 'title',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            return [];
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->inventoryPrototype);
+        $resultSet->initialize($result);
+
+        return $resultSet;
+    }
+
     public function updateCompany(int $companyId, array $params = []): void
     {
         $update = new Update($this->tableInventory);
