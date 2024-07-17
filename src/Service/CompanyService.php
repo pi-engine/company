@@ -71,6 +71,25 @@ class CompanyService implements ServiceInterface
             'email',
         ];
 
+    protected array $profileAdminFields
+        = [
+            'title',
+            'text_description',
+            'package_id',
+            'reseller_id',
+            'industry_id',
+            'status',
+            'address_1',
+            'address_2',
+            'country',
+            'state',
+            'city',
+            'zip_code',
+            'phone',
+            'website',
+            'email',
+        ];
+
     public function __construct(
         CompanyRepositoryInterface $companyRepository,
         AccountService $accountService,
@@ -422,88 +441,16 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function updateCompanyByAdmin($company, $type, $params): array
+    public function updateCompanyByAdmin($company, $params, $type = null): array
     {
-        // Set context
-        $setting = $company['setting'] ?? [];
-
-        // Set default params
-        $setting['analytic'] = $setting['analytic'] ?? [];
-        $setting['general']  = $setting['general'] ?? [];
-        $setting['context']  = $setting['context'] ?? [];
-        $setting['wizard']   = $setting['wizard'] ?? [];
-        $setting['package']  = $setting['package'] ?? [
-            'time_start'  => time(),
-            'time_renew'  => time(),
-            'time_expire' => strtotime($this->packageExpire),
-            'renew_count' => 1,
-            'user_count'  => 100,
-        ];
-
-        switch ($type) {
-            case 'wizard':
-
-                // Update data
-                foreach ($params as $key => $value) {
-                    if (in_array($key, array_keys($this->wizardSteps)) && in_array($value, ['true', 'false'])) {
-                        $setting['wizard']['steps'][$key] = (bool)$value;
-                    }
-                }
-
-                // update wizard
-                if (isset($setting['wizard']['steps'])
-                    && is_array($setting['wizard']['steps'])
-                    && !empty($setting['wizard']['steps'])
-                    && $setting['wizard']['is_completed'] === false
-                ) {
-                    $totalTrue = 0;
-                    foreach ($setting['wizard']['steps'] as $step) {
-                        if ($step === true) {
-                            $totalTrue = $totalTrue + 1;
-                        }
-                    }
-
-                    // Update data
-                    if (count($setting['wizard']['steps']) === $totalTrue) {
-                        $setting['wizard']['is_completed'] = true;
-                        $setting['wizard']['time_end']     = time();
-                    } else {
-                        $setting['wizard']['is_completed'] = false;
-                        $setting['wizard']['time_end']     = 0;
-                    }
-                }
-                break;
-
-            case 'package':
-                $setting['package']['time_expire'] = $params['package_expire']
-                    ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
-                    : strtotime(
-                        $this->packageExpire
-                    );
-                $setting['package']['renew_count'] = $setting['package']['renew_count'] + 1;
-                break;
-
-            case 'analytic':
-            case 'general':
-            case 'context':
-            default:
-                // Update data
-                foreach ($params as $key => $value) {
-                    $setting[$type][$key] = $value;
-                }
-                break;
-        }
-
         // Set update update
-        $companyParams
-            = [
+        $companyParams = [
             'time_update' => time(),
-            'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
         ];
 
         // Update params
         foreach ($params as $key => $value) {
-            if (in_array($key, $this->profileFields)) {
+            if (in_array($key, $this->profileAdminFields)) {
                 if (is_numeric($value)) {
                     $profileParams[$key] = (int)$value;
                 } elseif (is_string($value)) {
@@ -512,6 +459,77 @@ class CompanyService implements ServiceInterface
                     $profileParams[$key] = null;
                 }
             }
+        }
+
+        if (!is_null($type)) {
+            // Set context
+            $setting = $company['setting'] ?? [];
+
+            // Set default params
+            $setting['analytic'] = $setting['analytic'] ?? [];
+            $setting['general']  = $setting['general'] ?? [];
+            $setting['context']  = $setting['context'] ?? [];
+            $setting['wizard']   = $setting['wizard'] ?? [];
+            $setting['package']  = $setting['package'] ?? [
+                'time_start'  => time(),
+                'time_renew'  => time(),
+                'time_expire' => strtotime($this->packageExpire),
+                'renew_count' => 1,
+                'user_count'  => 100,
+            ];
+
+            switch ($type) {
+                case 'wizard':
+
+                    // Update data
+                    foreach ($params as $key => $value) {
+                        if (in_array($key, array_keys($this->wizardSteps)) && in_array($value, ['true', 'false'])) {
+                            $setting['wizard']['steps'][$key] = (bool)$value;
+                        }
+                    }
+
+                    // update wizard
+                    if (isset($setting['wizard']['steps'])
+                        && is_array($setting['wizard']['steps'])
+                        && !empty($setting['wizard']['steps'])
+                        && $setting['wizard']['is_completed'] === false
+                    ) {
+                        $totalTrue = 0;
+                        foreach ($setting['wizard']['steps'] as $step) {
+                            if ($step === true) {
+                                $totalTrue = $totalTrue + 1;
+                            }
+                        }
+
+                        // Update data
+                        if (count($setting['wizard']['steps']) === $totalTrue) {
+                            $setting['wizard']['is_completed'] = true;
+                            $setting['wizard']['time_end']     = time();
+                        } else {
+                            $setting['wizard']['is_completed'] = false;
+                            $setting['wizard']['time_end']     = 0;
+                        }
+                    }
+                    break;
+                case 'package':
+                    $setting['package']['renew_count'] = $setting['package']['renew_count'] + 1;
+                    $setting['package']['time_expire'] = $params['package_expire']
+                        ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
+                        : strtotime($this->packageExpire);
+                    break;
+                case 'analytic':
+                case 'general':
+                case 'context':
+                default:
+                    // Update data
+                    foreach ($params as $key => $value) {
+                        $setting[$type][$key] = $value;
+                    }
+                    break;
+            }
+
+            // Set update
+            $companyParams['setting'] = json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
         }
 
         // Update company
