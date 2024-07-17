@@ -717,7 +717,7 @@ class CompanyService implements ServiceInterface
 
         // Manage role
         if (isset($params['roles']) && !empty($params['roles'])) {
-            $this->accountService->updateAccountRoles($params['roles'], $account, 'api', $authorization['member']);
+            $this->accountService->updateAccountRoles($params['roles'], $account, $authorization['member'], 'api');
         }
 
         return $account;
