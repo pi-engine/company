@@ -2,7 +2,6 @@ CREATE TABLE IF NOT EXISTS `company_inventory`
 (
     `id`               INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
     `title`            VARCHAR(255)        NOT NULL DEFAULT '',
-    `setting`          JSON,
     `text_description` TEXT,
     `user_id`          INT(10) UNSIGNED    NOT NULL DEFAULT '0',
     `package_id`       INT(10) UNSIGNED    NOT NULL DEFAULT '0',
@@ -20,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `company_inventory`
     `phone`            VARCHAR(16)                  DEFAULT NULL,
     `website`          VARCHAR(64)                  DEFAULT NULL,
     `email`            VARCHAR(64)                  DEFAULT NULL,
+    `setting`          JSON,
     PRIMARY KEY (`id`)
 );
 

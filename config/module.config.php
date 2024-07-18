@@ -11,6 +11,7 @@ use Logger\Middleware\LoggerRequestMiddleware;
 use User\Middleware\AuthenticationMiddleware;
 use User\Middleware\AuthorizationMiddleware;
 use User\Middleware\InstallerMiddleware;
+use User\Middleware\JsonToArrayMiddleware;
 use User\Middleware\SecurityMiddleware;
 
 return [
@@ -27,7 +28,7 @@ return [
             Handler\Admin\AddHandler::class                 => Factory\Handler\Admin\AddHandlerFactory::class,
             Handler\Admin\UpdateHandler::class              => Factory\Handler\Admin\UpdateHandlerFactory::class,
             Handler\Admin\ListHandler::class                => Factory\Handler\Admin\ListHandlerFactory::class,
-            Handler\Admin\PackageUpdateHandler::class       => Factory\Handler\Admin\PackageHandler::class,
+            Handler\Admin\PackageUpdateHandler::class       => Factory\Handler\Admin\PackageUpdateHandlerFactory::class,
             Handler\Admin\Package\AddHandler::class         => Factory\Handler\Admin\Package\AddHandlerFactory::class,
             Handler\Admin\Package\ListHandler::class        => Factory\Handler\Admin\Package\ListHandlerFactory::class,
             Handler\Admin\Package\UpdateHandler::class      => Factory\Handler\Admin\Package\UpdateHandlerFactory::class,
@@ -439,6 +440,7 @@ return [
                                 'permissions' => 'company-list',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
+                                    JsonToArrayMiddleware::class,
                                     SecurityMiddleware::class,
                                     AuthenticationMiddleware::class,
                                     AuthorizationMiddleware::class,
@@ -460,6 +462,7 @@ return [
                                 'permissions' => 'company-add',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
+                                    JsonToArrayMiddleware::class,
                                     SecurityMiddleware::class,
                                     AuthenticationMiddleware::class,
                                     AuthorizationMiddleware::class,
@@ -481,6 +484,7 @@ return [
                                 'permissions' => 'company-update',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
+                                    JsonToArrayMiddleware::class,
                                     SecurityMiddleware::class,
                                     AuthenticationMiddleware::class,
                                     AuthorizationMiddleware::class,
@@ -502,6 +506,7 @@ return [
                                 'permissions' => 'company-time-status',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
+                                    JsonToArrayMiddleware::class,
                                     SecurityMiddleware::class,
                                     AuthenticationMiddleware::class,
                                     AuthorizationMiddleware::class,
@@ -531,6 +536,7 @@ return [
                                         'permissions' => 'company-package-add',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
+                                            JsonToArrayMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
@@ -552,6 +558,7 @@ return [
                                         'permissions' => 'company-package-update',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
+                                            JsonToArrayMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,
@@ -573,6 +580,7 @@ return [
                                         'permissions' => 'company-package-list',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
+                                            JsonToArrayMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             AuthorizationMiddleware::class,

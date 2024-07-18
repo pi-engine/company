@@ -336,6 +336,7 @@ class CompanyService implements ServiceInterface
 
         // Set company cache
         $company = $this->getCompany((int)$authorization['company_id']);
+        $this->cacheService->deleteItem(sprintf('company-%s', (int)$company['id']));
         $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
 
         // Set result
@@ -417,8 +418,7 @@ class CompanyService implements ServiceInterface
         }
 
         // Set update update
-        $profileParams
-            = [
+        $profileParams = [
             'time_update' => time(),
             'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
         ];
@@ -452,11 +452,11 @@ class CompanyService implements ServiceInterface
         foreach ($params as $key => $value) {
             if (in_array($key, $this->profileAdminFields)) {
                 if (is_numeric($value)) {
-                    $profileParams[$key] = (int)$value;
+                    $companyParams[$key] = (int)$value;
                 } elseif (is_string($value)) {
-                    $profileParams[$key] = $value;
+                    $companyParams[$key] = $value;
                 } elseif (empty($value)) {
-                    $profileParams[$key] = null;
+                    $companyParams[$key] = null;
                 }
             }
         }
@@ -537,6 +537,7 @@ class CompanyService implements ServiceInterface
 
         // Set company cache
         $company = $this->getCompany((int)$company['id']);
+        $this->cacheService->deleteItem(sprintf('company-%s', (int)$company['id']));
         $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
 
         // Set result
@@ -815,7 +816,6 @@ class CompanyService implements ServiceInterface
             $company = [
                 'id'               => $company->getId(),
                 'title'            => $company->getTitle(),
-                'setting'          => $company->getSetting(),
                 'text_description' => $company->getTextDescription(),
                 'user_id'          => $company->getUserId(),
                 'package_id'       => $company->getPackageId(),
@@ -838,12 +838,12 @@ class CompanyService implements ServiceInterface
                 'user_email'       => $company->getUserEmail(),
                 'user_mobile'      => $company->getUserMobile(),
                 'package_title'    => $company->getPackageTitle(),
+                'setting'          => $company->getSetting(),
             ];
         } else {
             $company = [
                 'id'               => $company['id'],
                 'title'            => $company['title'],
-                'setting'          => $company['setting'],
                 'text_description' => $company['text_description'],
                 'user_id'          => $company['user_id'],
                 'package_id'       => $company['package_id'],
@@ -864,6 +864,7 @@ class CompanyService implements ServiceInterface
                 'user_email'       => $company['user_email'],
                 'user_mobile'      => $company['user_mobile'],
                 'package_title'    => $company['package_title'],
+                'setting'          => $company['setting'],
             ];
         }
 
