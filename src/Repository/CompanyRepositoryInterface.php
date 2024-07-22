@@ -17,6 +17,8 @@ interface CompanyRepositoryInterface
 
     public function getCompanyList($params = []): HydratingResultSet;
 
+    public function getCompanyCount($params = []): int;
+
     public function getMember(array $params = []): array|Member;
 
     public function getMemberList($params = []): HydratingResultSet;

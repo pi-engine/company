@@ -303,14 +303,61 @@ class CompanyService implements ServiceInterface
 
     public function getCompanyList($params): array
     {
+        $limit  = (int)($params['limit'] ?? 25);
+        $page   = (int)($params['page'] ?? 1);
+        $order  = $params['order'] ?? ['time_create DESC'];
+        $offset = ($page - 1) * $limit;
+
+        $listParams = [
+            'order'  => $order,
+            'offset' => $offset,
+            'limit'  => $limit,
+        ];
+        if (isset($params['title']) && !empty($params['title'])) {
+            $listParams['title'] = $params['title'];
+        }
+        if (isset($params['status']) && !empty($params['status'])) {
+            $listParams['status'] = $params['status'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $listParams['id'] = $params['id'];
+        } elseif (isset($params['id']) && empty($params['id'])) {
+            return [
+                'result' => true,
+                'data'   => [
+                    'list'      => [],
+                    'paginator' => [
+                        'count' => 0,
+                        'limit' => $limit,
+                        'page'  => $page,
+                    ],
+                ],
+                'error'  => [],
+            ];
+        }
+
         // Get list
         $list   = [];
-        $rowSet = $this->companyRepository->getCompanyList($params);
+        $rowSet = $this->companyRepository->getCompanyList($listParams);
         foreach ($rowSet as $row) {
             $list[] = $this->canonizeCompany($row);
         }
 
-        return $list;
+        // Get count
+        $count = $this->companyRepository->getCompanyCount($listParams);
+
+        return [
+            'result' => true,
+            'data'   => [
+                'list'      => $list,
+                'paginator' => [
+                    'count' => $count,
+                    'limit' => $limit,
+                    'page'  => $page,
+                ],
+            ],
+            'error'  => [],
+        ];
     }
 
     public function updateCompany($authorization, $params): array

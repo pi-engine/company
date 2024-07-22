@@ -131,11 +131,14 @@ class CompanyRepository implements CompanyRepositoryInterface
     public function getCompanyList($params = []): HydratingResultSet
     {
         $where = [];
+        if (isset($params['title']) && !empty($params['title'])) {
+            $where['company.title like ?'] = '%' . $params['title'] . '%';
+        }
         if (isset($params['state']) && !empty($params['state'])) {
-            $where['state'] = $params['state'];
+            $where['company.state'] = $params['state'];
         }
         if (isset($params['id']) && !empty($params['id'])) {
-            $where['id'] = $params['id'];
+            $where['company.id'] = $params['id'];
         }
 
         $sql    = new Sql($this->db);
@@ -160,6 +163,15 @@ class CompanyRepository implements CompanyRepositoryInterface
             ],
             $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
         );
+        if (isset($params['order']) && !empty($params['order'])) {
+            $select->order($params['order']);
+        }
+        if (isset($params['offset']) && !empty($params['offset'])) {
+            $select->offset($params['offset']);
+        }
+        if (isset($params['limit']) && !empty($params['limit'])) {
+            $select->limit($params['limit']);
+        }
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result    = $statement->execute();
@@ -172,6 +184,30 @@ class CompanyRepository implements CompanyRepositoryInterface
         $resultSet->initialize($result);
 
         return $resultSet;
+    }
+
+    public function getCompanyCount($params = []): int
+    {
+        // Set where
+        $columns = ['count' => new Expression('count(*)')];
+
+        $where = [];
+        if (isset($params['title']) && !empty($params['title'])) {
+            $where['title like ?'] = '%' . $params['title'] . '%';
+        }
+        if (isset($params['state']) && !empty($params['state'])) {
+            $where['state'] = $params['state'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $where['id'] = $params['id'];
+        }
+
+        $sql       = new Sql($this->db);
+        $select    = $sql->select($this->tableInventory)->columns($columns)->where($where);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $row       = $statement->execute()->current();
+
+        return (int)$row['count'];
     }
 
     public function updateCompany(int $companyId, array $params = []): void

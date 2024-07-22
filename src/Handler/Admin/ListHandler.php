@@ -35,13 +35,7 @@ class ListHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestBody = $request->getParsedBody();
-        $list = $this->companyService->getCompanyList($requestBody);
-
-        $result = [
-            'result' => true,
-            'data'   => $list,
-            'error'  => [],
-        ];
+        $result = $this->companyService->getCompanyList($requestBody);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
