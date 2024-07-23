@@ -36,4 +36,8 @@ interface CompanyRepositoryInterface
     public function getPackage(array $params = []): array|Package;
 
     public function getPackageList($params = []): HydratingResultSet;
+
+    public function addPackage(array $params = []): Package;
+
+    public function updatePackage(int $packageId, array $params = []): void;
 }

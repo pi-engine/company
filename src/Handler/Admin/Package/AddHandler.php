@@ -36,9 +36,12 @@ class AddHandler implements RequestHandlerInterface
     {
         $requestBody = $request->getParsedBody();
 
+        // Add package
+        $package = $this->companyService->addPackage($requestBody);
+
         $result = [
             'result' => true,
-            'data'   => $requestBody,
+            'data'   => $package,
             'error'  => [],
         ];
 

@@ -35,10 +35,12 @@ class UpdateHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestBody = $request->getParsedBody();
+        $package     = $this->companyService->getPackage($requestBody['package_id']);
+        $package     = $this->companyService->updatePackage($package, $requestBody);
 
         $result = [
             'result' => true,
-            'data'   => $requestBody,
+            'data'   => $package,
             'error'  => [],
         ];
 

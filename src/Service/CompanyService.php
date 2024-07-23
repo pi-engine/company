@@ -853,6 +853,47 @@ class CompanyService implements ServiceInterface
         return $list;
     }
 
+    public function addPackage($params): array
+    {
+        // Set package params
+        $addParams = [
+            'title'       => $params['title'],
+            'status'      => 1,
+            'information' => json_encode(
+                [
+                    'type'   => $params['type'] ?? 'full',
+                    'expire' => $params['expire'] ?? $this->packageExpire,
+                    'access' => $params['access'],
+                ],
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
+            ),
+        ];
+
+        // Add package
+        $package = $this->companyRepository->addPackage($addParams);
+        return $this->canonizePackage($package);
+    }
+
+    public function updatePackage($package, $params): array
+    {
+        $packageParams = [
+            'title'       => $params['title'] ?? $package['title'],
+            'status'      => $params['status'] ?? $package['status'],
+            'information' => json_encode(
+                [
+                    'type'   => $params['type'] ?? $package['information']['status'],
+                    'expire' => $params['expire'] ?? $package['information']['expire'],
+                    'access' => $params['access'] ?? $package['information']['access'],
+                ],
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
+            ),
+        ];
+
+        // Update company
+        $this->companyRepository->updatePackage((int)$package['id'], $packageParams);
+        return $this->getPackage($package['id']);
+    }
+
     public function canonizeCompany($company): array
     {
         if (empty($company)) {

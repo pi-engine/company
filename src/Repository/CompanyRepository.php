@@ -540,4 +540,41 @@ class CompanyRepository implements CompanyRepositoryInterface
 
         return $resultSet;
     }
+
+    public function addPackage(array $params = []): Package
+    {
+        $insert = new Insert($this->tablePackage);
+        $insert->values($params);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during blog post insert operation'
+            );
+        }
+
+        $id = $result->getGeneratedValue();
+
+        return $this->getPackage(['id' => $id]);
+    }
+
+    public function updatePackage(int $packageId, array $params = []): void
+    {
+        $update = new Update($this->tablePackage);
+        $update->set($params);
+        $update->where(['id' => $packageId]);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during update operation'
+            );
+        }
+    }
 }
