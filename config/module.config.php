@@ -29,9 +29,14 @@ return [
             Handler\Admin\UpdateHandler::class              => Factory\Handler\Admin\UpdateHandlerFactory::class,
             Handler\Admin\ListHandler::class                => Factory\Handler\Admin\ListHandlerFactory::class,
             Handler\Admin\PackageUpdateHandler::class       => Factory\Handler\Admin\PackageUpdateHandlerFactory::class,
+            Handler\Admin\ReportHandler::class              => Factory\Handler\Admin\ReportHandlerFactory::class,
             Handler\Admin\Package\AddHandler::class         => Factory\Handler\Admin\Package\AddHandlerFactory::class,
             Handler\Admin\Package\ListHandler::class        => Factory\Handler\Admin\Package\ListHandlerFactory::class,
             Handler\Admin\Package\UpdateHandler::class      => Factory\Handler\Admin\Package\UpdateHandlerFactory::class,
+            Handler\Admin\Member\AddHandler::class          => Factory\Handler\Admin\Member\AddHandlerFactory::class,
+            Handler\Admin\Member\ListHandler::class         => Factory\Handler\Admin\Member\ListHandlerFactory::class,
+            Handler\Admin\Member\UpdateHandler::class       => Factory\Handler\Admin\Member\UpdateHandlerFactory::class,
+            Handler\Admin\Member\ViewHandler::class         => Factory\Handler\Admin\Member\ViewHandlerFactory::class,
             Handler\Api\Authentication\CheckHandler::class  => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
             Handler\Api\Authentication\ListHandler::class   => Factory\Handler\Api\Authentication\ListHandlerFactory::class,
             Handler\Api\Authentication\SwitchHandler::class => Factory\Handler\Api\Authentication\SwitchHandlerFactory::class,
@@ -150,7 +155,7 @@ return [
                                         'handler'     => 'list',
                                         'permissions' => 'company-member-list',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -174,7 +179,7 @@ return [
                                         'handler'     => 'add',
                                         'permissions' => 'company-member-add',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -199,7 +204,7 @@ return [
                                         'handler'     => 'view',
                                         'permissions' => 'company-member-view',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -225,7 +230,7 @@ return [
                                         'handler'     => 'update',
                                         'permissions' => 'company-member-update',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -251,7 +256,7 @@ return [
                                         'handler'     => 'role',
                                         'permissions' => 'company-member-role',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -286,7 +291,7 @@ return [
                                         'handler'     => 'view',
                                         'permissions' => 'company-profile-view',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -310,7 +315,7 @@ return [
                                         'handler'     => 'update',
                                         'permissions' => 'company-profile-update',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -334,7 +339,7 @@ return [
                                         'handler'     => 'context',
                                         'permissions' => 'company-profile-context',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -358,7 +363,7 @@ return [
                                         'handler'     => 'setting',
                                         'permissions' => 'company-profile-setting',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -392,7 +397,7 @@ return [
                                         'handler'     => 'current',
                                         'permissions' => 'company-package-current',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -416,7 +421,7 @@ return [
                                         'handler'     => 'list',
                                         'permissions' => 'company-package-list',
                                         'controller'  => PipeSpec::class,
-                                        'middleware' => new PipeSpec(
+                                        'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
@@ -453,7 +458,7 @@ return [
                                 'handler'     => 'list',
                                 'permissions' => 'company-list',
                                 'controller'  => PipeSpec::class,
-                                'middleware' => new PipeSpec(
+                                'middleware'  => new PipeSpec(
                                     RequestPreparationMiddleware::class,
                                     SecurityMiddleware::class,
                                     AuthenticationMiddleware::class,
@@ -525,6 +530,28 @@ return [
                                     AuthenticationMiddleware::class,
                                     AuthorizationMiddleware::class,
                                     Handler\Admin\PackageUpdateHandler::class
+                                ),
+                            ],
+                        ],
+                    ],
+                    'report'         => [
+                        'type'    => Literal::class,
+                        'options' => [
+                            'route'    => '/report',
+                            'defaults' => [
+                                'title'       => 'Company report',
+                                'module'      => 'company',
+                                'section'     => 'admin',
+                                'package'     => 'general',
+                                'handler'     => 'package',
+                                'permissions' => 'company-report',
+                                'controller'  => PipeSpec::class,
+                                'middleware'  => new PipeSpec(
+                                    RequestPreparationMiddleware::class,
+                                    SecurityMiddleware::class,
+                                    AuthenticationMiddleware::class,
+                                    AuthorizationMiddleware::class,
+                                    Handler\Admin\ReportHandler::class
                                 ),
                             ],
                         ],
@@ -604,6 +631,104 @@ return [
                                 ],
                             ],
 
+                        ],
+                    ],
+                    // Admin member section
+                    'member'         => [
+                        'type'         => Literal::class,
+                        'options'      => [
+                            'route'    => '/member',
+                            'defaults' => [],
+                        ],
+                        'child_routes' => [
+                            'list'   => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'title'       => 'Company member list',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'member',
+                                        'handler'     => 'list',
+                                        'permissions' => 'company-member-list',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Member\ListHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'add'    => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/add',
+                                    'defaults' => [
+                                        'title'       => 'Company member add',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'member',
+                                        'handler'     => 'add',
+                                        'permissions' => 'company-member-add',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Member\AddHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'update' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/update',
+                                    'defaults' => [
+                                        'title'       => 'Company member update',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'member',
+                                        'handler'     => 'update',
+                                        'permissions' => 'company-member-update',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Member\UpdateHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'view'   => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/view',
+                                    'defaults' => [
+                                        'title'       => 'Company member view',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'member',
+                                        'handler'     => 'view',
+                                        'permissions' => 'company-member-view',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Member\ViewHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     // Admin installer

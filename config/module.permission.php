@@ -47,6 +47,17 @@ return [
             ],
         ],
         [
+            'title'       => 'Company report',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'general',
+            'handler'     => 'package',
+            'permissions' => 'company-report',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
             'title'       => 'Company package add',
             'module'      => 'company',
             'section'     => 'admin',
@@ -79,8 +90,51 @@ return [
                 'admin',
             ],
         ],
+        [
+            'title'       => 'Company member list',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'member',
+            'handler'     => 'list',
+            'permissions' => 'company-member-list',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company member add',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'member',
+            'handler'     => 'add',
+            'permissions' => 'company-member-add',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company member update',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'member',
+            'handler'     => 'update',
+            'permissions' => 'company-member-update',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company member view',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'member',
+            'handler'     => 'view',
+            'permissions' => 'company-member-view',
+            'role'        => [
+                'admin',
+            ],
+        ],
     ],
-
     'api' => [
         [
             'title'       => 'Company member list',

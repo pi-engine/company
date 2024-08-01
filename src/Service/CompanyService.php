@@ -206,7 +206,6 @@ class CompanyService implements ServiceInterface
             }
         }
 
-
         // Check admin access
         $result['data']['is_admin'] = 0;
         if (in_array($this->companyAdminRole, $result['data']['roles'])
@@ -622,6 +621,11 @@ class CompanyService implements ServiceInterface
         }
 
         return array_values($list);
+    }
+
+    public function getCompanyFromCache(int $companyId): array
+    {
+        return $this->cacheService->getItem(sprintf('company-%s', $companyId));
     }
 
     public function getMember(int $userId, $params = []): array
