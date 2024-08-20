@@ -90,6 +90,10 @@ class CompanyService implements ServiceInterface
             'email',
         ];
 
+    protected int $companyTtl = 31536000;
+
+    protected int $packageTtl = 31536000;
+
     public function __construct(
         CompanyRepositoryInterface $companyRepository,
         AccountService $accountService,
@@ -218,7 +222,7 @@ class CompanyService implements ServiceInterface
         $this->cacheService->setUser($account['id'], ['authorization' => $result['data']]);
 
         // Set company cache
-        $this->cacheService->setItem(sprintf('company-%s', $result['data']['company_id']), $result['data']['company']);
+        $this->cacheService->setItem(sprintf('company-%s', $result['data']['company_id']), $result['data']['company'], $this->companyTtl);
 
         return $result;
     }
@@ -288,7 +292,7 @@ class CompanyService implements ServiceInterface
         $company = $this->canonizeCompany($company);
 
         // Set company cache
-        $this->cacheService->setItem(sprintf('company-%s', $company['id']), $company);
+        $this->cacheService->setItem(sprintf('company-%s', $company['id']), $company, $this->companyTtl);
 
         return $company;
     }
@@ -383,7 +387,7 @@ class CompanyService implements ServiceInterface
         // Set company cache
         $company = $this->getCompany((int)$authorization['company_id']);
         $this->cacheService->deleteItem(sprintf('company-%s', (int)$company['id']));
-        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
+        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company, $this->companyTtl);
 
         // Set result
         return [
@@ -474,7 +478,7 @@ class CompanyService implements ServiceInterface
 
         // Set company cache
         $company = $this->getCompany((int)$authorization['company_id']);
-        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
+        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company, $this->companyTtl);
 
         // Set result
         return [
@@ -584,7 +588,7 @@ class CompanyService implements ServiceInterface
         // Set company cache
         $company = $this->getCompany((int)$company['id']);
         $this->cacheService->deleteItem(sprintf('company-%s', (int)$company['id']));
-        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company);
+        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company, $this->companyTtl);
 
         // Set result
         return [
@@ -847,7 +851,7 @@ class CompanyService implements ServiceInterface
 
     public function getPackageList($params): array
     {
-        // Get list
+        // Get a list
         $list   = [];
         $rowSet = $this->companyRepository->getPackageList($params);
         foreach ($rowSet as $row) {
@@ -867,7 +871,7 @@ class CompanyService implements ServiceInterface
                 [
                     'type'   => $params['type'] ?? 'full',
                     'expire' => $params['expire'] ?? $this->packageExpire,
-                    'access' => $params['access'],
+                    'access' => array_values($params['access']),
                 ],
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
             ),
@@ -875,7 +879,12 @@ class CompanyService implements ServiceInterface
 
         // Add package
         $package = $this->companyRepository->addPackage($addParams);
-        return $this->canonizePackage($package);
+        $package = $this->canonizePackage($package);
+
+        // Set to cache
+        $this->cacheService->setItem(sprintf('package-%s', $package['id']), $package, $this->packageTtl);
+
+        return $package;
     }
 
     public function updatePackage($package, $params): array
@@ -887,15 +896,20 @@ class CompanyService implements ServiceInterface
                 [
                     'type'   => $params['type'] ?? $package['information']['status'],
                     'expire' => $params['expire'] ?? $package['information']['expire'],
-                    'access' => $params['access'] ?? $package['information']['access'],
+                    'access' => array_values($params['access'] ?? $package['information']['access']),
                 ],
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
             ),
         ];
 
-        // Update company
+        // Update a company
         $this->companyRepository->updatePackage((int)$package['id'], $packageParams);
-        return $this->getPackage($package['id']);
+        $package = $this->getPackage($package['id']);
+
+        // Set to cache
+        $this->cacheService->setItem(sprintf('package-%s', $package['id']), $package, $this->packageTtl);
+
+        return $package;
     }
 
     public function canonizeCompany($company): array
