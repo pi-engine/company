@@ -34,11 +34,11 @@ class ListHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // Set result
-        $result = [
-            'List handler'
-        ];
+        $requestBody = $request->getParsedBody();
 
-        return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
+        // Get a member list
+        $result = $this->companyService->getMemberList($requestBody);
+
+        return new JsonResponse($result, StatusCodeInterface::STATUS_OK);
     }
 }

@@ -809,6 +809,32 @@ class CompanyService implements ServiceInterface
         return $account;
     }
 
+    public function updateMemberByAdmin($params): array
+    {
+        // Get member
+        $member = $member ?? $this->getMember($params['user_id'], ['company_id' => $params['company_id']]);
+
+        // Update account
+        $account = ['id' => $params['user_id']];
+        $account = $this->accountService->updateAccount($params, $account);
+
+        // Set update params
+        $updateParams = [
+            'time_update' => time(),
+            'status'      => $params['status'] ?? $member['status'],
+        ];
+
+        // Update member
+        $this->companyRepository->updateMember((int)$member['id'], $updateParams);
+
+        // Manage role
+        if (isset($params['roles']) && !empty($params['roles'])) {
+            $this->accountService->updateAccountRoles($params['roles'], $account, 'api', $authorization['member']);
+        }
+
+        return $account;
+    }
+
     public function switchCompany(int $userId, int $companyId): array
     {
         // Make all user company list
@@ -910,6 +936,11 @@ class CompanyService implements ServiceInterface
         $this->cacheService->setItem(sprintf('package-%s', $package['id']), $package, $this->packageTtl);
 
         return $package;
+    }
+
+    public function getRoleMemberList($userId): array
+    {
+        return $this->roleService->getRoleAccountList($userId, 'api');
     }
 
     public function canonizeCompany($company): array

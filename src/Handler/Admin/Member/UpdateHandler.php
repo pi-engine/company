@@ -34,9 +34,15 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $requestBody   = $request->getParsedBody();
+
+        $member = $this->companyService->updateMemberByAdmin($requestBody);
+
         // Set result
         $result = [
-            'Update handler'
+            'result' => true,
+            'data'   => $member,
+            'error'  => [],
         ];
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);

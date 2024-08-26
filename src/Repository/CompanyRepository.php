@@ -264,6 +264,15 @@ class CompanyRepository implements CompanyRepositoryInterface
             ],
             $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
         );
+        $select->join(
+            ['profile' => $this->tableProfile],
+            'member.user_id=profile.user_id',
+            [
+                'first_name',
+                'last_name',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result    = $statement->execute();
@@ -441,12 +450,7 @@ class CompanyRepository implements CompanyRepositoryInterface
         $select->join(
             ['account' => $this->tableAccount],
             'member.user_id=account.id',
-            [
-                'user_identity' => 'identity',
-                'user_name'     => 'name',
-                'user_email'    => 'email',
-                'user_mobile'   => 'mobile',
-            ],
+            [],
             $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
         );
         $statement = $sql->prepareStatementForSqlObject($select);

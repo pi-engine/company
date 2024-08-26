@@ -34,9 +34,21 @@ class ViewHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $requestBody = $request->getParsedBody();
+
         // Set result
+        $member = $this->companyService->getMember($requestBody['user_id'], ['company_id' => $requestBody['company_id']]);;
+
+        // Get roles
+        $roleList = $this->companyService->getRoleMemberList($member['user_id']);
+        foreach ($roleList as $roleUser) {
+            $member['roles'] = $roleUser;
+        }
+
         $result = [
-            'View handler'
+            'result' => true,
+            'data'   => $member,
+            'error'  => [],
         ];
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);

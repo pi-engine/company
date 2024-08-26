@@ -44,6 +44,7 @@ return [
             Handler\Api\Member\AddHandler::class            => Factory\Handler\Api\Member\AddHandlerFactory::class,
             Handler\Api\Member\ViewHandler::class           => Factory\Handler\Api\Member\ViewHandlerFactory::class,
             Handler\Api\Member\UpdateHandler::class         => Factory\Handler\Api\Member\UpdateHandlerFactory::class,
+            Handler\Api\Member\RoleHandler::class           => Factory\Handler\Api\Member\RoleHandlerFactory::class,
             Handler\Api\Profile\ViewHandler::class          => Factory\Handler\Api\Profile\ViewHandlerFactory::class,
             Handler\Api\Profile\UpdateHandler::class        => Factory\Handler\Api\Profile\UpdateHandlerFactory::class,
             Handler\Api\Profile\ContextHandler::class       => Factory\Handler\Api\Profile\ContextHandlerFactory::class,
