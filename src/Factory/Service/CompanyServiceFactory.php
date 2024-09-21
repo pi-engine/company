@@ -4,7 +4,7 @@ namespace Company\Factory\Service;
 
 use Company\Repository\CompanyRepositoryInterface;
 use Company\Service\CompanyService;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Notification\Service\NotificationService;
 use User\Service\AccountService;

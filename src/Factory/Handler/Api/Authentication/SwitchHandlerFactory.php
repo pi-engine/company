@@ -4,7 +4,7 @@ namespace Company\Factory\Handler\Api\Authentication;
 
 use Company\Handler\Api\Authentication\SwitchHandler;
 use Company\Service\CompanyService;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;

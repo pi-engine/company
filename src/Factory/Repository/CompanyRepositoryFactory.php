@@ -7,7 +7,7 @@ use Company\Model\Member;
 use Company\Model\MemberCompany;
 use Company\Model\Package;
 use Company\Repository\CompanyRepository;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Hydrator\ReflectionHydrator;
 use Laminas\ServiceManager\Factory\FactoryInterface;

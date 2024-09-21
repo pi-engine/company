@@ -4,7 +4,7 @@ namespace Company\Factory\Handler\Admin;
 
 use Company\Handler\Admin\ReportHandler;
 use Company\Service\CompanyService;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
