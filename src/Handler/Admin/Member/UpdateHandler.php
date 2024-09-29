@@ -34,9 +34,10 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $account     = $request->getAttribute('account');
         $requestBody   = $request->getParsedBody();
 
-        $member = $this->companyService->updateMemberByAdmin($requestBody);
+        $member = $this->companyService->updateMemberByAdmin($requestBody, $account);
 
         // Set result
         $result = [

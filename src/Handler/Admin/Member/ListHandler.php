@@ -34,7 +34,11 @@ class ListHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        // Get request data
         $requestBody = $request->getParsedBody();
+
+        // Set a section
+        $requestBody['section'] = 'full';
 
         // Get a member list
         $result = $this->companyService->getMemberList($requestBody);

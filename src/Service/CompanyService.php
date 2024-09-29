@@ -683,8 +683,11 @@ class CompanyService implements ServiceInterface
             $list[$row->getUserId()] = $this->canonizeMember($row);
         }
 
+        // Set section
+        $section = $params['section'] ?? 'api';
+
         // Get roles
-        $roleList = $this->roleService->getRoleAccountList(array_keys($list), 'api');
+        $roleList = $this->roleService->getRoleAccountList(array_keys($list), $section);
         foreach ($roleList as $key => $roleUser) {
             $list[$key]['roles'] = $roleUser;
         }
@@ -783,6 +786,86 @@ class CompanyService implements ServiceInterface
         ];
     }
 
+    public function addMemberByAdmin($params, $operator): array
+    {
+        // Get company
+        $company = $this->getCompany((int)$params['company_id']);
+
+        // Add or Get account
+        $account = $this->accountService->addOrGetAccount($params);
+
+        // Check member not exist
+        $member = $this->getMember($account['id'], ['company_id' => $company['id']]);
+
+        // Add member if not exist
+        if (!empty($member)) {
+            return [
+                'result' => false,
+                'data'   => $member,
+                'error'  => [
+                    'message' => 'This member added before in your company !',
+                ],
+                'status' => StatusCodeInterface::STATUS_FORBIDDEN,
+            ];
+        }
+
+        // Set member params
+        $memberParams = [
+            'company_id'  => $company['id'],
+            'user_id'     => $account['id'],
+            'time_create' => time(),
+            'time_update' => time(),
+            'status'      => 1,
+        ];
+
+        // Add member
+        $member = $this->companyRepository->addMember($memberParams);
+        $member = $this->canonizeMember($member);
+
+        // Add roles
+        $roles = $params['roles'] ?? [$this->companyMemberRole];
+        foreach ($roles as $role) {
+            $this->roleService->addRoleAccount($account, $role, 'api', $operator);
+        }
+
+        // Check admin for a cache
+        $isAdmin = 0;
+        if (in_array($this->companyAdminRole, $roles)
+            || in_array($this->companySuperUserRole, $roles)
+        ) {
+            $isAdmin = 1;
+        }
+
+        // Set company setup
+        $account['is_company_setup'] = true;
+
+        // Set/Update user data to cache
+        $this->cacheService->setUser($account['id'], [
+            'account'       => $account,
+            'roles'         => $roles,
+            'authorization' => [
+                'user_id'        => (int)$account['id'],
+                'company_id'     => $company['id'],
+                'package_id'     => $company['package_id'],
+                'project_id'     => $company['project_id'],
+                'user'           => $account,
+                'standard_count' => $company['standard_count'] ?? 1,
+                'user_count'     => $company['user_count'] ?? 100,
+                'member'         => $member,
+                'company'        => $company,
+                'roles'          => $roles,
+                'is_admin'       => $isAdmin,
+                'package'        => $company['package'] ?? [],
+            ],
+        ]);
+
+        return [
+            'result' => true,
+            'data'   => $member,
+            'error'  => [],
+        ];
+    }
+
     public function updateMember($authorization, $params, $member): array
     {
         // Get member
@@ -809,7 +892,7 @@ class CompanyService implements ServiceInterface
         return $account;
     }
 
-    public function updateMemberByAdmin($params): array
+    public function updateMemberByAdmin($params, $operator): array
     {
         // Get member
         $member = $member ?? $this->getMember($params['user_id'], ['company_id' => $params['company_id']]);
@@ -829,7 +912,7 @@ class CompanyService implements ServiceInterface
 
         // Manage role
         if (isset($params['roles']) && !empty($params['roles'])) {
-            $this->accountService->updateAccountRoles($params['roles'], $account, 'api', $authorization['member']);
+            $this->accountService->updateAccountRoles($params['roles'], $account, 'api', $operator);
         }
 
         return $account;

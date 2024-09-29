@@ -34,9 +34,16 @@ class AddHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $account     = $request->getAttribute('account');
+        $requestBody   = $request->getParsedBody();
+
+        $member = $this->companyService->addMemberByAdmin($requestBody, $account);
+
         // Set result
         $result = [
-            'Add handler'
+            'result' => true,
+            'data'   => $member,
+            'error'  => [],
         ];
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
