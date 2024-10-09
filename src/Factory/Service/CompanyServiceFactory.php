@@ -17,7 +17,7 @@ class CompanyServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CompanyService
     {
         $config = $container->get('config');
-        $config = $config['company'] ?? [];
+        $config = array_merge($config['global'], $config['company']);
 
         return new CompanyService(
             $container->get(CompanyRepositoryInterface::class),
