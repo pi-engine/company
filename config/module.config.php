@@ -8,11 +8,11 @@ use Company\Middleware\PackageMiddleware;
 use Laminas\Mvc\Middleware\PipeSpec;
 use Laminas\Router\Http\Literal;
 use Logger\Middleware\LoggerRequestMiddleware;
+use Pi\Core\Middleware\SecurityMiddleware;
 use User\Middleware\AuthenticationMiddleware;
 use User\Middleware\AuthorizationMiddleware;
 use User\Middleware\InstallerMiddleware;
 use User\Middleware\RequestPreparationMiddleware;
-use User\Middleware\SecurityMiddleware;
 
 return [
     'service_manager' => [
