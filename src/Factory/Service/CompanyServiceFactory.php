@@ -4,13 +4,13 @@ namespace Company\Factory\Service;
 
 use Company\Repository\CompanyRepositoryInterface;
 use Company\Service\CompanyService;
-use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Notification\Service\NotificationService;
+use Pi\Core\Service\CacheService;
+use Pi\Core\Service\UtilityService;
+use Psr\Container\ContainerInterface;
 use User\Service\AccountService;
-use User\Service\CacheService;
 use User\Service\RoleService;
-use User\Service\UtilityService;
 
 class CompanyServiceFactory implements FactoryInterface
 {

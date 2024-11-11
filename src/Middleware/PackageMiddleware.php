@@ -4,13 +4,13 @@ namespace Company\Middleware;
 
 use Company\Service\CompanyService;
 use Fig\Http\Message\StatusCodeInterface;
+use Pi\Core\Handler\ErrorHandler;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use User\Handler\ErrorHandler;
 
 class PackageMiddleware implements MiddlewareInterface
 {

@@ -4,11 +4,11 @@ namespace Company\Factory\Middleware;
 
 use Company\Middleware\MemberAccessMiddleware;
 use Company\Service\CompanyService;
-use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Pi\Core\Handler\ErrorHandler;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use User\Handler\ErrorHandler;
 
 class MemberAccessMiddlewareFactory implements FactoryInterface
 {

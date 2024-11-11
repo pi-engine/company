@@ -6,10 +6,10 @@ use Company\Repository\CompanyRepositoryInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Math\Rand;
 use Notification\Service\NotificationService;
+use Pi\Core\Service\CacheService;
+use Pi\Core\Service\UtilityService;
 use User\Service\AccountService;
-use User\Service\CacheService;
 use User\Service\RoleService;
-use User\Service\UtilityService;
 
 class CompanyService implements ServiceInterface
 {
