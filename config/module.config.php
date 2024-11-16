@@ -7,10 +7,10 @@ use Company\Middleware\MemberAccessMiddleware;
 use Company\Middleware\PackageMiddleware;
 use Laminas\Mvc\Middleware\PipeSpec;
 use Laminas\Router\Http\Literal;
-use Logger\Middleware\LoggerRequestMiddleware;
 use Pi\Core\Middleware\InstallerMiddleware;
 use Pi\Core\Middleware\RequestPreparationMiddleware;
 use Pi\Core\Middleware\SecurityMiddleware;
+use Pi\Logger\Middleware\LoggerRequestMiddleware;
 use Pi\User\Middleware\AuthenticationMiddleware;
 use Pi\User\Middleware\AuthorizationMiddleware;
 
