@@ -1,11 +1,7 @@
 <?php
 
-namespace Company\Repository;
+namespace Pi\Company\Repository;
 
-use Company\Model\Inventory;
-use Company\Model\Member;
-use Company\Model\MemberCompany;
-use Company\Model\Package;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
@@ -14,6 +10,10 @@ use Laminas\Db\Sql\Predicate\Expression;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Update;
 use Laminas\Hydrator\HydratorInterface;
+use Pi\Company\Model\Inventory;
+use Pi\Company\Model\Member;
+use Pi\Company\Model\MemberCompany;
+use Pi\Company\Model\Package;
 use RuntimeException;
 
 class CompanyRepository implements CompanyRepositoryInterface

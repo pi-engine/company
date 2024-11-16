@@ -1,12 +1,12 @@
 <?php
 
-namespace Company\Middleware;
+namespace Pi\Company\Middleware;
 
-use Company\Service\CompanyService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\Digits;
+use Pi\Company\Service\CompanyService;
 use Pi\Core\Handler\ErrorHandler;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

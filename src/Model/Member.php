@@ -1,6 +1,6 @@
 <?php
 
-namespace Company\Model;
+namespace Pi\Company\Model;
 
 class Member
 {

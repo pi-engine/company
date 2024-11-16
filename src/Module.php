@@ -1,6 +1,6 @@
 <?php
 
-namespace Company;
+namespace Pi\Company;
 
 use Laminas\Mvc\MvcEvent;
 

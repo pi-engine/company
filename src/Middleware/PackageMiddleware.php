@@ -1,9 +1,9 @@
 <?php
 
-namespace Company\Middleware;
+namespace Pi\Company\Middleware;
 
-use Company\Service\CompanyService;
 use Fig\Http\Message\StatusCodeInterface;
+use Pi\Company\Service\CompanyService;
 use Pi\Core\Handler\ErrorHandler;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

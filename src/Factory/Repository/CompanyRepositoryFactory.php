@@ -1,16 +1,16 @@
 <?php
 
-namespace Company\Factory\Repository;
+namespace Pi\Company\Factory\Repository;
 
-use Company\Model\Inventory;
-use Company\Model\Member;
-use Company\Model\MemberCompany;
-use Company\Model\Package;
-use Company\Repository\CompanyRepository;
-use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Hydrator\ReflectionHydrator;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Pi\Company\Model\Inventory;
+use Pi\Company\Model\Member;
+use Pi\Company\Model\MemberCompany;
+use Pi\Company\Model\Package;
+use Pi\Company\Repository\CompanyRepository;
+use Psr\Container\ContainerInterface;
 
 class CompanyRepositoryFactory implements FactoryInterface
 {

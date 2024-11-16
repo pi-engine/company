@@ -1,12 +1,12 @@
 <?php
 
-namespace Company;
+namespace Pi\Company;
 
-use Company\Middleware\CompanyMiddleware;
-use Company\Middleware\MemberAccessMiddleware;
-use Company\Middleware\PackageMiddleware;
 use Laminas\Mvc\Middleware\PipeSpec;
 use Laminas\Router\Http\Literal;
+use Pi\Company\Middleware\CompanyMiddleware;
+use Pi\Company\Middleware\MemberAccessMiddleware;
+use Pi\Company\Middleware\PackageMiddleware;
 use Pi\Core\Middleware\InstallerMiddleware;
 use Pi\Core\Middleware\RequestPreparationMiddleware;
 use Pi\Core\Middleware\SecurityMiddleware;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Company\Repository;
+namespace Pi\Company\Repository;
 
-use Company\Model\Inventory;
-use Company\Model\Member;
-use Company\Model\Package;
 use Laminas\Db\ResultSet\HydratingResultSet;
+use Pi\Company\Model\Inventory;
+use Pi\Company\Model\Member;
+use Pi\Company\Model\Package;
 
 interface CompanyRepositoryInterface
 {

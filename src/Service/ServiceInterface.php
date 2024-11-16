@@ -1,6 +1,6 @@
 <?php
 
-namespace Company\Service;
+namespace Pi\Company\Service;
 
 interface ServiceInterface
 {

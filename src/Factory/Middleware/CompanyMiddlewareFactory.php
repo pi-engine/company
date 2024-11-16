@@ -1,10 +1,10 @@
 <?php
 
-namespace Company\Factory\Middleware;
+namespace Pi\Company\Factory\Middleware;
 
-use Company\Middleware\CompanyMiddleware;
-use Company\Service\CompanyService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Pi\Company\Middleware\CompanyMiddleware;
+use Pi\Company\Service\CompanyService;
 use Pi\Core\Handler\ErrorHandler;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;

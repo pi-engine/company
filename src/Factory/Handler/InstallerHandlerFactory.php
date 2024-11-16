@@ -1,9 +1,9 @@
 <?php
 
-namespace Company\Factory\Handler;
+namespace Pi\Company\Factory\Handler;
 
-use Company\Handler\InstallerHandler;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Pi\Company\Handler\InstallerHandler;
 use Pi\Core\Service\InstallerService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

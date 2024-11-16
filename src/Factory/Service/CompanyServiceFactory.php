@@ -1,10 +1,10 @@
 <?php
 
-namespace Company\Factory\Service;
+namespace Pi\Company\Factory\Service;
 
-use Company\Repository\CompanyRepositoryInterface;
-use Company\Service\CompanyService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Pi\Company\Repository\CompanyRepositoryInterface;
+use Pi\Company\Service\CompanyService;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
 use Pi\Notification\Service\NotificationService;

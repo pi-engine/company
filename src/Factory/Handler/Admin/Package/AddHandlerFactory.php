@@ -1,11 +1,11 @@
 <?php
 
-namespace Company\Factory\Handler\Admin\Package;
+namespace Pi\Company\Factory\Handler\Admin\Package;
 
-use Company\Handler\Admin\Package\AddHandler;
-use Company\Service\CompanyService;
-use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Pi\Company\Handler\Admin\Package\AddHandler;
+use Pi\Company\Service\CompanyService;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 

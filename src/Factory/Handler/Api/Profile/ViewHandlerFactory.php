@@ -1,9 +1,9 @@
 <?php
 
-namespace Company\Factory\Handler\Api\Profile;
+namespace Pi\Company\Factory\Handler\Api\Profile;
 
-use Company\Handler\Api\Profile\ViewHandler;
-use Company\Service\CompanyService;
+use Pi\Company\Handler\Api\Profile\ViewHandler;
+use Pi\Company\Service\CompanyService;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;

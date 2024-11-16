@@ -1,10 +1,10 @@
 <?php
 
-namespace Company\Service;
+namespace Pi\Company\Service;
 
-use Company\Repository\CompanyRepositoryInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Math\Rand;
+use Pi\Company\Repository\CompanyRepositoryInterface;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
 use Pi\Notification\Service\NotificationService;
