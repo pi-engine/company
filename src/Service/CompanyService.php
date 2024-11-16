@@ -8,8 +8,8 @@ use Laminas\Math\Rand;
 use Notification\Service\NotificationService;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
-use User\Service\AccountService;
-use User\Service\RoleService;
+use Pi\User\Service\AccountService;
+use Pi\User\Service\RoleService;
 
 class CompanyService implements ServiceInterface
 {

@@ -8,9 +8,9 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Notification\Service\NotificationService;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
+use Pi\User\Service\AccountService;
+use Pi\User\Service\RoleService;
 use Psr\Container\ContainerInterface;
-use User\Service\AccountService;
-use User\Service\RoleService;
 
 class CompanyServiceFactory implements FactoryInterface
 {
