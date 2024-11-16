@@ -5,9 +5,9 @@ namespace Company\Service;
 use Company\Repository\CompanyRepositoryInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Math\Rand;
-use Notification\Service\NotificationService;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
+use Pi\Notification\Service\NotificationService;
 use Pi\User\Service\AccountService;
 use Pi\User\Service\RoleService;
 
