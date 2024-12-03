@@ -36,9 +36,11 @@ class AddHandler implements RequestHandlerInterface
     {
         $requestBody = $request->getParsedBody();
 
+        $company = $this->companyService->registerCompanyByAdmin($requestBody);
+
         $result = [
             'result' => true,
-            'data'   => $requestBody,
+            'data'   => $company,
             'error'  => [],
         ];
 

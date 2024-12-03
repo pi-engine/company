@@ -286,6 +286,47 @@ class CompanyService implements ServiceInterface
         return $member;
     }
 
+    public function registerCompanyByAdmin($params): array
+    {
+        // Set company params
+        $addParams = [
+            'title'            => $params['title'],
+            'user_id'          => $params['user_id'],
+            'time_create'      => time(),
+            'time_update'      => time(),
+            'phone'            => $params['mobile'] ?? null,
+            'email'            => $params['email'] ?? null,
+            'status'           => 1,
+            'industry_id'      => $params['industry_id'],
+            'package_id'       => $params['package_id'],
+            'text_description' => '',
+            'setting'          => json_encode([
+                'analytic' => [],
+                'general'  => [],
+                'context'  => [],
+                'wizard'   => [
+                    'is_completed' => true,
+                    'time_start'   => time(),
+                    'time_end'     => time(),
+                    'steps'        => [
+                        'user_profile'    => true,
+                        'company_profile' => true,
+                        'voucher'         => true,
+                    ],
+                ],
+                'package'  => [
+                    'time_start'  => time(),
+                    'time_renew'  => time(),
+                    'time_expire' => strtotime($this->packageExpire),
+                    'renew_count' => 1,
+                    'user_count'  => 100,
+                ],
+            ]),
+        ];
+
+        return $this->addCompany($addParams);
+    }
+
     public function addCompany($params): array
     {
         $company = $this->companyRepository->addCompany($params);
