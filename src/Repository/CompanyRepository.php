@@ -5,6 +5,7 @@ namespace Pi\Company\Repository;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\Sql\Delete;
 use Laminas\Db\Sql\Insert;
 use Laminas\Db\Sql\Predicate\Expression;
 use Laminas\Db\Sql\Sql;
@@ -14,6 +15,8 @@ use Pi\Company\Model\Inventory;
 use Pi\Company\Model\Member;
 use Pi\Company\Model\MemberCompany;
 use Pi\Company\Model\Package;
+use Pi\Company\Model\Team\TeamInventory;
+use Pi\Company\Model\Team\TeamMember;
 use RuntimeException;
 
 class CompanyRepository implements CompanyRepositoryInterface
@@ -40,6 +43,20 @@ class CompanyRepository implements CompanyRepositoryInterface
     private string $tablePackage = 'company_package';
 
     /**
+     * Team inventory Table name
+     *
+     * @var string
+     */
+    private string $tableTeamInventory = 'company_team_inventory';
+
+    /**
+     * Team member Table name
+     *
+     * @var string
+     */
+    private string $tableTeamMember = 'company_team_member';
+
+    /**
      * Account Table name
      *
      * @var string
@@ -60,6 +77,10 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     private Package $packagePrototype;
 
+    private TeamInventory $teamInventoryPrototype;
+
+    private TeamMember $teamMemberPrototype;
+
     /**
      * @var HydratorInterface
      */
@@ -71,7 +92,9 @@ class CompanyRepository implements CompanyRepositoryInterface
         Inventory $inventoryPrototype,
         Member $memberPrototype,
         MemberCompany $memberCompanyPrototype,
-        Package $packagePrototype
+        Package $packagePrototype,
+        TeamInventory $teamInventoryPrototype,
+        TeamMember $teamMemberPrototype
     ) {
         $this->db                     = $db;
         $this->hydrator               = $hydrator;
@@ -79,6 +102,28 @@ class CompanyRepository implements CompanyRepositoryInterface
         $this->memberPrototype        = $memberPrototype;
         $this->memberCompanyPrototype = $memberCompanyPrototype;
         $this->packagePrototype       = $packagePrototype;
+        $this->teamInventoryPrototype       = $teamInventoryPrototype;
+        $this->teamMemberPrototype       = $teamMemberPrototype;
+    }
+
+    public function addCompany(array $params = []): Inventory
+    {
+        $insert = new Insert($this->tableInventory);
+        $insert->values($params);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during blog post insert operation'
+            );
+        }
+
+        $id = $result->getGeneratedValue();
+
+        return $this->getCompany(['id' => $id]);
     }
 
     public function getCompany(array $params = []): array|Inventory
@@ -106,26 +151,6 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
 
         return $company;
-    }
-
-    public function addCompany(array $params = []): Inventory
-    {
-        $insert = new Insert($this->tableInventory);
-        $insert->values($params);
-
-        $sql       = new Sql($this->db);
-        $statement = $sql->prepareStatementForSqlObject($insert);
-        $result    = $statement->execute();
-
-        if (!$result instanceof ResultInterface) {
-            throw new RuntimeException(
-                'Database error occurred during blog post insert operation'
-            );
-        }
-
-        $id = $result->getGeneratedValue();
-
-        return $this->getCompany(['id' => $id]);
     }
 
     public function getCompanyList($params = []): HydratingResultSet
@@ -227,6 +252,26 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
     }
 
+    public function addMember(array $params = []): Member
+    {
+        $insert = new Insert($this->tableMember);
+        $insert->values($params);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during blog post insert operation'
+            );
+        }
+
+        $id = $result->getGeneratedValue();
+
+        return $this->getMember(['id' => $id]);
+    }
+
     public function getMember(array $params = []): array|Member
     {
         // Set
@@ -292,26 +337,6 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
 
         return $member;
-    }
-
-    public function addMember(array $params = []): Member
-    {
-        $insert = new Insert($this->tableMember);
-        $insert->values($params);
-
-        $sql       = new Sql($this->db);
-        $statement = $sql->prepareStatementForSqlObject($insert);
-        $result    = $statement->execute();
-
-        if (!$result instanceof ResultInterface) {
-            throw new RuntimeException(
-                'Database error occurred during blog post insert operation'
-            );
-        }
-
-        $id = $result->getGeneratedValue();
-
-        return $this->getMember(['id' => $id]);
     }
 
     public function getMemberList($params = []): HydratingResultSet
@@ -493,6 +518,26 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
     }
 
+    public function addPackage(array $params = []): Package
+    {
+        $insert = new Insert($this->tablePackage);
+        $insert->values($params);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during blog post insert operation'
+            );
+        }
+
+        $id = $result->getGeneratedValue();
+
+        return $this->getPackage(['id' => $id]);
+    }
+
     public function getPackage(array $params = []): array|Package
     {
         // Set
@@ -545,9 +590,26 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $resultSet;
     }
 
-    public function addPackage(array $params = []): Package
+    public function updatePackage(int $packageId, array $params = []): void
     {
-        $insert = new Insert($this->tablePackage);
+        $update = new Update($this->tablePackage);
+        $update->set($params);
+        $update->where(['id' => $packageId]);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during update operation'
+            );
+        }
+    }
+
+    public function addTeam(array $params = []): TeamInventory
+    {
+        $insert = new Insert($this->tableTeamInventory);
         $insert->values($params);
 
         $sql       = new Sql($this->db);
@@ -562,17 +624,321 @@ class CompanyRepository implements CompanyRepositoryInterface
 
         $id = $result->getGeneratedValue();
 
-        return $this->getPackage(['id' => $id]);
+        return $this->getTeam(['id' => $id]);
     }
 
-    public function updatePackage(int $packageId, array $params = []): void
+    public function getTeam(array $params = []): array|TeamInventory
     {
-        $update = new Update($this->tablePackage);
+        // Set
+        $where = ['id' => (int)$params['id']];
+
+        $sql       = new Sql($this->db);
+        $select    = $sql->select($this->tableTeamInventory)->where($where);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            throw new RuntimeException(
+                'Failed retrieving row with identifier; unknown database error.',
+            );
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->teamInventoryPrototype);
+        $resultSet->initialize($result);
+        $team = $resultSet->current();
+
+        if (!$team) {
+            return [];
+        }
+
+        return $team;
+    }
+
+    public function getTeamList($params = []): HydratingResultSet
+    {
+        $where = [];
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $where['company_id'] = $params['company_id'];
+        }
+        if (isset($params['status']) && !empty($params['status'])) {
+            $where['status'] = $params['status'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $where['id'] = $params['id'];
+        }
+
+        $sql       = new Sql($this->db);
+        $select    = $sql->select($this->tableTeamInventory)->where($where);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            return [];
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->teamInventoryPrototype);
+        $resultSet->initialize($result);
+
+        return $resultSet;
+    }
+
+    public function updateTeam(int $teamId, array $params = []): void
+    {
+        $update = new Update($this->tableTeamInventory);
         $update->set($params);
-        $update->where(['id' => $packageId]);
+        $update->where(['id' => $teamId]);
 
         $sql       = new Sql($this->db);
         $statement = $sql->prepareStatementForSqlObject($update);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during update operation'
+            );
+        }
+    }
+
+    public function addTeamMember(array $params = []): TeamMember
+    {
+        $insert = new Insert($this->tableTeamMember);
+        $insert->values($params);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during blog post insert operation'
+            );
+        }
+
+        $id = $result->getGeneratedValue();
+
+        return $this->getTeamMember(['id' => $id]);
+    }
+
+    public function getTeamMember(array $params = []): array|TeamMember
+    {
+        // Set
+        $where = [];
+        if (isset($params['id']) && !empty($params['id'])) {
+            $where['member.id'] = (int)$params['id'];
+        }
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $where['member.company_id'] = $params['company_id'];
+        }
+        if (isset($params['team_id']) && !empty($params['team_id'])) {
+            $where['member.team_id'] = $params['team_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $where['member.user_id'] = $params['user_id'];
+        }
+        if (isset($params['status']) && (int)$params['status'] > 0) {
+            $where['member.status'] = (int)$params['status'];
+        }
+
+        $limit = 1;
+        $order = ['time_create DESC', 'id DESC'];
+
+        $sql    = new Sql($this->db);
+        $from   = ['member' => $this->tableTeamMember];
+        $select = $sql->select()->from($from)->where($where)->order($order)->limit($limit);
+        $select->join(
+            ['account' => $this->tableAccount],
+            'member.user_id=account.id',
+            [
+                'user_identity' => 'identity',
+                'user_name'     => 'name',
+                'user_email'    => 'email',
+                'user_mobile'   => 'mobile',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $select->join(
+            ['profile' => $this->tableProfile],
+            'member.user_id=profile.user_id',
+            [
+                'first_name',
+                'last_name',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $select->join(
+            ['team' => $this->tableTeamInventory],
+            'member.team_id=team.id',
+            [
+                'team_title' => 'title',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            throw new RuntimeException(
+                'Failed retrieving row with identifier; unknown database error.',
+            );
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->teamMemberPrototype);
+        $resultSet->initialize($result);
+        $member = $resultSet->current();
+
+        if (!$member) {
+            return [];
+        }
+
+        return $member;
+    }
+
+    public function getTeamMemberList($params = []): HydratingResultSet
+    {
+        $where = [];
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $where['member.company_id'] = $params['company_id'];
+        }
+        if (isset($params['team_id']) && !empty($params['team_id'])) {
+            $where['member.team_id'] = $params['team_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $where['member.user_id'] = $params['user_id'];
+        }
+        if (isset($params['status']) && (int)$params['status'] > 0) {
+            $where['member.status'] = (int)$params['status'];
+        }
+        if (isset($params['mobile']) && !empty($params['mobile'])) {
+            $where['account.mobile like ?'] = '%' . $params['mobile'] . '%';
+        }
+        if (isset($params['email']) && !empty($params['email'])) {
+            $where['account.email like ?'] = '%' . $params['email'] . '%';
+        }
+        if (isset($params['name']) && !empty($params['name'])) {
+            $where['account.name like ?'] = '%' . $params['name'] . '%';
+        }
+
+        $sql    = new Sql($this->db);
+        $from   = ['member' => $this->tableTeamMember];
+        $select = $sql->select()->from($from)->where($where);
+        $select->join(
+            ['account' => $this->tableAccount],
+            'member.user_id=account.id',
+            [
+                'user_identity' => 'identity',
+                'user_name'     => 'name',
+                'user_email'    => 'email',
+                'user_mobile'   => 'mobile',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $select->join(
+            ['profile' => $this->tableProfile],
+            'member.user_id=profile.user_id',
+            [
+                'first_name',
+                'last_name',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $select->join(
+            ['team' => $this->tableTeamInventory],
+            'member.team_id=team.id',
+            [
+                'team_title' => 'title',
+            ],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        if (isset($params['order']) && !empty($params['order'])) {
+            $select->order($params['order']);
+        }
+        if (isset($params['offset']) && !empty($params['offset'])) {
+            $select->offset($params['offset']);
+        }
+        if (isset($params['limit']) && !empty($params['limit'])) {
+            $select->limit($params['limit']);
+        }
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface || !$result->isQueryResult()) {
+            return [];
+        }
+
+        $resultSet = new HydratingResultSet($this->hydrator, $this->teamMemberPrototype);
+        $resultSet->initialize($result);
+
+        return $resultSet;
+    }
+
+    public function getTeamMemberCount(array $params = []): int
+    {
+        // Set where
+        $columns = ['count' => new Expression('count(*)')];
+        $where   = [];
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $where['member.company_id'] = $params['company_id'];
+        }
+        if (isset($params['team_id']) && !empty($params['team_id'])) {
+            $where['member.team_id'] = $params['team_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $where['member.user_id'] = $params['user_id'];
+        }
+        if (isset($params['status']) && (int)$params['status'] > 0) {
+            $where['member.status'] = (int)$params['status'];
+        }
+        if (isset($params['mobile']) && !empty($params['mobile'])) {
+            $where['account.mobile like ?'] = '%' . $params['mobile'] . '%';
+        }
+        if (isset($params['email']) && !empty($params['email'])) {
+            $where['account.email like ?'] = '%' . $params['email'] . '%';
+        }
+        if (isset($params['name']) && !empty($params['name'])) {
+            $where['account.name like ?'] = '%' . $params['name'] . '%';
+        }
+
+        $sql    = new Sql($this->db);
+        $from   = ['member' => $this->tableTeamMember];
+        $select = $sql->select()->from($from)->columns($columns)->where($where);
+        $select->join(
+            ['account' => $this->tableAccount],
+            'member.user_id=account.id',
+            [],
+            $select::JOIN_LEFT . ' ' . $select::JOIN_OUTER
+        );
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $row       = $statement->execute()->current();
+
+        return (int)$row['count'];
+    }
+
+    public function updateTeamMember(int $memberId, array $params = []): void
+    {
+        $update = new Update($this->tableTeamMember);
+        $update->set($params);
+        $update->where(['id' => $memberId]);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during update operation'
+            );
+        }
+    }
+
+    public function deleteTeamMember(int $memberId): void
+    {
+        $delete = new Delete($this->tableTeamMember);
+        $delete->where(['id' => $memberId]);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($delete);
         $result    = $statement->execute();
 
         if (!$result instanceof ResultInterface) {

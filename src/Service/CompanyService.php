@@ -996,6 +996,13 @@ class CompanyService implements ServiceInterface
         return $package;
     }
 
+    public function getTeam(int $teamId): array
+    {
+        $where   = ['id' => $teamId];
+        $team = $this->companyRepository->getTeam($where);
+        return $this->canonizeTeam($team);
+    }
+
     public function updatePackage($package, $params): array
     {
         $packageParams = [
@@ -1019,6 +1026,150 @@ class CompanyService implements ServiceInterface
         $this->cacheService->setItem(sprintf('package-%s', $package['id']), $package, $this->packageTtl);
 
         return $package;
+    }
+
+    public function addTeam($authorization, $params): array
+    {
+        // Set team params
+        $addParams = [
+            'title'       => $params['title'],
+            'company_id'  => $authorization['company_id'],
+            'status'      => 1,
+            'information' => json_encode(
+                $params,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
+            ),
+        ];
+
+        // Add team
+        $team = $this->companyRepository->addTeam($addParams);
+        return $this->canonizeTeam($team);
+    }
+
+    public function updateTeam($team, $params): array
+    {
+        $updateParams = [
+            'title'       => $params['title'] ?? $team['title'],
+            'information' => json_encode(
+                $params,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
+            ),
+        ];
+
+        // Update a company
+        $this->companyRepository->updateTeam((int)$team['id'], $updateParams);
+        return $this->getTeam($team['id']);
+    }
+
+    public function listTeam($authorization, $params): array
+    {
+        // Set list params
+        $listParams = ['company_id' => $authorization['company_id']];
+
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getTeamList($listParams);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizeMemberCompany($row);
+        }
+
+        return $list;
+    }
+
+    public function addTeamMember($authorization, $params): array
+    {
+        // Set member params
+        $addParams = [
+            'company_id'  => $authorization['company_id'],
+            'team_id'     => $params['team_id'],
+            'user_id'     => $params['user_id'],
+            'time_create' => time(),
+            'time_update' => time(),
+            'status'      => 1,
+            'team_role'     => $params['team_role'] ?? '',
+        ];
+
+        // Add member
+        $member = $this->companyRepository->addTeamMember($addParams);
+        return $this->canonizeTeamMember($member);
+    }
+
+    public function getTeamMember(int $memberId): array
+    {
+        $where   = ['id' => $memberId];
+        $member = $this->companyRepository->getTeamMember($where);
+        return $this->canonizeTeamMember($member);
+    }
+
+    public function updateTeamMember($member, $params): array
+    {
+        $updateParams = [
+            'title'       => $params['team_role'] ?? $member['team_role'],
+            'time_update' => time(),
+        ];
+
+        // Update a team member
+        $this->companyRepository->updateTeamMember((int)$member['id'], $updateParams);
+        return $this->getTeamMember($member['id']);
+    }
+
+    public function deleteTeamMember($member): void
+    {
+        $this->companyRepository->deleteTeamMember($member['id']);
+    }
+
+    public function listTeamMember($authorization, $params): array
+    {
+        $limit  = (int)($params['limit'] ?? 25);
+        $page   = (int)($params['page'] ?? 1);
+        $order  = $params['order'] ?? ['time_create DESC'];
+        $offset = ($page - 1) * $limit;
+
+        $listParams = [
+            'order'  => $order,
+            'offset' => $offset,
+            'limit'  => $limit,
+            'company_id' => $authorization['company_id'],
+        ];
+
+        if (isset($params['team_id']) && !empty($params['team_id'])) {
+            $listParams['team_id'] = $params['team_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $listParams['user_id'] = $params['user_id'];
+        }
+        if (isset($params['mobile']) && !empty($params['mobile'])) {
+            $listParams['mobile'] = $params['mobile'];
+        }
+        if (isset($params['email']) && !empty($params['email'])) {
+            $listParams['email'] = $params['email'];
+        }
+        if (isset($params['name']) && !empty($params['name'])) {
+            $listParams['name'] = $params['name'];
+        }
+
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getTeamMemberList($listParams);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizeTeamMember($row);
+        }
+
+        // Get count
+        $count = $this->companyRepository->getTeamMemberCount($listParams);
+
+        return [
+            'result' => true,
+            'data'   => [
+                'list'      => array_values($list),
+                'paginator' => [
+                    'count' => $count,
+                    'limit' => $limit,
+                    'page'  => $page,
+                ],
+            ],
+            'error'  => [],
+        ];
     }
 
     public function getRoleMemberList($userId): array
@@ -1222,5 +1373,85 @@ class CompanyService implements ServiceInterface
         $package['information'] = !empty($package['information']) ? json_decode($package['information'], true) : [];
 
         return $package;
+    }
+
+    public function canonizeTeam($team): array
+    {
+        if (empty($team)) {
+            return [];
+        }
+
+        if (is_object($team)) {
+            $team = [
+                'id'          => $team->getId(),
+                'title'       => $team->getTitle(),
+                'company_id'  => $team->getCompanyId(),
+                'status'      => $team->getStatus(),
+                'information' => $team->getInformation(),
+            ];
+        } else {
+            $team = [
+                'id'          => $team['id'],
+                'title'       => $team['title'],
+                'company_id'  => $team['company_id'],
+                'status'      => $team['status'],
+                'information' => $team['information'],
+            ];
+        }
+
+        $team['information'] = !empty($team['information']) ? json_decode($team['information'], true) : [];
+
+        return $team;
+    }
+
+    public function canonizeTeamMember($teamMember): array
+    {
+        if (empty($teamMember)) {
+            return [];
+        }
+
+        if (is_object($teamMember)) {
+            $teamMember = [
+                'id'            => $teamMember->getId(),
+                'company_id'    => $teamMember->getCompanyId(),
+                'team_id'       => $teamMember->getTeamId(),
+                'user_id'       => $teamMember->getUserId(),
+                'time_create'   => $teamMember->getTimeCreate(),
+                'time_update'   => $teamMember->getTimeUpdate(),
+                'status'        => $teamMember->getStatus(),
+                'team_role'    => $teamMember->getTeamRole(),
+                'team_title'    => $teamMember->getTeamTitle(),
+                'user_identity' => $teamMember->getUserIdentity(),
+                'user_name'     => $teamMember->getUserName(),
+                'user_email'    => $teamMember->getUserEmail(),
+                'user_mobile'   => $teamMember->getUserMobile(),
+                'first_name'    => $teamMember->getFirstName(),
+                'last_name'     => $teamMember->getLastName(),
+            ];
+        } else {
+            $teamMember = [
+                'id'            => $teamMember['id'],
+                'company_id'    => $teamMember['company_id'],
+                'team_id'       => $teamMember['team_id'],
+                'user_id'       => $teamMember['user_id'],
+                'time_create'   => $teamMember['time_create'],
+                'time_update'   => $teamMember['time_update'],
+                'status'        => $teamMember['status'],
+                'team_role'    => $teamMember['team_role'],
+                'team_title'    => $teamMember['team_title'],
+                'user_identity' => $teamMember['user_identity'],
+                'user_name'     => $teamMember['user_name'],
+                'user_email'    => $teamMember['user_email'],
+                'user_mobile'   => $teamMember['user_mobile'],
+                'first_name'    => $teamMember['first_name'],
+                'last_name'     => $teamMember['last_name'],
+            ];
+        }
+
+        // Set time view
+        $teamMember['time_create_view'] = $this->utilityService->date($teamMember['time_create']);
+        $teamMember['time_update_view'] = $this->utilityService->date($teamMember['time_update']);
+
+        return $teamMember;
     }
 }
