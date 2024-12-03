@@ -2,6 +2,4 @@
 
 namespace Pi\Company\Service;
 
-interface ServiceInterface
-{
-}
+interface ServiceInterface {}

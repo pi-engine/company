@@ -24,8 +24,8 @@ class ListHandler implements RequestHandlerInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -39,7 +39,7 @@ class ListHandler implements RequestHandlerInterface
 
         $team = $this->companyService->listTeam($authorization, $requestBody);
 
-        $result      = [
+        $result = [
             'result' => true,
             'data'   => $team,
             'error'  => [],

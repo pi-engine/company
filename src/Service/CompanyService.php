@@ -96,12 +96,12 @@ class CompanyService implements ServiceInterface
 
     public function __construct(
         CompanyRepositoryInterface $companyRepository,
-        AccountService $accountService,
-        RoleService $roleService,
-        CacheService $cacheService,
-        NotificationService $notificationService,
-        UtilityService $utilityService,
-        $config
+        AccountService             $accountService,
+        RoleService                $roleService,
+        CacheService               $cacheService,
+        NotificationService        $notificationService,
+        UtilityService             $utilityService,
+                                   $config
     ) {
         $this->companyRepository   = $companyRepository;
         $this->accountService      = $accountService;
@@ -1039,8 +1039,8 @@ class CompanyService implements ServiceInterface
 
     public function getTeam(int $teamId): array
     {
-        $where   = ['id' => $teamId];
-        $team = $this->companyRepository->getTeam($where);
+        $where = ['id' => $teamId];
+        $team  = $this->companyRepository->getTeam($where);
         return $this->canonizeTeam($team);
     }
 
@@ -1127,7 +1127,7 @@ class CompanyService implements ServiceInterface
             'time_create' => time(),
             'time_update' => time(),
             'status'      => 1,
-            'team_role'     => $params['team_role'] ?? '',
+            'team_role'   => $params['team_role'] ?? '',
         ];
 
         // Add member
@@ -1137,7 +1137,7 @@ class CompanyService implements ServiceInterface
 
     public function getTeamMember(int $memberId): array
     {
-        $where   = ['id' => $memberId];
+        $where  = ['id' => $memberId];
         $member = $this->companyRepository->getTeamMember($where);
         return $this->canonizeTeamMember($member);
     }
@@ -1167,9 +1167,9 @@ class CompanyService implements ServiceInterface
         $offset = ($page - 1) * $limit;
 
         $listParams = [
-            'order'  => $order,
-            'offset' => $offset,
-            'limit'  => $limit,
+            'order'      => $order,
+            'offset'     => $offset,
+            'limit'      => $limit,
             'company_id' => $authorization['company_id'],
         ];
 
@@ -1460,7 +1460,7 @@ class CompanyService implements ServiceInterface
                 'time_create'   => $teamMember->getTimeCreate(),
                 'time_update'   => $teamMember->getTimeUpdate(),
                 'status'        => $teamMember->getStatus(),
-                'team_role'    => $teamMember->getTeamRole(),
+                'team_role'     => $teamMember->getTeamRole(),
                 'team_title'    => $teamMember->getTeamTitle(),
                 'user_identity' => $teamMember->getUserIdentity(),
                 'user_name'     => $teamMember->getUserName(),
@@ -1478,7 +1478,7 @@ class CompanyService implements ServiceInterface
                 'time_create'   => $teamMember['time_create'],
                 'time_update'   => $teamMember['time_update'],
                 'status'        => $teamMember['status'],
-                'team_role'    => $teamMember['team_role'],
+                'team_role'     => $teamMember['team_role'],
                 'team_title'    => $teamMember['team_title'],
                 'user_identity' => $teamMember['user_identity'],
                 'user_name'     => $teamMember['user_name'],

@@ -24,8 +24,8 @@ class AddHandler implements RequestHandlerInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -35,7 +35,7 @@ class AddHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $account     = $request->getAttribute('account');
-        $requestBody   = $request->getParsedBody();
+        $requestBody = $request->getParsedBody();
 
         $member = $this->companyService->addMemberByAdmin($requestBody, $account);
 

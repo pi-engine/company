@@ -28,9 +28,9 @@ class PackageMiddleware implements MiddlewareInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        ErrorHandler $errorHandler,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        ErrorHandler             $errorHandler,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;

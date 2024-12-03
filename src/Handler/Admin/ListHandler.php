@@ -24,8 +24,8 @@ class ListHandler implements RequestHandlerInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -35,7 +35,7 @@ class ListHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestBody = $request->getParsedBody();
-        $result = $this->companyService->getCompanyList($requestBody);
+        $result      = $this->companyService->getCompanyList($requestBody);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

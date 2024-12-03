@@ -87,14 +87,14 @@ class CompanyRepository implements CompanyRepositoryInterface
     private HydratorInterface $hydrator;
 
     public function __construct(
-        AdapterInterface $db,
+        AdapterInterface  $db,
         HydratorInterface $hydrator,
-        Inventory $inventoryPrototype,
-        Member $memberPrototype,
-        MemberCompany $memberCompanyPrototype,
-        Package $packagePrototype,
-        TeamInventory $teamInventoryPrototype,
-        TeamMember $teamMemberPrototype
+        Inventory         $inventoryPrototype,
+        Member            $memberPrototype,
+        MemberCompany     $memberCompanyPrototype,
+        Package           $packagePrototype,
+        TeamInventory     $teamInventoryPrototype,
+        TeamMember        $teamMemberPrototype
     ) {
         $this->db                     = $db;
         $this->hydrator               = $hydrator;
@@ -102,8 +102,8 @@ class CompanyRepository implements CompanyRepositoryInterface
         $this->memberPrototype        = $memberPrototype;
         $this->memberCompanyPrototype = $memberCompanyPrototype;
         $this->packagePrototype       = $packagePrototype;
-        $this->teamInventoryPrototype       = $teamInventoryPrototype;
-        $this->teamMemberPrototype       = $teamMemberPrototype;
+        $this->teamInventoryPrototype = $teamInventoryPrototype;
+        $this->teamMemberPrototype    = $teamMemberPrototype;
     }
 
     public function addCompany(array $params = []): Inventory

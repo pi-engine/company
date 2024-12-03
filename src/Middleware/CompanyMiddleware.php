@@ -28,9 +28,9 @@ class CompanyMiddleware implements MiddlewareInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        ErrorHandler $errorHandler,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        ErrorHandler             $errorHandler,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -40,7 +40,7 @@ class CompanyMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $account = $request->getAttribute('account');
+        $account     = $request->getAttribute('account');
         $requestBody = $request->getParsedBody();
         $checkResult = $this->companyService->authorization($account, $requestBody);
 

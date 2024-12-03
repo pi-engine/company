@@ -6,7 +6,7 @@ class TeamInventory
 {
     private mixed  $id;
     private string $title;
-    private int   $company_id;
+    private int    $company_id;
     private int    $status;
     private mixed  $information;
 
@@ -18,7 +18,7 @@ class TeamInventory
         $id = null
     ) {
         $this->title       = $title;
-        $this->company_id    = $company_id;
+        $this->company_id  = $company_id;
         $this->status      = $status;
         $this->information = $information;
         $this->id          = $id;

@@ -24,8 +24,8 @@ class DeleteHandler implements RequestHandlerInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -40,10 +40,10 @@ class DeleteHandler implements RequestHandlerInterface
         // Delete
         $this->companyService->deleteTeamMember($member);
 
-        $result      = [
+        $result = [
             'result' => true,
             'data'   => [
-                'message' => 'Team member has been deleted.'
+                'message' => 'Team member has been deleted.',
             ],
             'error'  => [],
         ];

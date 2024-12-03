@@ -2,10 +2,10 @@
 
 namespace Pi\Company\Factory\Handler\Api\Profile;
 
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Pi\Company\Handler\Api\Profile\ViewHandler;
 use Pi\Company\Service\CompanyService;
 use Psr\Container\ContainerInterface;
-use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 

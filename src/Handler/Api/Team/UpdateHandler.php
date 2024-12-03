@@ -24,8 +24,8 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        CompanyService $companyService
+        StreamFactoryInterface   $streamFactory,
+        CompanyService           $companyService
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -34,12 +34,12 @@ class UpdateHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $team = $request->getAttribute('team_item');
-        $requestBody   = $request->getParsedBody();
+        $team        = $request->getAttribute('team_item');
+        $requestBody = $request->getParsedBody();
 
         $team = $this->companyService->updateTeam($team, $requestBody);
 
-        $result      = [
+        $result = [
             'result' => true,
             'data'   => $team,
             'error'  => [],

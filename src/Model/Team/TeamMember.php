@@ -4,21 +4,21 @@ namespace Pi\Company\Model\Team;
 
 class TeamMember
 {
-    private mixed $id;
-    private int   $company_id;
-    private int $team_id;
-    private int   $user_id;
-    private int   $time_create;
-    private int   $time_update;
-    private int   $status;
+    private mixed  $id;
+    private int    $company_id;
+    private int    $team_id;
+    private int    $user_id;
+    private int    $time_create;
+    private int    $time_update;
+    private int    $status;
     private string $team_role;
-    private mixed $team_title;
-    private mixed $user_identity;
-    private mixed $user_name;
-    private mixed $user_email;
-    private mixed $user_mobile;
-    private mixed $first_name;
-    private mixed $last_name;
+    private mixed  $team_title;
+    private mixed  $user_identity;
+    private mixed  $user_name;
+    private mixed  $user_email;
+    private mixed  $user_mobile;
+    private mixed  $first_name;
+    private mixed  $last_name;
 
     public function __construct(
         $company_id,
@@ -38,13 +38,13 @@ class TeamMember
         $id = null
     ) {
         $this->company_id    = $company_id;
-        $this->team_id = $team_id;
+        $this->team_id       = $team_id;
         $this->user_id       = $user_id;
         $this->time_create   = $time_create;
         $this->time_update   = $time_update;
         $this->status        = $status;
         $this->team_role     = $team_role;
-        $this->team_title = $team_title;
+        $this->team_title    = $team_title;
         $this->user_identity = $user_identity;
         $this->user_name     = $user_name;
         $this->user_email    = $user_email;
