@@ -25,6 +25,8 @@ return [
             Middleware\CompanyMiddleware::class             => Factory\Middleware\CompanyMiddlewareFactory::class,
             Middleware\MemberAccessMiddleware::class        => Factory\Middleware\MemberAccessMiddlewareFactory::class,
             Middleware\PackageMiddleware::class             => Factory\Middleware\PackageMiddlewareFactory::class,
+            Middleware\TeamAccessMiddleware::class          => Factory\Middleware\TeamAccessMiddlewareFactory::class,
+            Middleware\TeamMemberAccessMiddleware::class    => Factory\Middleware\TeamMemberAccessMiddlewareFactory::class,
             Handler\Admin\AddHandler::class                 => Factory\Handler\Admin\AddHandlerFactory::class,
             Handler\Admin\UpdateHandler::class              => Factory\Handler\Admin\UpdateHandlerFactory::class,
             Handler\Admin\ListHandler::class                => Factory\Handler\Admin\ListHandlerFactory::class,
@@ -51,6 +53,13 @@ return [
             Handler\Api\Profile\SettingHandler::class       => Factory\Handler\Api\Profile\SettingHandlerFactory::class,
             Handler\Api\Package\CurrentHandler::class       => Factory\Handler\Api\Package\CurrentHandlerFactory::class,
             Handler\Api\Package\ListHandler::class          => Factory\Handler\Api\Package\ListHandlerFactory::class,
+            Handler\Api\Team\ListHandler::class             => Factory\Handler\Api\Team\ListHandlerFactory::class,
+            Handler\Api\Team\AddHandler::class              => Factory\Handler\Api\Team\AddHandlerFactory::class,
+            Handler\Api\Team\UpdateHandler::class           => Factory\Handler\Api\Team\UpdateHandlerFactory::class,
+            Handler\Api\Team\Member\ListHandler::class      => Factory\Handler\Api\Team\Member\ListHandlerFactory::class,
+            Handler\Api\Team\Member\AddHandler::class       => Factory\Handler\Api\Team\Member\AddHandlerFactory::class,
+            Handler\Api\Team\Member\UpdateHandler::class    => Factory\Handler\Api\Team\Member\UpdateHandlerFactory::class,
+            Handler\Api\Team\Member\DeleteHandler::class    => Factory\Handler\Api\Team\Member\DeleteHandlerFactory::class,
             Handler\InstallerHandler::class                 => Factory\Handler\InstallerHandlerFactory::class,
         ],
     ],
@@ -431,6 +440,196 @@ return [
                                             LoggerRequestMiddleware::class,
                                             Handler\Api\Package\ListHandler::class
                                         ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    // team section
+                    'team'           => [
+                        'type'         => Literal::class,
+                        'options'      => [
+                            'route'    => '/team',
+                            'defaults' => [],
+                        ],
+                        'child_routes' => [
+                            'list'   => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'title'       => 'Company team list',
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'team',
+                                        'handler'     => 'list',
+                                        'permissions' => 'company-team-list',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Team\ListHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'add'    => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/add',
+                                    'defaults' => [
+                                        'title'       => 'Company team add',
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'team',
+                                        'handler'     => 'add',
+                                        'permissions' => 'company-team-add',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Team\AddHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'update' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/update',
+                                    'defaults' => [
+                                        'title'       => 'Company team update',
+                                        'module'      => 'company',
+                                        'section'     => 'api',
+                                        'package'     => 'team',
+                                        'handler'     => 'update',
+                                        'permissions' => 'company-team-update',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            CompanyMiddleware::class,
+                                            Middleware\TeamAccessMiddleware::class,
+                                            LoggerRequestMiddleware::class,
+                                            Handler\Api\Team\AddHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'member' => [
+                                'type'         => Literal::class,
+                                'options'      => [
+                                    'route'    => '/member',
+                                    'defaults' => [],
+                                ],
+                                'child_routes' => [
+                                    'list'   => [
+                                        'type'    => Literal::class,
+                                        'options' => [
+                                            'route'    => '/list',
+                                            'defaults' => [
+                                                'title'       => 'Company team member list',
+                                                'module'      => 'company',
+                                                'section'     => 'api',
+                                                'package'     => 'team-member',
+                                                'handler'     => 'list',
+                                                'permissions' => 'company-team-member-list',
+                                                'controller'  => PipeSpec::class,
+                                                'middleware'  => new PipeSpec(
+                                                    RequestPreparationMiddleware::class,
+                                                    SecurityMiddleware::class,
+                                                    AuthenticationMiddleware::class,
+                                                    AuthorizationMiddleware::class,
+                                                    CompanyMiddleware::class,
+                                                    LoggerRequestMiddleware::class,
+                                                    Handler\Api\Team\Member\ListHandler::class
+                                                ),
+                                            ],
+                                        ],
+                                    ],
+                                    'add'    => [
+                                        'type'    => Literal::class,
+                                        'options' => [
+                                            'route'    => '/add',
+                                            'defaults' => [
+                                                'title'       => 'Company team member add',
+                                                'module'      => 'company',
+                                                'section'     => 'api',
+                                                'package'     => 'team-member',
+                                                'handler'     => 'add',
+                                                'permissions' => 'company-team-member-add',
+                                                'controller'  => PipeSpec::class,
+                                                'middleware'  => new PipeSpec(
+                                                    RequestPreparationMiddleware::class,
+                                                    SecurityMiddleware::class,
+                                                    AuthenticationMiddleware::class,
+                                                    AuthorizationMiddleware::class,
+                                                    CompanyMiddleware::class,
+                                                    LoggerRequestMiddleware::class,
+                                                    Handler\Api\Team\Member\AddHandler::class
+                                                ),
+                                            ],
+                                        ],
+                                    ],
+                                    'update' => [
+                                        'type'    => Literal::class,
+                                        'options' => [
+                                            'route'    => '/update',
+                                            'defaults' => [
+                                                'title'       => 'Company team member update',
+                                                'module'      => 'company',
+                                                'section'     => 'api',
+                                                'package'     => 'team-member',
+                                                'handler'     => 'update',
+                                                'permissions' => 'company-team-member-update',
+                                                'controller'  => PipeSpec::class,
+                                                'middleware'  => new PipeSpec(
+                                                    RequestPreparationMiddleware::class,
+                                                    SecurityMiddleware::class,
+                                                    AuthenticationMiddleware::class,
+                                                    AuthorizationMiddleware::class,
+                                                    CompanyMiddleware::class,
+                                                    Middleware\TeamMemberAccessMiddleware::class,
+                                                    LoggerRequestMiddleware::class,
+                                                    Handler\Api\Team\Member\UpdateHandler::class
+                                                ),
+                                            ],
+                                        ],
+                                    ],
+                                    'delete' => [
+                                        'type'    => Literal::class,
+                                        'options' => [
+                                            'route'    => '/delete',
+                                            'defaults' => [
+                                                'title'       => 'Company team member delete',
+                                                'module'      => 'company',
+                                                'section'     => 'api',
+                                                'package'     => 'team-member',
+                                                'handler'     => 'delete',
+                                                'permissions' => 'company-team-member-delete',
+                                                'controller'  => PipeSpec::class,
+                                                'middleware'  => new PipeSpec(
+                                                    RequestPreparationMiddleware::class,
+                                                    SecurityMiddleware::class,
+                                                    AuthenticationMiddleware::class,
+                                                    AuthorizationMiddleware::class,
+                                                    CompanyMiddleware::class,
+                                                    Middleware\TeamMemberAccessMiddleware::class,
+                                                    LoggerRequestMiddleware::class,
+                                                    Handler\Api\Team\Member\DeleteHandler::class
+                                                ),
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
