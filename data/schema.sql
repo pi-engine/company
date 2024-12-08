@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `company_team_member`
 	`time_create` INT(10) UNSIGNED    NOT NULL DEFAULT '0',
 	`time_update` INT(10) UNSIGNED    NOT NULL DEFAULT '0',
 	`status`      TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	'team_role'   VARCHAR(255)        NOT NULL DEFAULT '',
+	`team_role`   VARCHAR(255)        NOT NULL DEFAULT '',
 	PRIMARY KEY (`id`),
 	KEY `company_id` (`company_id`),
 	KEY `list` (`company_id`, `status`)

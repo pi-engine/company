@@ -114,6 +114,9 @@ class CompanyService implements ServiceInterface
 
     public function authorization($account, $params): array
     {
+        // Get cached user
+        $cacheUser = $this->accountService->getUserFromCache($account['id']);
+
         // Set result
         $result = [
             'result' => true,
@@ -123,8 +126,11 @@ class CompanyService implements ServiceInterface
                 'package_id'     => 0,
                 'project_id'     => 0,
                 'user'           => $account,
-                'standard_count' => 1,
-                'user_count'     => 100,
+                'roles'          => $cacheUser['roles'],
+                'member'         => null,
+                'company'        => null,
+                'is_admin'       => 0,
+                'package'        => null,
             ],
             'error'  => [],
         ];
@@ -142,9 +148,7 @@ class CompanyService implements ServiceInterface
         }
 
         // Set member params
-        $memberParams = [
-            'is_default' => 1,
-        ];
+        $memberParams = ['is_default' => 1];
         if (isset($params['company_id']) && !empty($params['company_id'])) {
             $memberParams['company_id'] = $params['company_id'];
         }
@@ -186,12 +190,6 @@ class CompanyService implements ServiceInterface
             ];
         }
 
-        // Get cached user
-        $cacheUser = $this->accountService->getUserFromCache($account['id']);
-
-        // Get user roles
-        $result['data']['roles'] = $cacheUser['roles'];
-
         // Check company
         if (!in_array($this->companyAdminRole, $result['data']['roles'])) {
             if (!in_array($this->companyMemberRole, $result['data']['roles'])) {
@@ -225,6 +223,54 @@ class CompanyService implements ServiceInterface
         $this->cacheService->setItem(sprintf('company-%s', $result['data']['company_id']), $result['data']['company'], $this->companyTtl);
 
         return $result;
+    }
+
+    public function switchCompany(int $userId, int $companyId): array
+    {
+        // Make all user company list
+        $companyList = [];
+        $list        = $this->getCompanyListByUser($userId);
+        foreach ($list as $single) {
+            $companyList[] = $single['company_id'];
+        }
+
+        // Check user have access to select company
+        if (!in_array($companyId, $companyList)) {
+            return [
+                'result' => false,
+                'data'   => [],
+                'error'  => [
+                    'message' => 'Please select a company !',
+                ],
+            ];
+        }
+
+        // set selected company as default
+        $this->companyRepository->setDefault($userId, $companyId);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Your company has been changed successfully !',
+            ],
+            'error'  => [],
+        ];
+    }
+
+    public function refreshToken($authorization, $tokenOldId): array
+    {
+        // Set account
+        $account = array_merge(
+            $authorization['user'],
+            [
+                'company_id'    => $authorization['company_id'],
+                'company_title' => $authorization['company']['title'],
+                'roles'         => $authorization['roles'],
+            ]
+        );
+
+        return $this->accountService->refreshToken($account, $tokenOldId);
     }
 
     public function registerCompany($account): array
@@ -810,8 +856,6 @@ class CompanyService implements ServiceInterface
                 'package_id'     => $authorization['package_id'],
                 'project_id'     => $authorization['project_id'],
                 'user'           => $account,
-                'standard_count' => $authorization['standard_count'],
-                'user_count'     => $authorization['user_count'],
                 'member'         => $member,
                 'company'        => $authorization['company'],
                 'roles'          => $roles,
@@ -890,8 +934,6 @@ class CompanyService implements ServiceInterface
                 'package_id'     => $company['package_id'],
                 'project_id'     => $company['project_id'],
                 'user'           => $account,
-                'standard_count' => $company['standard_count'] ?? 1,
-                'user_count'     => $company['user_count'] ?? 100,
                 'member'         => $member,
                 'company'        => $company,
                 'roles'          => $roles,
@@ -957,39 +999,6 @@ class CompanyService implements ServiceInterface
         }
 
         return $account;
-    }
-
-    public function switchCompany(int $userId, int $companyId): array
-    {
-        // Make all user company list
-        $companyList = [];
-        $list        = $this->getCompanyListByUser($userId);
-        foreach ($list as $single) {
-            $companyList[] = $single['company_id'];
-        }
-
-        // Check user have access to select company
-        if (!in_array($companyId, $companyList)) {
-            return [
-                'result' => false,
-                'data'   => [],
-                'error'  => [
-                    'message' => 'Please select a company !',
-                ],
-            ];
-        }
-
-        // set selected company as default
-        $this->companyRepository->setDefault($userId, $companyId);
-
-        // Set result
-        return [
-            'result' => true,
-            'data'   => [
-                'message' => 'Your company has been changed successfully !',
-            ],
-            'error'  => [],
-        ];
     }
 
     public function getPackage(int $packageId): array
@@ -1239,9 +1248,9 @@ class CompanyService implements ServiceInterface
         $offset = ($page - 1) * $limit;
 
         $listParams = [
-            'order'      => $order,
-            'offset'     => $offset,
-            'limit'      => $limit,
+            'order'  => $order,
+            'offset' => $offset,
+            'limit'  => $limit,
         ];
 
         if (isset($params['company_id']) && !empty($params['company_id'])) {

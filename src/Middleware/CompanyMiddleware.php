@@ -40,23 +40,55 @@ class CompanyMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $account     = $request->getAttribute('account');
-        $requestBody = $request->getParsedBody();
-        $checkResult = $this->companyService->authorization($account, $requestBody);
+        $account       = $request->getAttribute('account');
+        $tokenData     = $request->getAttribute('token_data');
+        $requestBody   = $request->getParsedBody();
+        $authorization = $this->companyService->authorization($account, $requestBody);
 
-        if (!$checkResult['result']) {
+        // Check authorization
+        if (!$authorization['result']) {
             $request = $request->withAttribute('status', StatusCodeInterface::STATUS_UNAUTHORIZED);
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => $checkResult['error']['message'],
+                    'message' => $authorization['error']['message'],
                     'code'    => StatusCodeInterface::STATUS_UNAUTHORIZED,
                 ]
             );
             return $this->errorHandler->handle($request);
         }
 
-        $request = $request->withAttribute('company_authorization', $checkResult['data']);
+        // Check authorization and token company_id is same
+        if (
+            (
+                !isset($tokenData['company_id'])
+                || empty($tokenData['company_id'])
+                || (int)$tokenData['company_id'] === 0
+                || (int)$tokenData['company_id'] !== (int)$authorization['data']['company_id']
+            )
+            && (
+                $tokenData['type'] != 'refresh'
+            )
+        ) {
+            $request = $request->withAttribute('status', StatusCodeInterface::STATUS_UPGRADE_REQUIRED);
+            $request = $request->withAttribute(
+                'error',
+                [
+                    'message' => 'Company ID not found, please refresh your token !',
+                    'code'    => StatusCodeInterface::STATUS_UPGRADE_REQUIRED,
+                ]
+            );
+            $request = $request->withAttribute(
+                'header',
+                [
+                    'Upgrade'         => 'refresh-token',
+                    'X-Upgrade-Token' => 'Please refresh your token by calling /company/authentication/refresh-token, by refresh_token',
+                ]
+            );
+            return $this->errorHandler->handle($request);
+        }
+
+        $request = $request->withAttribute('company_authorization', $authorization['data']);
         return $handler->handle($request);
     }
 }
