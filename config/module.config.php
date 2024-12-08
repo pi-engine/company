@@ -39,6 +39,8 @@ return [
             Handler\Admin\Member\ListHandler::class         => Factory\Handler\Admin\Member\ListHandlerFactory::class,
             Handler\Admin\Member\UpdateHandler::class       => Factory\Handler\Admin\Member\UpdateHandlerFactory::class,
             Handler\Admin\Member\ViewHandler::class         => Factory\Handler\Admin\Member\ViewHandlerFactory::class,
+            Handler\Admin\Team\ListHandler::class           => Factory\Handler\Admin\Team\ListHandlerFactory::class,
+            Handler\Admin\Team\Member\ListHandler::class    => Factory\Handler\Admin\Team\Member\ListHandlerFactory::class,
             Handler\Api\Authentication\CheckHandler::class  => Factory\Handler\Api\Authentication\CheckHandlerFactory::class,
             Handler\Api\Authentication\ListHandler::class   => Factory\Handler\Api\Authentication\ListHandlerFactory::class,
             Handler\Api\Authentication\SwitchHandler::class => Factory\Handler\Api\Authentication\SwitchHandlerFactory::class,
@@ -656,7 +658,7 @@ return [
                                 'section'     => 'admin',
                                 'package'     => 'general',
                                 'handler'     => 'list',
-                                'permissions' => 'company-list',
+                                'permissions' => 'admin-company-list',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
                                     RequestPreparationMiddleware::class,
@@ -678,7 +680,7 @@ return [
                                 'section'     => 'admin',
                                 'package'     => 'general',
                                 'handler'     => 'add',
-                                'permissions' => 'company-add',
+                                'permissions' => 'admin-company-add',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
                                     RequestPreparationMiddleware::class,
@@ -700,7 +702,7 @@ return [
                                 'section'     => 'admin',
                                 'package'     => 'general',
                                 'handler'     => 'update',
-                                'permissions' => 'company-update',
+                                'permissions' => 'admin-company-update',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
                                     RequestPreparationMiddleware::class,
@@ -722,7 +724,7 @@ return [
                                 'section'     => 'admin',
                                 'package'     => 'general',
                                 'handler'     => 'package',
-                                'permissions' => 'company-time-status',
+                                'permissions' => 'admin-company-time-status',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
                                     RequestPreparationMiddleware::class,
@@ -744,7 +746,7 @@ return [
                                 'section'     => 'admin',
                                 'package'     => 'general',
                                 'handler'     => 'package',
-                                'permissions' => 'company-report',
+                                'permissions' => 'admin-company-report',
                                 'controller'  => PipeSpec::class,
                                 'middleware'  => new PipeSpec(
                                     RequestPreparationMiddleware::class,
@@ -774,7 +776,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'package',
                                         'handler'     => 'add',
-                                        'permissions' => 'company-package-add',
+                                        'permissions' => 'admin-company-package-add',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -796,7 +798,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'package',
                                         'handler'     => 'update',
-                                        'permissions' => 'company-package-update',
+                                        'permissions' => 'admin-company-package-update',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -818,7 +820,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'package',
                                         'handler'     => 'list',
-                                        'permissions' => 'company-package-list',
+                                        'permissions' => 'admin-company-package-list',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -851,7 +853,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'member',
                                         'handler'     => 'list',
-                                        'permissions' => 'company-member-list',
+                                        'permissions' => 'admin-company-member-list',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -873,7 +875,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'member',
                                         'handler'     => 'add',
-                                        'permissions' => 'company-member-add',
+                                        'permissions' => 'admin-company-member-add',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -895,7 +897,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'member',
                                         'handler'     => 'update',
-                                        'permissions' => 'company-member-update',
+                                        'permissions' => 'admin-company-member-update',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -917,7 +919,7 @@ return [
                                         'section'     => 'admin',
                                         'package'     => 'member',
                                         'handler'     => 'view',
-                                        'permissions' => 'company-member-view',
+                                        'permissions' => 'admin-company-member-view',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -926,6 +928,69 @@ return [
                                             AuthorizationMiddleware::class,
                                             Handler\Admin\Member\ViewHandler::class
                                         ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    // Admin team section
+                    'team'           => [
+                        'type'         => Literal::class,
+                        'options'      => [
+                            'route'    => '/team',
+                            'defaults' => [],
+                        ],
+                        'child_routes' => [
+                            'list' => [
+                                'type'    => Literal::class,
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'title'       => 'Company team list',
+                                        'module'      => 'company',
+                                        'section'     => 'admin',
+                                        'package'     => 'team',
+                                        'handler'     => 'list',
+                                        'permissions' => 'admin-company-team-list',
+                                        'controller'  => PipeSpec::class,
+                                        'middleware'  => new PipeSpec(
+                                            RequestPreparationMiddleware::class,
+                                            SecurityMiddleware::class,
+                                            AuthenticationMiddleware::class,
+                                            AuthorizationMiddleware::class,
+                                            Handler\Admin\Team\ListHandler::class
+                                        ),
+                                    ],
+                                ],
+                            ],
+                            'member'           => [
+                                'type'         => Literal::class,
+                                'options'      => [
+                                    'route'    => '/member',
+                                    'defaults' => [],
+                                ],
+                                'child_routes' => [
+                                    'list' => [
+                                        'type'    => Literal::class,
+                                        'options' => [
+                                            'route'    => '/list',
+                                            'defaults' => [
+                                                'title'       => 'Company team member list',
+                                                'module'      => 'company',
+                                                'section'     => 'admin',
+                                                'package'     => 'team-member',
+                                                'handler'     => 'list',
+                                                'permissions' => 'admin-company-team-member-list',
+                                                'controller'  => PipeSpec::class,
+                                                'middleware'  => new PipeSpec(
+                                                    RequestPreparationMiddleware::class,
+                                                    SecurityMiddleware::class,
+                                                    AuthenticationMiddleware::class,
+                                                    AuthorizationMiddleware::class,
+                                                    Handler\Admin\Team\ListHandler::class
+                                                ),
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],

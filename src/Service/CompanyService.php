@@ -1117,6 +1117,24 @@ class CompanyService implements ServiceInterface
         return $list;
     }
 
+    public function listTeamByAdmin($params): array
+    {
+        // Set list params
+        $listParams = [];
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $listParams['company_id'] = $params['company_id'];
+        }
+
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getTeamList($listParams);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizeMemberCompany($row);
+        }
+
+        return $list;
+    }
+
     public function addTeamMember($authorization, $params): array
     {
         // Set member params
@@ -1173,6 +1191,62 @@ class CompanyService implements ServiceInterface
             'company_id' => $authorization['company_id'],
         ];
 
+        if (isset($params['team_id']) && !empty($params['team_id'])) {
+            $listParams['team_id'] = $params['team_id'];
+        }
+        if (isset($params['user_id']) && !empty($params['user_id'])) {
+            $listParams['user_id'] = $params['user_id'];
+        }
+        if (isset($params['mobile']) && !empty($params['mobile'])) {
+            $listParams['mobile'] = $params['mobile'];
+        }
+        if (isset($params['email']) && !empty($params['email'])) {
+            $listParams['email'] = $params['email'];
+        }
+        if (isset($params['name']) && !empty($params['name'])) {
+            $listParams['name'] = $params['name'];
+        }
+
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getTeamMemberList($listParams);
+        foreach ($rowSet as $row) {
+            $list[] = $this->canonizeTeamMember($row);
+        }
+
+        // Get count
+        $count = $this->companyRepository->getTeamMemberCount($listParams);
+
+        return [
+            'result' => true,
+            'data'   => [
+                'list'      => array_values($list),
+                'paginator' => [
+                    'count' => $count,
+                    'limit' => $limit,
+                    'page'  => $page,
+                ],
+            ],
+            'error'  => [],
+        ];
+    }
+
+    public function listTeamMemberByAdmin($params): array
+    {
+        $limit  = (int)($params['limit'] ?? 25);
+        $page   = (int)($params['page'] ?? 1);
+        $order  = $params['order'] ?? ['time_create DESC'];
+        $offset = ($page - 1) * $limit;
+
+        $listParams = [
+            'order'      => $order,
+            'offset'     => $offset,
+            'limit'      => $limit,
+        ];
+
+        if (isset($params['company_id']) && !empty($params['company_id'])) {
+            $listParams['company_id'] = $params['company_id'];
+        }
         if (isset($params['team_id']) && !empty($params['team_id'])) {
             $listParams['team_id'] = $params['team_id'];
         }

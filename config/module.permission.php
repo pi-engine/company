@@ -8,7 +8,7 @@ return [
             'section'     => 'admin',
             'package'     => 'general',
             'handler'     => 'list',
-            'permissions' => 'company-list',
+            'permissions' => 'admin-company-list',
             'role'        => [
                 'admin',
             ],
@@ -19,7 +19,7 @@ return [
             'section'     => 'admin',
             'package'     => 'general',
             'handler'     => 'add',
-            'permissions' => 'company-add',
+            'permissions' => 'admin-company-add',
             'role'        => [
                 'admin',
             ],
@@ -30,7 +30,7 @@ return [
             'section'     => 'admin',
             'package'     => 'general',
             'handler'     => 'update',
-            'permissions' => 'company-update',
+            'permissions' => 'admin-company-update',
             'role'        => [
                 'admin',
             ],
@@ -41,7 +41,7 @@ return [
             'section'     => 'admin',
             'package'     => 'general',
             'handler'     => 'package',
-            'permissions' => 'company-time-status',
+            'permissions' => 'admin-company-time-status',
             'role'        => [
                 'admin',
             ],
@@ -52,7 +52,7 @@ return [
             'section'     => 'admin',
             'package'     => 'general',
             'handler'     => 'package',
-            'permissions' => 'company-report',
+            'permissions' => 'admin-company-report',
             'role'        => [
                 'admin',
             ],
@@ -63,7 +63,7 @@ return [
             'section'     => 'admin',
             'package'     => 'package',
             'handler'     => 'add',
-            'permissions' => 'company-package-add',
+            'permissions' => 'admin-company-package-add',
             'role'        => [
                 'admin',
             ],
@@ -74,7 +74,7 @@ return [
             'section'     => 'admin',
             'package'     => 'package',
             'handler'     => 'update',
-            'permissions' => 'company-package-update',
+            'permissions' => 'admin-company-package-update',
             'role'        => [
                 'admin',
             ],
@@ -85,7 +85,7 @@ return [
             'section'     => 'admin',
             'package'     => 'package',
             'handler'     => 'list',
-            'permissions' => 'company-package-list',
+            'permissions' => 'admin-company-package-list',
             'role'        => [
                 'admin',
             ],
@@ -96,7 +96,7 @@ return [
             'section'     => 'admin',
             'package'     => 'member',
             'handler'     => 'list',
-            'permissions' => 'company-member-list',
+            'permissions' => 'admin-company-member-list',
             'role'        => [
                 'admin',
             ],
@@ -107,7 +107,7 @@ return [
             'section'     => 'admin',
             'package'     => 'member',
             'handler'     => 'add',
-            'permissions' => 'company-member-add',
+            'permissions' => 'admin-company-member-add',
             'role'        => [
                 'admin',
             ],
@@ -118,7 +118,7 @@ return [
             'section'     => 'admin',
             'package'     => 'member',
             'handler'     => 'update',
-            'permissions' => 'company-member-update',
+            'permissions' => 'admin-company-member-update',
             'role'        => [
                 'admin',
             ],
@@ -129,11 +129,33 @@ return [
             'section'     => 'admin',
             'package'     => 'member',
             'handler'     => 'view',
-            'permissions' => 'company-member-view',
+            'permissions' => 'admin-company-member-view',
             'role'        => [
                 'admin',
             ],
         ],
+        [
+            'title'       => 'Company team list',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'team',
+            'handler'     => 'list',
+            'permissions' => 'admin-company-team-list',
+            'role'        => [
+                'admin',
+            ],
+        ],
+        [
+            'title'       => 'Company team member list',
+            'module'      => 'company',
+            'section'     => 'admin',
+            'package'     => 'team-member',
+            'handler'     => 'list',
+            'permissions' => 'admin-company-team-member-list',
+            'role'        => [
+                'admin',
+            ],
+        ]
     ],
     'api'   => [
         [
