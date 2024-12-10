@@ -37,13 +37,7 @@ class ListHandler implements RequestHandlerInterface
         $authorization = $request->getAttribute('company_authorization');
         $requestBody   = $request->getParsedBody();
 
-        $member = $this->companyService->listTeamMember($authorization, $requestBody);
-
-        $result = [
-            'result' => true,
-            'data'   => $member,
-            'error'  => [],
-        ];
+        $result = $this->companyService->listTeamMember($authorization, $requestBody);
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

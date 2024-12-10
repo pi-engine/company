@@ -545,7 +545,7 @@ return [
                                             CompanyMiddleware::class,
                                             Middleware\TeamAccessMiddleware::class,
                                             LoggerRequestMiddleware::class,
-                                            Handler\Api\Team\AddHandler::class
+                                            Handler\Api\Team\UpdateHandler::class
                                         ),
                                     ],
                                 ],

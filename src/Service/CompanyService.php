@@ -1120,7 +1120,7 @@ class CompanyService implements ServiceInterface
         $list   = [];
         $rowSet = $this->companyRepository->getTeamList($listParams);
         foreach ($rowSet as $row) {
-            $list[] = $this->canonizeMemberCompany($row);
+            $list[] = $this->canonizeTeam($row);
         }
 
         return $list;
@@ -1138,7 +1138,7 @@ class CompanyService implements ServiceInterface
         $list   = [];
         $rowSet = $this->companyRepository->getTeamList($listParams);
         foreach ($rowSet as $row) {
-            $list[] = $this->canonizeMemberCompany($row);
+            $list[] = $this->canonizeTeam($row);
         }
 
         return $list;
