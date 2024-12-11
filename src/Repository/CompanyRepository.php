@@ -162,6 +162,9 @@ class CompanyRepository implements CompanyRepositoryInterface
         if (isset($params['state']) && !empty($params['state'])) {
             $where['company.state'] = $params['state'];
         }
+        if (isset($params['reseller_id']) && !empty($params['reseller_id'])) {
+            $where['company.reseller_id'] = $params['reseller_id'];
+        }
         if (isset($params['id']) && !empty($params['id'])) {
             $where['company.id'] = $params['id'];
         }

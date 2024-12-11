@@ -38,17 +38,15 @@ class AddHandler implements RequestHandlerInterface
         $authorization = $request->getAttribute('company_authorization');
         $requestBody   = $request->getParsedBody();
 
-        $params = [
-            'company_id' => $authorization['company_id'],
-            'first_name' => $requestBody['first_name'] ?? '',
-            'last_name'  => $requestBody['last_name'] ?? '',
-            'email'      => $requestBody['email'] ?? '',
-            'roles'      => $requestBody['roles'] ?? '',
-            'added_by'   => $account,
-        ];
+        // Add member
+        $member = $this->companyService->addMemberByCompany($authorization['company'], $requestBody, $account);
 
         // Set result
-        $result = $this->companyService->addMember($authorization, $params);
+        $result = [
+            'result' => true,
+            'data'   => $member,
+            'error'  => [],
+        ];
 
         return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

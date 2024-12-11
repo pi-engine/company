@@ -90,9 +90,9 @@ class CompanyService implements ServiceInterface
             'email',
         ];
 
-    protected int $companyTtl = 31536000;
+    public int $companyTtl = 31536000;
 
-    protected int $packageTtl = 31536000;
+    public int $packageTtl = 31536000;
 
     public function __construct(
         CompanyRepositoryInterface $companyRepository,
@@ -406,6 +406,9 @@ class CompanyService implements ServiceInterface
         if (isset($params['title']) && !empty($params['title'])) {
             $listParams['title'] = $params['title'];
         }
+        if (isset($params['reseller_id']) && !empty($params['reseller_id'])) {
+            $listParams['reseller_id'] = $params['reseller_id'];
+        }
         if (isset($params['status']) && !empty($params['status'])) {
             $listParams['status'] = $params['status'];
         }
@@ -448,6 +451,31 @@ class CompanyService implements ServiceInterface
             ],
             'error'  => [],
         ];
+    }
+
+    public function getCompanyListLight($params): array
+    {
+        $listParams = [];
+        if (isset($params['reseller_id']) && !empty($params['reseller_id'])) {
+            $listParams['reseller_id'] = $params['reseller_id'];
+        }
+        if (isset($params['status']) && !empty($params['status'])) {
+            $listParams['status'] = $params['status'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $listParams['id'] = $params['id'];
+        } elseif (isset($params['id']) && empty($params['id'])) {
+            return [];
+        }
+
+        // Get list
+        $list   = [];
+        $rowSet = $this->companyRepository->getCompanyList($listParams);
+        foreach ($rowSet as $row) {
+            $list[$row->getId()] = $this->canonizeCompanyLight($row);
+        }
+
+        return $list;
     }
 
     public function updateCompany($authorization, $params): array
@@ -796,102 +824,33 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function addMember($authorization, $params): array
+    public function addMemberByCompany($company, $params, $operator): array
     {
         // Add or Get account
         $account = $this->accountService->addOrGetAccount($params);
 
-        // Check member not exist
-        $member = $this->getMember($account['id'], ['company_id' => $params['company_id']]);
-
-        // Add member if not exist
-        if (!empty($member)) {
-            return [
-                'result' => false,
-                'data'   => $member,
-                'error'  => [
-                    'message' => 'This member added before in your company !',
-                ],
-                'status' => StatusCodeInterface::STATUS_FORBIDDEN,
-            ];
-        }
-
-        // Set member params
-        $memberParams = [
-            'company_id'  => $params['company_id'],
-            'user_id'     => $account['id'],
-            'time_create' => time(),
-            'time_update' => time(),
-            'status'      => 1,
-        ];
-
-        // Add member
-        $member = $this->companyRepository->addMember($memberParams);
-        $member = $this->canonizeMember($member);
-
-        // Add roles
-        $roles = $params['roles'] ?? [$this->companyMemberRole];
-        foreach ($roles as $role) {
-            $this->roleService->addRoleAccount($account, $role);
-        }
-
-        // Check admin for a cache
-        $isAdmin = 0;
-        if (in_array($this->companyAdminRole, $roles)
-            || in_array($this->companySuperUserRole, $roles)
-        ) {
-            $isAdmin = 1;
-        }
-
-        // Set company setup
-        $account['is_company_setup'] = true;
-
-        // Set/Update user data to cache
-        $this->cacheService->setUser($account['id'], [
-            'account'       => $account,
-            'roles'         => $roles,
-            'authorization' => [
-                'user_id'        => (int)$account['id'],
-                'company_id'     => $authorization['company']['id'],
-                'package_id'     => $authorization['package_id'],
-                'project_id'     => $authorization['project_id'],
-                'user'           => $account,
-                'member'         => $member,
-                'company'        => $authorization['company'],
-                'roles'          => $roles,
-                'is_admin'       => $isAdmin,
-                'package'        => $authorization['package'] ?? [],
-            ],
-        ]);
-
-        return [
-            'result' => true,
-            'data'   => $member,
-            'error'  => [],
-        ];
+        // Add or Get member
+        return $this->addMember($account, $company, $params, $operator);
     }
 
     public function addMemberByAdmin($params, $operator): array
     {
-        // Get company
-        $company = $this->getCompany((int)$params['company_id']);
-
         // Add or Get account
         $account = $this->accountService->addOrGetAccount($params);
 
+        // Get company
+        $company = $this->getCompany((int)$params['company_id']);
+
+        // Add or Get member
+        return $this->addMember($account, $company, $params, $operator);
+    }
+
+    public function addMember($account, $company, $params, $operator = []): array
+    {
         // Check member not exist
         $member = $this->getMember($account['id'], ['company_id' => $company['id']]);
-
-        // Add member if not exist
         if (!empty($member)) {
-            return [
-                'result' => false,
-                'data'   => $member,
-                'error'  => [
-                    'message' => 'This member added before in your company !',
-                ],
-                'status' => StatusCodeInterface::STATUS_FORBIDDEN,
-            ];
+            return $member;
         }
 
         // Set member params
@@ -942,11 +901,7 @@ class CompanyService implements ServiceInterface
             ],
         ]);
 
-        return [
-            'result' => true,
-            'data'   => $member,
-            'error'  => [],
-        ];
+        return $member;
     }
 
     public function updateMember($authorization, $params, $member): array
@@ -1379,6 +1334,36 @@ class CompanyService implements ServiceInterface
             $company['setting']['package']['time_start_view']  = $this->utilityService->date($company['setting']['package']['time_start']);
             $company['setting']['package']['time_renew_view']  = $this->utilityService->date($company['setting']['package']['time_renew']);
             $company['setting']['package']['time_expire_view'] = $this->utilityService->date($company['setting']['package']['time_expire']);
+        }
+
+        return $company;
+    }
+
+    public function canonizeCompanyLight($company): array
+    {
+        if (empty($company)) {
+            return [];
+        }
+
+        if (is_object($company)) {
+            $company = [
+                'id'               => $company->getId(),
+                'title'            => $company->getTitle(),
+                'user_id'          => $company->getUserId(),
+                'package_id'       => $company->getPackageId(),
+                'reseller_id'      => $company->getResellerId(),
+                'industry_id'      => $company->getIndustryId(),
+                'status'           => $company->getStatus(),
+                           ];
+        } else {
+            $company = [
+                'id'               => $company['id'],
+                'title'            => $company['title'],
+                'user_id'          => $company['user_id'],
+                'package_id'       => $company['package_id'],
+                'reseller_id'      => $company['reseller_id'],
+                'status'           => $company['status'],
+            ];
         }
 
         return $company;
