@@ -22,6 +22,7 @@ return [
         'factories' => [
             Repository\CompanyRepository::class              => Factory\Repository\CompanyRepositoryFactory::class,
             Service\CompanyService::class                    => Factory\Service\CompanyServiceFactory::class,
+            Service\CompanyLightService::class               => Factory\Service\CompanyLightServiceFactory::class,
             Middleware\CompanyMiddleware::class              => Factory\Middleware\CompanyMiddlewareFactory::class,
             Middleware\MemberAccessMiddleware::class         => Factory\Middleware\MemberAccessMiddlewareFactory::class,
             Middleware\PackageMiddleware::class              => Factory\Middleware\PackageMiddlewareFactory::class,
