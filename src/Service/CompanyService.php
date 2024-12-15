@@ -121,16 +121,16 @@ class CompanyService implements ServiceInterface
         $result = [
             'result' => true,
             'data'   => [
-                'user_id'        => $account['id'],
-                'company_id'     => 0,
-                'package_id'     => 0,
-                'project_id'     => 0,
-                'user'           => $account,
-                'roles'          => $cacheUser['roles'],
-                'member'         => null,
-                'company'        => null,
-                'is_admin'       => 0,
-                'package'        => null,
+                'user_id'    => $account['id'],
+                'company_id' => 0,
+                'package_id' => 0,
+                'project_id' => 0,
+                'user'       => $account,
+                'roles'      => $cacheUser['roles'],
+                'member'     => null,
+                'company'    => null,
+                'is_admin'   => 0,
+                'package'    => null,
             ],
             'error'  => [],
         ];
@@ -216,8 +216,28 @@ class CompanyService implements ServiceInterface
             $result['data']['is_admin'] = 1;
         }
 
-        // Update user cache
-        $this->cacheService->setUser($account['id'], ['authorization' => $result['data']]);
+        // Set and clean user authorization cache
+        $account = [
+            'id'               => $result['data']['user_id'],
+            'is_company_setup' => true,
+            'company_id'       => $result['data']['company']['id'],
+            'company_title'    => $result['data']['company']['title'],
+            'roles'            => $result['data']['roles'],
+            'authorization'    => [
+                'user_id'    => $result['data']['user_id'],
+                'company_id' => $result['data']['company_id'],
+                'package_id' => $result['data']['package_id'],
+                'project_id' => $result['data']['project_id'],
+                'is_admin'   => $result['data']['is_admin'],
+                'company'    => $result['data']['company'],
+            ],
+        ];
+
+        // Clean company data
+        unset($account['authorization']['company']['setting']);
+
+        // Save to cache
+        $this->accountService->manageUserCache($account);
 
         // Set company cache
         $this->cacheService->setItem(sprintf('company-%s', $result['data']['company_id']), $result['data']['company'], $this->companyTtl);
@@ -867,39 +887,39 @@ class CompanyService implements ServiceInterface
         $member = $this->canonizeMember($member);
 
         // Add roles
-        $roles = $params['roles'] ?? [$this->companyMemberRole];
-        foreach ($roles as $role) {
+        $account['roles'] = $params['roles'] ?? [$this->companyMemberRole];
+        foreach ($account['roles'] as $role) {
             $this->roleService->addRoleAccount($account, $role, 'api', $operator);
         }
 
         // Check admin for a cache
         $isAdmin = 0;
-        if (in_array($this->companyAdminRole, $roles)
-            || in_array($this->companySuperUserRole, $roles)
+        if (in_array($this->companyAdminRole, $account['roles'])
+            || in_array($this->companySuperUserRole, $account['roles'])
         ) {
             $isAdmin = 1;
         }
 
         // Set company setup
         $account['is_company_setup'] = true;
+        $account['company_id']       = $company['id'];
+        $account['company_title']    = $company['title'];
 
-        // Set/Update user data to cache
-        $this->cacheService->setUser($account['id'], [
-            'account'       => $account,
-            'roles'         => $roles,
-            'authorization' => [
-                'user_id'        => (int)$account['id'],
-                'company_id'     => $company['id'],
-                'package_id'     => $company['package_id'],
-                'project_id'     => $company['project_id'],
-                'user'           => $account,
-                'member'         => $member,
-                'company'        => $company,
-                'roles'          => $roles,
-                'is_admin'       => $isAdmin,
-                'package'        => $company['package'] ?? [],
-            ],
-        ]);
+        // Set and clean user authorization cache
+        $account['authorization'] = [
+            'user_id'    => $company['user_id'],
+            'company_id' => $company['company_id'],
+            'package_id' => $company['package_id'],
+            'project_id' => $company['project_id'],
+            'is_admin'   => $isAdmin,
+            'company'    => $company,
+        ];
+
+        // Clean company data
+        unset($account['authorization']['company']['setting']);
+
+        // Save to cache
+        $this->accountService->manageUserCache($account);
 
         return $member;
     }
@@ -1347,22 +1367,22 @@ class CompanyService implements ServiceInterface
 
         if (is_object($company)) {
             $company = [
-                'id'               => $company->getId(),
-                'title'            => $company->getTitle(),
-                'user_id'          => $company->getUserId(),
-                'package_id'       => $company->getPackageId(),
-                'reseller_id'      => $company->getResellerId(),
-                'industry_id'      => $company->getIndustryId(),
-                'status'           => $company->getStatus(),
-                           ];
+                'id'          => $company->getId(),
+                'title'       => $company->getTitle(),
+                'user_id'     => $company->getUserId(),
+                'package_id'  => $company->getPackageId(),
+                'reseller_id' => $company->getResellerId(),
+                'industry_id' => $company->getIndustryId(),
+                'status'      => $company->getStatus(),
+            ];
         } else {
             $company = [
-                'id'               => $company['id'],
-                'title'            => $company['title'],
-                'user_id'          => $company['user_id'],
-                'package_id'       => $company['package_id'],
-                'reseller_id'      => $company['reseller_id'],
-                'status'           => $company['status'],
+                'id'          => $company['id'],
+                'title'       => $company['title'],
+                'user_id'     => $company['user_id'],
+                'package_id'  => $company['package_id'],
+                'reseller_id' => $company['reseller_id'],
+                'status'      => $company['status'],
             ];
         }
 
