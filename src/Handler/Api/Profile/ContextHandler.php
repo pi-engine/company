@@ -3,8 +3,8 @@
 namespace Pi\Company\Handler\Api\Profile;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 use Pi\Company\Service\CompanyService;
+use Pi\Core\Response\EscapingJsonResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,13 +52,13 @@ class ContextHandler implements RequestHandlerInterface
                 ],
                 'status' => StatusCodeInterface::STATUS_FORBIDDEN,
             ];
-            return new JsonResponse($errorResponse, StatusCodeInterface::STATUS_FORBIDDEN);
+            return new EscapingJsonResponse($errorResponse, StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
         $requestBody['type'] = 'context';
 
         $result = $this->companyService->updateCompanySetting($authorization, $requestBody);
 
-        return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
+        return new EscapingJsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
 }

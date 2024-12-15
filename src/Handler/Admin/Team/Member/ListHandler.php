@@ -3,8 +3,8 @@
 namespace Pi\Company\Handler\Admin\Team\Member;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 use Pi\Company\Service\CompanyService;
+use Pi\Core\Response\EscapingJsonResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,6 +37,6 @@ class ListHandler implements RequestHandlerInterface
         $requestBody = $request->getParsedBody();
         $result      = $this->companyService->listTeamMemberByAdmin($requestBody);
 
-        return new JsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
+        return new EscapingJsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
 }
