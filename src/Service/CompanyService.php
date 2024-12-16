@@ -3,13 +3,13 @@
 namespace Pi\Company\Service;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Laminas\Math\Rand;
 use Pi\Company\Repository\CompanyRepositoryInterface;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
 use Pi\Notification\Service\NotificationService;
 use Pi\User\Service\AccountService;
 use Pi\User\Service\RoleService;
+use Random\RandomException;
 
 class CompanyService implements ServiceInterface
 {
@@ -293,11 +293,14 @@ class CompanyService implements ServiceInterface
         return $this->accountService->refreshToken($account, $tokenOldId);
     }
 
+    /**
+     * @throws RandomException
+     */
     public function registerCompany($account): array
     {
         // Set company params
         $addParams = [
-            'title'            => $account['company'] ?? sprintf('%s company', Rand::getString('8', 'abcdefghijklmnopqrstuvwxyz0123456789')),
+            'title'            => $account['company'] ?? sprintf('%s company', bin2hex(random_bytes(4))),
             'user_id'          => $account['id'],
             'time_create'      => time(),
             'time_update'      => time(),
