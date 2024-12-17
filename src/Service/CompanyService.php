@@ -956,7 +956,7 @@ class CompanyService implements ServiceInterface
     public function updateMemberByAdmin($params, $operator): array
     {
         // Get member
-        $member = $member ?? $this->getMember($params['user_id'], ['company_id' => $params['company_id']]);
+        $member = $this->getMember($params['user_id'], ['company_id' => $params['company_id']]);
 
         // Update account
         $account = ['id' => $params['user_id']];
