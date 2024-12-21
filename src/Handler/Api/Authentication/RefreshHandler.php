@@ -35,8 +35,8 @@ class RefreshHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $authorization = $request->getAttribute('company_authorization');
-        $tokenOldId    = $request->getAttribute('token_id');
-        $result        = $this->companyService->refreshToken($authorization, $tokenOldId);
+        $tokenId    = $request->getAttribute('token_id');
+        $result        = $this->companyService->refreshToken($authorization, $tokenId);
 
         return new EscapingJsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }
