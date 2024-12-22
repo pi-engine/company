@@ -1058,20 +1058,48 @@ class CompanyService implements ServiceInterface
 
     public function addTeam($authorization, $params): array
     {
+        // Set members
+        $members = [];
+        if (isset($params['members']) && !empty($params['members'])) {
+            $members = $params['members'];
+            unset($params['members']);
+        }
+
         // Set team params
         $addParams = [
             'title'       => $params['title'],
             'company_id'  => $authorization['company_id'],
             'status'      => 1,
             'information' => json_encode(
-                $params,
+                [
+                    'description' => $params['description'] ?? ''
+                ],
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
             ),
         ];
 
         // Add team
         $team = $this->companyRepository->addTeam($addParams);
-        return $this->canonizeTeam($team);
+        $team = $this->canonizeTeam($team);
+
+        // Save members
+        if (!empty($members)) {
+            foreach ($members as $member) {
+                if (isset($member['user_id']) && is_numeric($member['user_id'])) {
+                    // Set team member params
+                    $addMemberParams = [
+                        'team_id'   => $team['id'],
+                        'user_id'   => $member['user_id'],
+                        'team_role' => $member['team_role'] ?? '',
+                    ];
+
+                    // Add member
+                    $team['members'][] = $this->addTeamMember($authorization, $addMemberParams);
+                }
+            }
+        }
+
+        return $team;
     }
 
     public function updateTeam($team, $params): array
