@@ -7,6 +7,7 @@ use Laminas\Router\Http\Literal;
 use Pi\Company\Middleware\CompanyMiddleware;
 use Pi\Company\Middleware\MemberAccessMiddleware;
 use Pi\Company\Middleware\PackageMiddleware;
+use Pi\Core\Middleware\ErrorMiddleware;
 use Pi\Core\Middleware\InstallerMiddleware;
 use Pi\Core\Middleware\RequestPreparationMiddleware;
 use Pi\Core\Middleware\SecurityMiddleware;
@@ -101,6 +102,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Authentication\CheckHandler::class
                                         ),
                                     ],
@@ -122,6 +124,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Authentication\ListHandler::class
                                         ),
                                     ],
@@ -142,6 +145,7 @@ return [
                                             SecurityMiddleware::class,
                                             AuthenticationMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Authentication\SwitchHandler::class
                                         ),
                                     ],
@@ -163,6 +167,7 @@ return [
                                             AuthenticationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Authentication\RefreshHandler::class
                                         ),
                                     ],
@@ -197,6 +202,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Member\ListHandler::class
                                         ),
                                     ],
@@ -222,6 +228,7 @@ return [
                                             CompanyMiddleware::class,
                                             PackageMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Member\AddHandler::class
                                         ),
                                     ],
@@ -248,6 +255,7 @@ return [
                                             PackageMiddleware::class,
                                             MemberAccessMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Member\ViewHandler::class
                                         ),
                                     ],
@@ -274,6 +282,7 @@ return [
                                             PackageMiddleware::class,
                                             MemberAccessMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Member\UpdateHandler::class
                                         ),
                                     ],
@@ -299,6 +308,7 @@ return [
                                             CompanyMiddleware::class,
                                             PackageMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Member\RoleHandler::class
                                         ),
                                     ],
@@ -333,6 +343,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Profile\ViewHandler::class
                                         ),
                                     ],
@@ -357,6 +368,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Profile\UpdateHandler::class
                                         ),
                                     ],
@@ -381,6 +393,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Profile\ContextHandler::class
                                         ),
                                     ],
@@ -405,6 +418,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Profile\SettingHandler::class
                                         ),
                                     ],
@@ -439,6 +453,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Package\CurrentHandler::class
                                         ),
                                     ],
@@ -463,6 +478,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Package\ListHandler::class
                                         ),
                                     ],
@@ -497,6 +513,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Team\ListHandler::class
                                         ),
                                     ],
@@ -521,6 +538,7 @@ return [
                                             AuthorizationMiddleware::class,
                                             CompanyMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Team\AddHandler::class
                                         ),
                                     ],
@@ -546,6 +564,7 @@ return [
                                             CompanyMiddleware::class,
                                             Middleware\TeamAccessMiddleware::class,
                                             LoggerRequestResponseMiddleware::class,
+                                            ErrorMiddleware::class,
                                             Handler\Api\Team\UpdateHandler::class
                                         ),
                                     ],
@@ -577,6 +596,7 @@ return [
                                                     AuthorizationMiddleware::class,
                                                     CompanyMiddleware::class,
                                                     LoggerRequestResponseMiddleware::class,
+                                                    ErrorMiddleware::class,
                                                     Handler\Api\Team\Member\ListHandler::class
                                                 ),
                                             ],
@@ -601,6 +621,7 @@ return [
                                                     AuthorizationMiddleware::class,
                                                     CompanyMiddleware::class,
                                                     LoggerRequestResponseMiddleware::class,
+                                                    ErrorMiddleware::class,
                                                     Handler\Api\Team\Member\AddHandler::class
                                                 ),
                                             ],
@@ -626,6 +647,7 @@ return [
                                                     CompanyMiddleware::class,
                                                     Middleware\TeamMemberAccessMiddleware::class,
                                                     LoggerRequestResponseMiddleware::class,
+                                                    ErrorMiddleware::class,
                                                     Handler\Api\Team\Member\UpdateHandler::class
                                                 ),
                                             ],
@@ -651,6 +673,7 @@ return [
                                                     CompanyMiddleware::class,
                                                     Middleware\TeamMemberAccessMiddleware::class,
                                                     LoggerRequestResponseMiddleware::class,
+                                                    ErrorMiddleware::class,
                                                     Handler\Api\Team\Member\DeleteHandler::class
                                                 ),
                                             ],
@@ -1036,6 +1059,7 @@ return [
                                     AuthenticationMiddleware::class,
                                     InstallerMiddleware::class,
                                     LoggerRequestResponseMiddleware::class,
+                                    ErrorMiddleware::class,
                                     Handler\InstallerHandler::class
                                 ),
                             ],
