@@ -70,21 +70,3 @@ CREATE TABLE IF NOT EXISTS `company_team_member`
 	KEY `company_id` (`company_id`),
 	KEY `list` (`company_id`, `status`)
 );
-
-# default roles for manage company RBAC
-/*
- INSERT INTO `role_resource` (`id`, `name`, `title`, `section`, `status`) VALUES
-(1, 'member', 'Member', 'api', 1),
-(2, 'admin', 'Admin', 'admin', 1),
-(3, 'companyadmin', 'Admin', 'api', 1),
-(4, 'companysuperuser', 'Super User', 'api', 1),
-(5, 'companyassessmentmanager', 'Assessment Manager', 'api', 1),
-(6, 'companycompliancemanager', 'Compliance Manager', 'api', 1),
-(7, 'companyriskmanager', 'Risk Manager', 'api', 1),
-(8, 'companyauditmanager', 'Audit Manager', 'api', 1),
-(9, 'companycomplianceofficer', 'Compliance Officer', 'api', 1),
-(10, 'companyauditor', 'Auditor', 'api', 1),
-(11, 'companymember', 'Team Member', 'api', 1),
-(12, 'companyviewer', 'Vewer', 'api', 1),
-(13, 'companyexternal', 'External Member', 'api', 1);
- */
