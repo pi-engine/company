@@ -36,15 +36,6 @@ class CompanyService implements ServiceInterface
 
     public string $companyAdminRole             = 'companyadmin';
     public string $companySuperUserRole         = 'companysuperuser';
-    public string $companyAssessmentManagerRole = 'companyassessmentmanager';
-    public string $companyComplianceManagerRole = 'companycompliancemanager';
-    public string $companyRiskManagerRole       = 'companyriskmanager';
-    public string $companyAuditManagerRole      = 'companyauditmanager';
-    public string $companyComplianceOfficerRole = 'companycomplianceofficer';
-    public string $companyAuditorRole           = 'companyauditor';
-    public string $companyMemberRole            = 'companymember';
-    public string $companyExternalRole          = 'companyexternal';
-    public string $companyViewerRole            = 'companyviewer';
     public int    $industryId                   = 1;
     public int    $packageId                    = 1;
     public string $packageExpire                = '+4 weeks';
