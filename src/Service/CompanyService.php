@@ -34,13 +34,31 @@ class CompanyService implements ServiceInterface
     /* @var array */
     protected array $config;
 
-    public string $companyAdminRole             = 'companyadmin';
-    public string $companySuperUserRole         = 'companysuperuser';
-    public int    $industryId                   = 1;
-    public int    $packageId                    = 1;
-    public string $packageExpire                = '+4 weeks';
+    public string $companyAdminRole         = 'companyadmin';
+    public string $companySuperUserRole     = 'companysuperuser';
+    public string $companyGovernanceManager = 'companygovernancemanager';
+    public string $companyGovernanceOfficer = 'companygovernanceofficer';
+    public string $companyGovernanceViewer  = 'companygovernanceviewer';
+    public string $companyAssessmentManager = 'companyassessmentmanager';
+    public string $companyAssessmentOfficer = 'companyassessmentofficer';
+    public string $companyAssessmentViewer  = 'companyassessmentviewer';
+    public string $companyComplianceManager = 'companycompliancemanager';
+    public string $companyComplianceOfficer = 'companycomplianceofficer';
+    public string $companyComplianceViewer  = 'companycomplianceviewer';
+    public string $companyRiskManager       = 'companyriskmanager';
+    public string $companyRiskOfficer       = 'companyriskofficer';
+    public string $companyRiskViewer        = 'companyriskviewer';
+    public string $companyAuditManager      = 'companyauditmanager';
+    public string $companyAuditor           = 'companyauditor';
+    public string $companyAuditViewer       = 'companyauditviewer';
+    public string $companyMemberRole        = 'companymember';
+    public string $companyExternalRole      = 'companyexternal';
+    public string $companyViewerRole        = 'companyviewer';
+    public int    $industryId               = 1;
+    public int    $packageId                = 1;
+    public string $packageExpire            = '+4 weeks';
     public array  $wizardSteps
-                                                = [
+                                            = [
             'user_profile'    => false,
             'company_profile' => false,
             'voucher'         => false,
@@ -1063,7 +1081,7 @@ class CompanyService implements ServiceInterface
             'status'      => 1,
             'information' => json_encode(
                 [
-                    'description' => $params['description'] ?? ''
+                    'description' => $params['description'] ?? '',
                 ],
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
             ),
