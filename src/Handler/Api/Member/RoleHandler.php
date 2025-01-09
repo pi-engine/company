@@ -47,28 +47,64 @@ class RoleHandler implements RequestHandlerInterface
                     'value' => 'Super User',
                 ],
                 [
-                    'key'   => $this->companyService->companyAssessmentManagerRole,
+                    'key'   => $this->companyService->companyGovernanceManager,
+                    'value' => 'Governance Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyGovernanceOfficer,
+                    'value' => 'Governance Officer',
+                ],
+                [
+                    'key'   => $this->companyService->companyGovernanceViewer,
+                    'value' => 'Governance viewer',
+                ],
+                [
+                    'key'   => $this->companyService->companyAssessmentManager,
                     'value' => 'Assessment Manager',
                 ],
                 [
-                    'key'   => $this->companyService->companyComplianceManagerRole,
+                    'key'   => $this->companyService->companyAssessmentOfficer,
+                    'value' => 'Assessment Officer',
+                ],
+                [
+                    'key'   => $this->companyService->companyAssessmentViewer,
+                    'value' => 'Assessment viewer',
+                ],
+                [
+                    'key'   => $this->companyService->companyComplianceManager,
                     'value' => 'Compliance Manager',
                 ],
                 [
-                    'key'   => $this->companyService->companyRiskManagerRole,
-                    'value' => 'Risk Manager',
-                ],
-                [
-                    'key'   => $this->companyService->companyAuditManagerRole,
-                    'value' => 'Audit Manager',
-                ],
-                [
-                    'key'   => $this->companyService->companyComplianceOfficerRole,
+                    'key'   => $this->companyService->companyComplianceOfficer,
                     'value' => 'Compliance Officer',
                 ],
                 [
-                    'key'   => $this->companyService->companyAuditorRole,
+                    'key'   => $this->companyService->companyComplianceViewer,
+                    'value' => 'Compliance viewer',
+                ],
+                [
+                    'key'   => $this->companyService->companyRiskManager,
+                    'value' => 'Risk Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyRiskOfficer,
+                    'value' => 'Risk Officer',
+                ],
+                [
+                    'key'   => $this->companyService->companyRiskViewer,
+                    'value' => 'Risk viewer',
+                ],
+                [
+                    'key'   => $this->companyService->companyAuditManager,
+                    'value' => 'Audit Manager',
+                ],
+                [
+                    'key'   => $this->companyService->companyAuditor,
                     'value' => 'Auditor',
+                ],
+                [
+                    'key'   => $this->companyService->companyAuditViewer,
+                    'value' => 'Audit viewer',
                 ],
                 [
                     'key'   => $this->companyService->companyMemberRole,
