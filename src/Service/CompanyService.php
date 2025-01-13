@@ -1391,9 +1391,9 @@ class CompanyService implements ServiceInterface
         $company['setting']['package']  = $company['setting']['package'] ?? [];
 
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
-            $company['setting']['package']['time_start_view']  = $this->utilityService->date($company['setting']['package']['time_start']);
-            $company['setting']['package']['time_renew_view']  = $this->utilityService->date($company['setting']['package']['time_renew']);
-            $company['setting']['package']['time_expire_view'] = $this->utilityService->date($company['setting']['package']['time_expire']);
+            $company['setting']['package']['time_start_view']  = $this->utilityService->date($company['setting']['package']['time_start'], ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y']);
+            $company['setting']['package']['time_renew_view']  = $this->utilityService->date($company['setting']['package']['time_renew'], ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y']);
+            $company['setting']['package']['time_expire_view'] = $this->utilityService->date($company['setting']['package']['time_expire'], ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y']);
         }
 
         return $company;
