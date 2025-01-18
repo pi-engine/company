@@ -510,6 +510,26 @@ class CompanyService implements ServiceInterface
         return $list;
     }
 
+    public function getCompanyCount($params): int
+    {
+        $listParams = [];
+        if (isset($params['title']) && !empty($params['title'])) {
+            $listParams['title'] = $params['title'];
+        }
+        if (isset($params['reseller_id']) && !empty($params['reseller_id'])) {
+            $listParams['reseller_id'] = $params['reseller_id'];
+        }
+        if (isset($params['status']) && !empty($params['status'])) {
+            $listParams['status'] = $params['status'];
+        }
+        if (isset($params['id']) && !empty($params['id'])) {
+            $listParams['id'] = $params['id'];
+        }
+
+        // Get count
+        return $this->companyRepository->getCompanyCount($listParams);
+    }
+
     public function updateCompany($authorization, $params): array
     {
         $profileParams = [];
