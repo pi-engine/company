@@ -1401,7 +1401,7 @@ class CompanyService implements ServiceInterface
         $company['setting']          = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
         $company['hash']             = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
         $company['slug']             = sprintf('company-%s-%s', $company['id'], $this->config['platform']);
-        $company['is_company_setup'] = $company['setting']['wizard']['is_completed'] ?? false;
+        $company['is_company_setup'] = true; // ToDo: remove it
 
         // Set default params
         $company['setting']['analytic'] = $company['setting']['analytic'] ?? [];
