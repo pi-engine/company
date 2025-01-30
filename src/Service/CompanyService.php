@@ -364,16 +364,19 @@ class CompanyService implements ServiceInterface
         return $member;
     }
 
-    public function registerCompanyByAdmin($params): array
+    public function registerCompanyByAdmin($params, $operator): array
     {
+        // Get user account
+        $account = $this->accountService->getAccount(['user_id' => $params['user_id']]);
+
         // Set company params
         $addParams = [
             'title'            => $params['title'],
-            'user_id'          => $params['user_id'],
+            'user_id'          => $account['id'],
             'time_create'      => time(),
             'time_update'      => time(),
-            'phone'            => $params['mobile'] ?? null,
-            'email'            => $params['email'] ?? null,
+            'phone'            => $params['mobile'] ?? $account['mobile'] ?? null,
+            'email'            => $params['email'] ?? $account['email'] ?? null,
             'status'           => 1,
             'industry_id'      => $params['industry_id'],
             'package_id'       => $params['package_id'],
@@ -402,7 +405,13 @@ class CompanyService implements ServiceInterface
             ]),
         ];
 
-        return $this->addCompany($addParams);
+        // Add company
+        $company = $this->addCompany($addParams);
+
+        // Add member
+        $this->addMember($account, $company, $params, $operator);
+
+        return $company;
     }
 
     public function addCompany($params): array
@@ -1411,9 +1420,11 @@ class CompanyService implements ServiceInterface
         $company['setting']['package']  = $company['setting']['package'] ?? [];
 
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
-            $company['setting']['package']['time_start_view']  = $this->utilityService->date($company['setting']['package']['time_start'], ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y']);
-            $company['setting']['package']['time_renew_view']  = $this->utilityService->date($company['setting']['package']['time_renew'], ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y']);
-            $company['setting']['package']['time_expire_view'] = $this->utilityService->date($company['setting']['package']['time_expire'], ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y']);
+            $timeParams                                          = ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y'];
+            $company['setting']['package']['time_expire_format'] = date('Y/m/d', $company['setting']['package']['time_expire']);
+            $company['setting']['package']['time_start_view']    = $this->utilityService->date($company['setting']['package']['time_start'], $timeParams);
+            $company['setting']['package']['time_renew_view']    = $this->utilityService->date($company['setting']['package']['time_renew'], $timeParams);
+            $company['setting']['package']['time_expire_view']   = $this->utilityService->date($company['setting']['package']['time_expire'], $timeParams);
         }
 
         return $company;

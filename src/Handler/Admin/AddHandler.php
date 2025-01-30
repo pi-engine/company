@@ -34,9 +34,10 @@ class AddHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $operator    = $request->getAttribute('account');
         $requestBody = $request->getParsedBody();
 
-        $company = $this->companyService->registerCompanyByAdmin($requestBody);
+        $company = $this->companyService->registerCompanyByAdmin($requestBody, $operator);
 
         $result = [
             'result' => true,
