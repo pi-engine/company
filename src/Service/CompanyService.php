@@ -34,6 +34,8 @@ class CompanyService implements ServiceInterface
     /* @var array */
     protected array $config;
 
+    protected string $companyKeyPattern = 'company_%s';
+
     public string $companyAdminRole         = 'companyadmin';
     public string $companySuperUserRole     = 'companysuperuser';
     public string $companyGovernanceManager = 'companygovernancemanager';
@@ -249,7 +251,7 @@ class CompanyService implements ServiceInterface
         $this->accountService->manageUserCache($account);
 
         // Set company cache
-        $this->cacheService->setItem(sprintf('company-%s', $result['data']['company_id']), $result['data']['company'], $this->companyTtl);
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, $result['data']['company_id']), $result['data']['company'], $this->companyTtl);
 
         return $result;
     }
@@ -420,7 +422,7 @@ class CompanyService implements ServiceInterface
         $company = $this->canonizeCompany($company);
 
         // Set company cache
-        $this->cacheService->setItem(sprintf('company-%s', $company['id']), $company, $this->companyTtl);
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, $company['id']), $company, $this->companyTtl);
 
         return $company;
     }
@@ -562,8 +564,8 @@ class CompanyService implements ServiceInterface
 
         // Set company cache
         $company = $this->getCompany((int)$authorization['company_id']);
-        $this->cacheService->deleteItem(sprintf('company-%s', (int)$company['id']));
-        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company, $this->companyTtl);
+        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
 
         // Set result
         return [
@@ -654,7 +656,7 @@ class CompanyService implements ServiceInterface
 
         // Set company cache
         $company = $this->getCompany((int)$authorization['company_id']);
-        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company, $this->companyTtl);
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
 
         // Set result
         return [
@@ -763,8 +765,8 @@ class CompanyService implements ServiceInterface
 
         // Set company cache
         $company = $this->getCompany((int)$company['id']);
-        $this->cacheService->deleteItem(sprintf('company-%s', (int)$company['id']));
-        $this->cacheService->setItem(sprintf('company-%s', (int)$company['id']), $company, $this->companyTtl);
+        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
 
         // Set result
         return [
@@ -805,7 +807,7 @@ class CompanyService implements ServiceInterface
 
     public function getCompanyFromCache(int $companyId): array
     {
-        return $this->cacheService->getItem(sprintf('company-%s', $companyId));
+        return $this->cacheService->getItem(sprintf($this->companyKeyPattern, $companyId));
     }
 
     public function getMember(int $userId, $params = []): array
