@@ -887,6 +887,11 @@ class CompanyService implements ServiceInterface
         ];
     }
 
+    public function getMemberCount($params): int
+    {
+        return $this->companyRepository->getMemberCount($params);
+    }
+
     public function addMemberByCompany($company, $params, $operator): array
     {
         // Add or Get account
