@@ -82,7 +82,7 @@ class PackageMiddleware implements MiddlewareInterface
             $request = $request->withAttribute(
                 'error',
                 [
-                    'message' => 'Your subscription has ended.<br />Please upgrade your license on the License page.',
+                    'message' => 'Your subscription has ended. Please upgrade your license on the License page.',
                     'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                     'type'    => 'package',
                 ]
@@ -97,7 +97,7 @@ class PackageMiddleware implements MiddlewareInterface
                 $request = $request->withAttribute(
                     'error',
                     [
-                        'message' => 'Access denied.<br />Please upgrade your license on the License page.',
+                        'message' => 'Access denied. Please upgrade your license on the License page.',
                         'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
                         'type'    => 'package',
                     ]
