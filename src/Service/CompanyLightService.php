@@ -49,7 +49,7 @@ class CompanyLightService implements ServiceInterface
             $member = [
                 'company_title' => $member['title'],
                 'company_id'    => $member['company_id'],
-                'is_default' => $member['is_default'],
+                'is_default'    => $member['is_default'],
             ];
         }
 

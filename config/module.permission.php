@@ -155,7 +155,7 @@ return [
             'role'        => [
                 'admin',
             ],
-        ]
+        ],
     ],
     'api'   => [
         [

@@ -3,8 +3,8 @@
 namespace Pi\Company\Handler\Api\Team\Member;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Pi\Core\Response\EscapingJsonResponse;
 use Pi\Company\Service\CompanyService;
+use Pi\Core\Response\EscapingJsonResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
