@@ -75,6 +75,7 @@ class CompanyMiddleware implements MiddlewareInterface
                 'error',
                 [
                     'message' => 'Company ID not found, please refresh your token !',
+                    'key'     => 'company-id-not-found-please-refresh-your-token',
                     'code'    => StatusCodeInterface::STATUS_UPGRADE_REQUIRED,
                 ]
             );
