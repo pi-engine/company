@@ -311,6 +311,7 @@ class CompanyService implements ServiceInterface
     {
         // Set company params
         $addParams = [
+            'slug'             => $this->utilityService->slug($params['slug'] ?? null),
             'title'            => $account['company'] ?? sprintf('%s company', bin2hex(random_bytes(4))),
             'user_id'          => $account['id'],
             'time_create'      => time(),
@@ -373,6 +374,7 @@ class CompanyService implements ServiceInterface
 
         // Set company params
         $addParams = [
+            'slug'             => $this->utilityService->slug($params['slug'] ?? null),
             'title'            => $params['title'],
             'user_id'          => $account['id'],
             'time_create'      => time(),
