@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `company_member`
 	`time_create` INT(10) UNSIGNED    NOT NULL DEFAULT '0',
 	`time_update` INT(10) UNSIGNED    NOT NULL DEFAULT '0',
 	`status`      TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	`is_default`  TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+	`is_default`  TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`),
 	KEY `company_id` (`company_id`),
 	KEY `list` (`company_id`, `status`)

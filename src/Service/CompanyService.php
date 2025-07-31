@@ -179,6 +179,7 @@ class CompanyService implements ServiceInterface
                 'data'   => [],
                 'error'  => [
                     'message' => 'You account is inactive by admin',
+                    'key' => 'you-account-is-inactive-by-admin',
                 ],
                 'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
@@ -196,6 +197,7 @@ class CompanyService implements ServiceInterface
                 'data'   => [],
                 'error'  => [
                     'message' => 'No company found for selected user',
+                    'kry' => 'no-company-found-for-selected-user',
                 ],
                 'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
@@ -311,7 +313,6 @@ class CompanyService implements ServiceInterface
     {
         // Set company params
         $addParams = [
-            'slug'             => $this->utilityService->slug($params['slug'] ?? null),
             'title'            => $account['company'] ?? sprintf('%s company', bin2hex(random_bytes(4))),
             'user_id'          => $account['id'],
             'time_create'      => time(),
@@ -325,7 +326,9 @@ class CompanyService implements ServiceInterface
             'setting'          => json_encode([
                 'analytic' => [],
                 'general'  => [],
-                'context'  => [],
+                'context'  => [
+                    'general'  => [],
+                ],
                 'wizard'   => [
                     'is_completed' => false,
                     'time_start'   => time(),
@@ -352,6 +355,7 @@ class CompanyService implements ServiceInterface
             'time_create' => time(),
             'time_update' => time(),
             'status'      => 1,
+            'is_default'  => 1,
         ];
 
         // Add member
@@ -369,12 +373,11 @@ class CompanyService implements ServiceInterface
 
     public function registerCompanyByAdmin($params, $operator): array
     {
-        // Get user account
-        $account = $this->accountService->getAccount(['user_id' => $params['user_id']]);
+        // Get a user account
+        $account = $this->accountService->getAccount(['id' => $params['user_id']]);
 
         // Set company params
         $addParams = [
-            'slug'             => $this->utilityService->slug($params['slug'] ?? null),
             'title'            => $params['title'],
             'user_id'          => $account['id'],
             'time_create'      => time(),
@@ -388,7 +391,9 @@ class CompanyService implements ServiceInterface
             'setting'          => json_encode([
                 'analytic' => [],
                 'general'  => [],
-                'context'  => [],
+                'context'  => [
+                    'general'  => [],
+                ],
                 'wizard'   => [
                     'is_completed' => true,
                     'time_start'   => time(),
@@ -930,6 +935,7 @@ class CompanyService implements ServiceInterface
             'time_create' => time(),
             'time_update' => time(),
             'status'      => 1,
+            'is_default'  => 0,
         ];
 
         // Add member
@@ -1427,6 +1433,12 @@ class CompanyService implements ServiceInterface
         $company['setting']['context']  = $company['setting']['context'] ?? [];
         $company['setting']['wizard']   = $company['setting']['wizard'] ?? [];
         $company['setting']['package']  = $company['setting']['package'] ?? [];
+        
+        if (empty($company['setting']['context'])) {
+            $company['setting']['context'] = [
+                'general' => [],
+            ];
+        }
 
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
             $timeParams                                          = ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y'];
