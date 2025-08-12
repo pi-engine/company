@@ -524,6 +524,23 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
     }
 
+    public function resetDefault(int $userId): void
+    {
+        $update = new Update($this->tableMember);
+        $update->set(['is_default' => 0]);
+        $update->where(['user_id' => $userId]);
+
+        $sql       = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result    = $statement->execute();
+
+        if (!$result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during update operation'
+            );
+        }
+    }
+
     public function addPackage(array $params = []): Package
     {
         $insert = new Insert($this->tablePackage);

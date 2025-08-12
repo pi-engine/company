@@ -922,11 +922,14 @@ class CompanyService implements ServiceInterface
 
     public function addMember($account, $company, $params, $operator = []): array
     {
-        // Check member not exist
+        // Check member doesn't exist
         $member = $this->getMember($account['id'], ['company_id' => $company['id']]);
         if (!empty($member)) {
             return $member;
         }
+
+        // Reset all other defaults
+        $this->companyRepository->resetDefault((int)$account['id']);
 
         // Set member params
         $memberParams = [
@@ -935,7 +938,7 @@ class CompanyService implements ServiceInterface
             'time_create' => time(),
             'time_update' => time(),
             'status'      => 1,
-            'is_default'  => 0,
+            'is_default'  => 1,
         ];
 
         // Add member
@@ -1433,7 +1436,7 @@ class CompanyService implements ServiceInterface
         $company['setting']['context']  = $company['setting']['context'] ?? [];
         $company['setting']['wizard']   = $company['setting']['wizard'] ?? [];
         $company['setting']['package']  = $company['setting']['package'] ?? [];
-        
+
         if (empty($company['setting']['context'])) {
             $company['setting']['context'] = [
                 'general' => [],

@@ -35,6 +35,8 @@ interface CompanyRepositoryInterface
 
     public function setDefault(int $userId, int $companyId): void;
 
+    public function resetDefault(int $userId): void;
+
     public function addPackage(array $params = []): Package;
 
     public function getPackage(array $params = []): array|Package;
