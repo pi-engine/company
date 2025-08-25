@@ -179,7 +179,7 @@ class CompanyService implements ServiceInterface
                 'data'   => [],
                 'error'  => [
                     'message' => 'You account is inactive by admin',
-                    'key' => 'you-account-is-inactive-by-admin',
+                    'key'     => 'you-account-is-inactive-by-admin',
                 ],
                 'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
@@ -197,7 +197,7 @@ class CompanyService implements ServiceInterface
                 'data'   => [],
                 'error'  => [
                     'message' => 'No company found for selected user',
-                    'kry' => 'no-company-found-for-selected-user',
+                    'kry'     => 'no-company-found-for-selected-user',
                 ],
                 'status' => StatusCodeInterface::STATUS_UNAUTHORIZED,
             ];
@@ -327,7 +327,7 @@ class CompanyService implements ServiceInterface
                 'analytic' => [],
                 'general'  => [],
                 'context'  => [
-                    'general'  => [],
+                    'general' => [],
                 ],
                 'wizard'   => [
                     'is_completed' => false,
@@ -392,7 +392,7 @@ class CompanyService implements ServiceInterface
                 'analytic' => [],
                 'general'  => [],
                 'context'  => [
-                    'general'  => [],
+                    'general' => [],
                 ],
                 'wizard'   => [
                     'is_completed' => true,
@@ -1444,11 +1444,28 @@ class CompanyService implements ServiceInterface
         }
 
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
-            $timeParams                                          = ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y'];
+            // difference in days
+            $daysLeft   = ($company['setting']['package']['time_expire'] - time()) / (60 * 60 * 24);
+            $timeParams = ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y'];
+
             $company['setting']['package']['time_expire_format'] = date('Y/m/d', $company['setting']['package']['time_expire']);
             $company['setting']['package']['time_start_view']    = $this->utilityService->date($company['setting']['package']['time_start'], $timeParams);
             $company['setting']['package']['time_renew_view']    = $this->utilityService->date($company['setting']['package']['time_renew'], $timeParams);
             $company['setting']['package']['time_expire_view']   = $this->utilityService->date($company['setting']['package']['time_expire'], $timeParams);
+
+            if ($daysLeft <= 0) {
+                // Expired
+                $company['setting']['package']['status']    = 'expired';
+                $company['setting']['package']['days_label'] = 0;
+            } elseif ($daysLeft <= 15) {
+                // Expiring soon (within 15 days)
+                $company['setting']['package']['status']    = 'expiring-soon';
+                $company['setting']['package']['days_label'] = ceil($daysLeft);
+            } else {
+                // Valid for more than 15 days
+                $company['setting']['package']['status']    = 'active';
+                $company['setting']['package']['days_label'] = ceil($daysLeft);
+            }
         }
 
         return $company;
