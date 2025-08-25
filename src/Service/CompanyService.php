@@ -1062,9 +1062,16 @@ class CompanyService implements ServiceInterface
             'status'      => 1,
             'information' => json_encode(
                 [
-                    'type'   => $params['type'] ?? 'full',
-                    'expire' => $params['expire'] ?? $this->packageExpire,
-                    'access' => array_values($params['access']),
+                    'type'              => $params['type'] ?? 'full',
+                    'expire'            => $params['expire'] ?? $this->packageExpire,
+                    'access'            => array_values($params['access']),
+                    'description'       => $params['description'] ?? null,
+                    'user_limit'        => $params['user_limit'] ?? 10,
+                    'storage_limit'     => $params['storage_limit'] ?? '5GB',
+                    'support_level'     => $params['support_level'] ?? 'standard',
+                    'region_compliance' => $params['region_compliance'] ?? null,
+                    'promo_offer'       => $params['promo_offer'] ?? null,
+                    'ai_addon'          => $params['ai_addon'] ?? null,
                 ],
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
             ),
@@ -1094,9 +1101,16 @@ class CompanyService implements ServiceInterface
             'status'      => $params['status'] ?? $package['status'],
             'information' => json_encode(
                 [
-                    'type'   => $params['type'] ?? $package['information']['status'],
-                    'expire' => $params['expire'] ?? $package['information']['expire'],
-                    'access' => array_values($params['access'] ?? $package['information']['access']),
+                    'type'              => $params['type'] ?? $package['information']['status'],
+                    'expire'            => $params['expire'] ?? $package['information']['expire'],
+                    'access'            => array_values($params['access'] ?? $package['information']['access']),
+                    'description'       => $params['description'] ?? $package['information']['description'],
+                    'user_limit'        => $params['user_limit'] ?? $package['information']['user_limit'],
+                    'storage_limit'     => $params['storage_limit'] ?? $package['information']['storage_limit'],
+                    'support_level'     => $params['support_level'] ?? $package['information']['support_level'],
+                    'region_compliance' => $params['region_compliance'] ?? $package['information']['region_compliance'],
+                    'promo_offer'       => $params['promo_offer'] ?? $package['information']['promo_offer'],
+                    'ai_addon'          => $params['ai_addon'] ?? $package['information']['ai_addon'],
                 ],
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
             ),
@@ -1455,15 +1469,15 @@ class CompanyService implements ServiceInterface
 
             if ($daysLeft <= 0) {
                 // Expired
-                $company['setting']['package']['status']    = 'expired';
+                $company['setting']['package']['status']     = 'expired';
                 $company['setting']['package']['days_label'] = 0;
             } elseif ($daysLeft <= 15) {
                 // Expiring soon (within 15 days)
-                $company['setting']['package']['status']    = 'expiring-soon';
+                $company['setting']['package']['status']     = 'expiring-soon';
                 $company['setting']['package']['days_label'] = ceil($daysLeft);
             } else {
                 // Valid for more than 15 days
-                $company['setting']['package']['status']    = 'active';
+                $company['setting']['package']['status']     = 'active';
                 $company['setting']['package']['days_label'] = ceil($daysLeft);
             }
         }
