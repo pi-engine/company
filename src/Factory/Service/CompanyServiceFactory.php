@@ -7,6 +7,7 @@ use Pi\Company\Repository\CompanyRepositoryInterface;
 use Pi\Company\Service\CompanyService;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
+use Pi\Logger\Service\LoggerService;
 use Pi\Notification\Service\NotificationService;
 use Pi\User\Service\AccountService;
 use Pi\User\Service\RoleService;
@@ -26,6 +27,7 @@ class CompanyServiceFactory implements FactoryInterface
             $container->get(CacheService::class),
             $container->get(NotificationService::class),
             $container->get(UtilityService::class),
+            $container->get(LoggerService::class),
             $config
         );
     }

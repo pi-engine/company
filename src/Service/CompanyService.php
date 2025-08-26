@@ -6,6 +6,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Pi\Company\Repository\CompanyRepositoryInterface;
 use Pi\Core\Service\CacheService;
 use Pi\Core\Service\UtilityService;
+use Pi\Logger\Service\LoggerService;
 use Pi\Notification\Service\NotificationService;
 use Pi\User\Service\AccountService;
 use Pi\User\Service\RoleService;
@@ -25,11 +26,14 @@ class CompanyService implements ServiceInterface
     /* @var CacheService */
     protected CacheService $cacheService;
 
+    /** @var NotificationService */
+    protected NotificationService $notificationService;
+
     /** @var UtilityService */
     protected UtilityService $utilityService;
 
-    /** @var NotificationService */
-    protected NotificationService $notificationService;
+    /** @var LoggerService */
+    protected LoggerService $loggerService;
 
     /* @var array */
     protected array $config;
@@ -58,13 +62,7 @@ class CompanyService implements ServiceInterface
     public string $companyViewerRole        = 'companyviewer';
     public int    $industryId               = 1;
     public int    $packageId                = 1;
-    public string $packageExpire            = '+4 weeks';
-    public array  $wizardSteps
-                                            = [
-            'user_profile'    => false,
-            'company_profile' => false,
-            'voucher'         => false,
-        ];
+    public string $packageExpire            = '+1 month';
 
     protected array $profileFields
         = [
@@ -112,6 +110,7 @@ class CompanyService implements ServiceInterface
         CacheService               $cacheService,
         NotificationService        $notificationService,
         UtilityService             $utilityService,
+        LoggerService              $loggerService,
                                    $config
     ) {
         $this->companyRepository   = $companyRepository;
@@ -120,6 +119,7 @@ class CompanyService implements ServiceInterface
         $this->cacheService        = $cacheService;
         $this->notificationService = $notificationService;
         $this->utilityService      = $utilityService;
+        $this->loggerService       = $loggerService;
         $this->config              = $config;
     }
 
@@ -324,18 +324,9 @@ class CompanyService implements ServiceInterface
             'package_id'       => $this->packageId,
             'text_description' => '',
             'setting'          => json_encode([
-                'analytic' => [],
-                'general'  => [],
-                'context'  => [
-                    'general' => [],
-                ],
-                'wizard'   => [
-                    'is_completed' => false,
-                    'time_start'   => time(),
-                    'time_end'     => 0,
-                    'steps'        => $this->wizardSteps,
-                ],
-                'package'  => [
+                'general' => [],
+                'context' => [],
+                'package' => [
                     'time_start'  => time(),
                     'time_renew'  => time(),
                     'time_expire' => strtotime($this->packageExpire),
@@ -365,6 +356,16 @@ class CompanyService implements ServiceInterface
         // Add role
         $this->roleService->addRoleAccount($account, $this->companyAdminRole);
 
+        // Add package history
+        $this->loggerService->addHistoryLog([
+            'relation_module'  => 'company',
+            'relation_section' => 'package',
+            'relation_item'    => $this->packageId,
+            'company_id'       => $company['id'],
+            'user_id'          => $account['id'],
+            'state'            => 'add',
+        ]);
+
         // Send notification
         // Todo: add it
 
@@ -389,22 +390,9 @@ class CompanyService implements ServiceInterface
             'package_id'       => $params['package_id'],
             'text_description' => '',
             'setting'          => json_encode([
-                'analytic' => [],
-                'general'  => [],
-                'context'  => [
-                    'general' => [],
-                ],
-                'wizard'   => [
-                    'is_completed' => true,
-                    'time_start'   => time(),
-                    'time_end'     => time(),
-                    'steps'        => [
-                        'user_profile'    => true,
-                        'company_profile' => true,
-                        'voucher'         => true,
-                    ],
-                ],
-                'package'  => [
+                'general' => [],
+                'context' => [],
+                'package' => [
                     'time_start'  => time(),
                     'time_renew'  => time(),
                     'time_expire' => strtotime($this->packageExpire),
@@ -419,6 +407,16 @@ class CompanyService implements ServiceInterface
 
         // Add member
         $this->addMember($account, $company, $params, $operator);
+
+        // Add package history
+        $this->loggerService->addHistoryLog([
+            'relation_module'  => 'company',
+            'relation_section' => 'package',
+            'relation_item'    => $params['package_id'],
+            'company_id'       => $company['id'],
+            'user_id'          => $operator['id'],
+            'state'            => 'add',
+        ]);
 
         return $company;
     }
@@ -594,56 +592,19 @@ class CompanyService implements ServiceInterface
         $setting = $authorization['company']['setting'] ?? [];
 
         // Set default params
-        $setting['analytic'] = $setting['analytic'] ?? [];
-        $setting['general']  = $setting['general'] ?? [];
-        $setting['context']  = $setting['context'] ?? [];
-        $setting['wizard']   = $setting['wizard'] ?? [];
-        $setting['package']  = $setting['package'] ?? [
+        $setting['general'] = $setting['general'] ?? [];
+        $setting['context'] = $setting['context'] ?? [];
+        /* $setting['package'] = $setting['package'] ?? [
             'time_start'  => time(),
             'time_renew'  => time(),
             'time_expire' => strtotime($this->packageExpire),
             'renew_count' => 1,
             'user_count'  => 100,
-        ];
+        ]; */
 
         switch ($type) {
-            case 'wizard':
-
-                // Update data
-                foreach ($params as $key => $value) {
-                    if (in_array($key, array_keys($this->wizardSteps)) && in_array($value, ['true', 'false'])) {
-                        $setting['wizard']['steps'][$key] = (bool)$value;
-                    }
-                }
-
-                // update wizard
-                if (isset($setting['wizard']['steps'])
-                    && is_array($setting['wizard']['steps'])
-                    && !empty($setting['wizard']['steps'])
-                    && $setting['wizard']['is_completed'] === false
-                ) {
-                    $totalTrue = 0;
-                    foreach ($setting['wizard']['steps'] as $step) {
-                        if ($step === true) {
-                            $totalTrue = $totalTrue + 1;
-                        }
-                    }
-
-                    // Update data
-                    if (count($setting['wizard']['steps']) === $totalTrue) {
-                        $setting['wizard']['is_completed'] = true;
-                        $setting['wizard']['time_end']     = time();
-                    } else {
-                        $setting['wizard']['is_completed'] = false;
-                        $setting['wizard']['time_end']     = 0;
-                    }
-                }
-                break;
-
-            case 'analytic':
             case 'general':
             case 'context':
-                //case 'package':
             default:
                 // Update data
                 foreach ($params as $key => $value) {
@@ -676,7 +637,7 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function updateCompanyByAdmin($company, $params, $type = null): array
+    public function updateCompanyByAdmin($company, $params, $operator = [], $type = null): array
     {
         // Set update update
         $companyParams = [
@@ -701,58 +662,34 @@ class CompanyService implements ServiceInterface
             $setting = $company['setting'] ?? [];
 
             // Set default params
-            $setting['analytic'] = $setting['analytic'] ?? [];
-            $setting['general']  = $setting['general'] ?? [];
-            $setting['context']  = $setting['context'] ?? [];
-            $setting['wizard']   = $setting['wizard'] ?? [];
-            $setting['package']  = $setting['package'] ?? [
+            $setting['general'] = $setting['general'] ?? [];
+            $setting['context'] = $setting['context'] ?? [];
+            /* $setting['package'] = $setting['package'] ?? [
                 'time_start'  => time(),
                 'time_renew'  => time(),
                 'time_expire' => strtotime($this->packageExpire),
                 'renew_count' => 1,
                 'user_count'  => 100,
-            ];
+            ]; */
 
             switch ($type) {
-                case 'wizard':
-
-                    // Update data
-                    foreach ($params as $key => $value) {
-                        if (in_array($key, array_keys($this->wizardSteps)) && in_array($value, ['true', 'false'])) {
-                            $setting['wizard']['steps'][$key] = (bool)$value;
-                        }
-                    }
-
-                    // update wizard
-                    if (isset($setting['wizard']['steps'])
-                        && is_array($setting['wizard']['steps'])
-                        && !empty($setting['wizard']['steps'])
-                        && $setting['wizard']['is_completed'] === false
-                    ) {
-                        $totalTrue = 0;
-                        foreach ($setting['wizard']['steps'] as $step) {
-                            if ($step === true) {
-                                $totalTrue = $totalTrue + 1;
-                            }
-                        }
-
-                        // Update data
-                        if (count($setting['wizard']['steps']) === $totalTrue) {
-                            $setting['wizard']['is_completed'] = true;
-                            $setting['wizard']['time_end']     = time();
-                        } else {
-                            $setting['wizard']['is_completed'] = false;
-                            $setting['wizard']['time_end']     = 0;
-                        }
-                    }
-                    break;
                 case 'package':
                     $setting['package']['renew_count'] = $setting['package']['renew_count'] + 1;
                     $setting['package']['time_expire'] = $params['package_expire']
                         ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
                         : strtotime($this->packageExpire);
+
+                    // Add package history
+                    $this->loggerService->addHistoryLog([
+                        'relation_module'  => 'company',
+                        'relation_section' => 'package',
+                        'relation_item'    => $this->packageId,
+                        'company_id'       => $company['id'],
+                        'user_id'          => $operator['id'] ?? 0,
+                        'state'            => 'add',
+                    ]);
                     break;
-                case 'analytic':
+
                 case 'general':
                 case 'context':
                 default:
@@ -780,6 +717,7 @@ class CompanyService implements ServiceInterface
             'result' => true,
             'data'   => [
                 'message' => 'Company data updated successfully !',
+                'key' => 'company-data-updated-successfully',
                 'company' => $company,
             ],
             'error'  => [],
@@ -1066,8 +1004,8 @@ class CompanyService implements ServiceInterface
                     'expire'            => $params['expire'] ?? $this->packageExpire,
                     'access'            => array_values($params['access']),
                     'description'       => $params['description'] ?? null,
-                    'user_limit'        => $params['user_limit'] ?? 10,
-                    'storage_limit'     => $params['storage_limit'] ?? '5GB',
+                    'user_limit'        => (int)$params['user_limit'] ?? 10,
+                    'storage_limit'     => (int)$params['storage_limit'] ?? 1,
                     'support_level'     => $params['support_level'] ?? 'standard',
                     'region_compliance' => $params['region_compliance'] ?? null,
                     'promo_offer'       => $params['promo_offer'] ?? null,
@@ -1105,8 +1043,8 @@ class CompanyService implements ServiceInterface
                     'expire'            => $params['expire'] ?? $package['information']['expire'],
                     'access'            => array_values($params['access'] ?? $package['information']['access']),
                     'description'       => $params['description'] ?? $package['information']['description'],
-                    'user_limit'        => $params['user_limit'] ?? $package['information']['user_limit'],
-                    'storage_limit'     => $params['storage_limit'] ?? $package['information']['storage_limit'],
+                    'user_limit'        => (int)$params['user_limit'] ?? (int)$package['information']['user_limit'],
+                    'storage_limit'     => (int)$params['storage_limit'] ?? (int)$package['information']['storage_limit'],
                     'support_level'     => $params['support_level'] ?? $package['information']['support_level'],
                     'region_compliance' => $params['region_compliance'] ?? $package['information']['region_compliance'],
                     'promo_offer'       => $params['promo_offer'] ?? $package['information']['promo_offer'],
@@ -1445,17 +1383,9 @@ class CompanyService implements ServiceInterface
         $company['is_company_setup'] = true; // ToDo: remove it
 
         // Set default params
-        $company['setting']['analytic'] = $company['setting']['analytic'] ?? [];
-        $company['setting']['general']  = $company['setting']['general'] ?? [];
-        $company['setting']['context']  = $company['setting']['context'] ?? [];
-        $company['setting']['wizard']   = $company['setting']['wizard'] ?? [];
-        $company['setting']['package']  = $company['setting']['package'] ?? [];
-
-        if (empty($company['setting']['context'])) {
-            $company['setting']['context'] = [
-                'general' => [],
-            ];
-        }
+        //$company['setting']['general'] = $company['setting']['general'] ?? [];
+        //$company['setting']['context'] = $company['setting']['context'] ?? [];
+        //$company['setting']['package'] = $company['setting']['package'] ?? [];
 
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
             // difference in days
@@ -1481,6 +1411,9 @@ class CompanyService implements ServiceInterface
                 $company['setting']['package']['days_label'] = ceil($daysLeft);
             }
         }
+
+        unset($company['setting']['wizard']);
+        unset($company['setting']['analytic']);
 
         return $company;
     }
