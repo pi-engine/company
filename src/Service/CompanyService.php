@@ -686,7 +686,7 @@ class CompanyService implements ServiceInterface
                         'relation_item'    => $this->packageId,
                         'company_id'       => $company['id'],
                         'user_id'          => $operator['id'] ?? 0,
-                        'state'            => 'add',
+                        'state'            => 'update',
                     ]);
                     break;
 
