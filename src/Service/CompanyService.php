@@ -360,10 +360,11 @@ class CompanyService implements ServiceInterface
         $this->loggerService->addHistoryLog([
             'relation_module'  => 'company',
             'relation_section' => 'package',
-            'relation_item'    => $this->packageId,
+            'relation_item'    => $company['package_id'],
             'company_id'       => $company['id'],
             'user_id'          => $account['id'],
             'state'            => 'add',
+            'package'          => $company['setting']['package'],
         ]);
 
         // Send notification
@@ -412,10 +413,11 @@ class CompanyService implements ServiceInterface
         $this->loggerService->addHistoryLog([
             'relation_module'  => 'company',
             'relation_section' => 'package',
-            'relation_item'    => $params['package_id'],
+            'relation_item'    => $company['package_id'],
             'company_id'       => $company['id'],
-            'user_id'          => $operator['id'],
+            'user_id'          => $account['id'],
             'state'            => 'add',
+            'package'          => $company['setting']['package'],
         ]);
 
         return $company;
@@ -683,10 +685,11 @@ class CompanyService implements ServiceInterface
                     $this->loggerService->addHistoryLog([
                         'relation_module'  => 'company',
                         'relation_section' => 'package',
-                        'relation_item'    => $this->packageId,
+                        'relation_item'    => $params['package_id'] ?? $company['package_id'] ?? $this->packageId,
                         'company_id'       => $company['id'],
                         'user_id'          => $operator['id'] ?? 0,
                         'state'            => 'update',
+                        'package'          => $company['setting']['package'],
                     ]);
                     break;
 
@@ -717,7 +720,7 @@ class CompanyService implements ServiceInterface
             'result' => true,
             'data'   => [
                 'message' => 'Company data updated successfully !',
-                'key' => 'company-data-updated-successfully',
+                'key'     => 'company-data-updated-successfully',
                 'company' => $company,
             ],
             'error'  => [],
