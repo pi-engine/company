@@ -1390,7 +1390,7 @@ class CompanyService implements ServiceInterface
         if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
             // difference in days
             $daysLeft   = ($company['setting']['package']['time_expire'] - time()) / (60 * 60 * 24);
-            $timeParams = ['pattern' => 'dd/MM/yyyy', 'format' => 'd/m/Y'];
+            $timeParams = ['pattern' => 'yyyy/MM/dd', 'format' => 'Y/m/d'];
 
             $company['setting']['package']['time_expire_format'] = date('Y/m/d', $company['setting']['package']['time_expire']);
             $company['setting']['package']['time_start_view']    = $this->utilityService->date($company['setting']['package']['time_start'], $timeParams);
