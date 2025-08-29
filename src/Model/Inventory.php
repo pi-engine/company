@@ -5,8 +5,8 @@ namespace Pi\Company\Model;
 class Inventory
 {
     private mixed  $id;
+    private mixed  $slug;
     private string $title;
-    private string $text_description;
     private mixed  $setting;
     private int    $user_id;
     private int    $package_id;
@@ -15,15 +15,6 @@ class Inventory
     private int    $time_create;
     private int    $time_update;
     private int    $status;
-    private mixed  $address_1;
-    private mixed  $address_2;
-    private mixed  $country;
-    private mixed  $state;
-    private mixed  $city;
-    private mixed  $zip_code;
-    private mixed  $phone;
-    private mixed  $website;
-    private mixed  $email;
     private mixed  $user_identity;
     private mixed  $user_name;
     private mixed  $user_email;
@@ -31,8 +22,8 @@ class Inventory
     private mixed  $package_title;
 
     public function __construct(
+        $slug,
         $title,
-        $text_description,
         $setting,
         $user_id,
         $package_id,
@@ -41,15 +32,6 @@ class Inventory
         $time_create,
         $time_update,
         $status,
-        $address_1,
-        $address_2,
-        $country,
-        $state,
-        $city,
-        $zip_code,
-        $phone,
-        $website,
-        $email,
         $user_identity = null,
         $user_name = null,
         $user_email = null,
@@ -57,8 +39,8 @@ class Inventory
         $package_title = null,
         $id = null
     ) {
-        $this->title            = $title;
-        $this->text_description = $text_description;
+        $this->slug               = $slug;
+        $this->title              = $title;
         $this->setting          = $setting;
         $this->user_id          = $user_id;
         $this->package_id       = $package_id;
@@ -67,15 +49,6 @@ class Inventory
         $this->time_create      = $time_create;
         $this->time_update      = $time_update;
         $this->status           = $status;
-        $this->address_1        = $address_1;
-        $this->address_2        = $address_2;
-        $this->country          = $country;
-        $this->state            = $state;
-        $this->city             = $city;
-        $this->zip_code         = $zip_code;
-        $this->phone            = $phone;
-        $this->website          = $website;
-        $this->email            = $email;
         $this->user_identity    = $user_identity;
         $this->user_name        = $user_name;
         $this->user_email       = $user_email;
@@ -89,20 +62,17 @@ class Inventory
         return $this->id;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
     /**
      * @return string
      */
     public function getTitle(): string
     {
         return $this->title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTextDescription(): string
-    {
-        return $this->text_description;
     }
 
     /**
@@ -155,78 +125,6 @@ class Inventory
     public function getStatus(): int
     {
         return $this->status;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAddress1(): ?string
-    {
-        return $this->address_1;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAddress2(): ?string
-    {
-        return $this->address_2;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getZipCode(): ?string
-    {
-        return $this->zip_code;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getWebsite(): ?string
-    {
-        return $this->website;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getEmail(): ?string
-    {
-        return $this->email;
     }
 
     public function getUserIdentity(): ?string

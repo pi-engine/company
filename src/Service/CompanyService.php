@@ -10,7 +10,6 @@ use Pi\Logger\Service\LoggerService;
 use Pi\Notification\Service\NotificationService;
 use Pi\User\Service\AccountService;
 use Pi\User\Service\RoleService;
-use Random\RandomException;
 
 class CompanyService implements ServiceInterface
 {
@@ -63,41 +62,6 @@ class CompanyService implements ServiceInterface
     public int    $industryId               = 1;
     public int    $packageId                = 1;
     public string $packageExpire            = '+1 month';
-
-    protected array $profileFields
-        = [
-            'title',
-            'text_description',
-            'industry_id',
-            'address_1',
-            'address_2',
-            'country',
-            'state',
-            'city',
-            'zip_code',
-            'phone',
-            'website',
-            'email',
-        ];
-
-    protected array $profileAdminFields
-        = [
-            'title',
-            'text_description',
-            'package_id',
-            'reseller_id',
-            'industry_id',
-            'status',
-            'address_1',
-            'address_2',
-            'country',
-            'state',
-            'city',
-            'zip_code',
-            'phone',
-            'website',
-            'email',
-        ];
 
     public int $companyTtl = 31536000;
 
@@ -231,12 +195,11 @@ class CompanyService implements ServiceInterface
 
         // Set and clean user authorization cache
         $account = [
-            'id'               => $result['data']['user_id'],
-            'is_company_setup' => true,
-            'company_id'       => $result['data']['company']['id'],
-            'company_title'    => $result['data']['company']['title'],
-            'roles'            => $result['data']['roles'],
-            'authorization'    => [
+            'id'            => $result['data']['user_id'],
+            'company_id'    => $result['data']['company']['id'],
+            'company_title' => $result['data']['company']['title'],
+            'roles'         => $result['data']['roles'],
+            'authorization' => [
                 'user_id'    => $result['data']['user_id'],
                 'company_id' => $result['data']['company_id'],
                 'package_id' => $result['data']['package_id'],
@@ -306,34 +269,29 @@ class CompanyService implements ServiceInterface
         return $this->accountService->refreshToken($account, $tokenId);
     }
 
-    /**
-     * @throws RandomException
-     */
     public function registerCompany($account): array
     {
         // Set company params
         $addParams = [
-            'title'            => $account['company'] ?? sprintf('%s company', bin2hex(random_bytes(4))),
-            'user_id'          => $account['id'],
-            'time_create'      => time(),
-            'time_update'      => time(),
-            'phone'            => $account['mobile'] ?? null,
-            'email'            => $account['email'] ?? null,
-            'status'           => 1,
-            'industry_id'      => $this->industryId,
-            'package_id'       => $this->packageId,
-            'text_description' => '',
-            'setting'          => json_encode([
+            'slug'        => $this->utilityService->slug(),
+            'title'       => $account['company'] ?? sprintf('%s company', bin2hex(random_bytes(4))),
+            'user_id'     => $account['id'],
+            'time_create' => time(),
+            'time_update' => time(),
+            'status'      => 1,
+            'industry_id' => $this->industryId,
+            'package_id'  => $this->packageId,
+            'setting'     => json_encode([
                 'general' => [],
                 'context' => [],
                 'package' => [
+                    'package_id'  => $this->packageId,
                     'time_start'  => time(),
                     'time_renew'  => time(),
                     'time_expire' => strtotime($this->packageExpire),
                     'renew_count' => 1,
-                    'user_count'  => 100,
                 ],
-            ]),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
         ];
 
         // Add company
@@ -380,27 +338,27 @@ class CompanyService implements ServiceInterface
 
         // Set company params
         $addParams = [
-            'title'            => $params['title'],
-            'user_id'          => $account['id'],
-            'time_create'      => time(),
-            'time_update'      => time(),
-            'phone'            => $params['mobile'] ?? $account['mobile'] ?? null,
-            'email'            => $params['email'] ?? $account['email'] ?? null,
-            'status'           => 1,
-            'industry_id'      => $params['industry_id'],
-            'package_id'       => $params['package_id'],
-            'text_description' => '',
-            'setting'          => json_encode([
-                'general' => [],
-                'context' => [],
+            'slug'        => $this->utilityService->slug(),
+            'title'       => $params['title'],
+            'user_id'     => $account['id'],
+            'time_create' => time(),
+            'time_update' => time(),
+            'status'      => 1,
+            'industry_id' => $params['industry_id'] ?? $this->industryId,
+            'package_id'  => $params['package_id'] ?? $this->packageId,
+            'setting'     => json_encode([
+                'general' => $params['general'] ?? [],
+                'context' => $params['context'] ?? [],
                 'package' => [
+                    'package_id'  => $params['package_id'] ?? $this->packageId,
                     'time_start'  => time(),
                     'time_renew'  => time(),
-                    'time_expire' => strtotime($this->packageExpire),
+                    'time_expire' => $params['package_expire']
+                        ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
+                        : strtotime($this->packageExpire),
                     'renew_count' => 1,
-                    'user_count'  => 100,
                 ],
-            ]),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
         ];
 
         // Add company
@@ -432,6 +390,166 @@ class CompanyService implements ServiceInterface
         $this->cacheService->setItem(sprintf($this->companyKeyPattern, $company['id']), $company, $this->companyTtl);
 
         return $company;
+    }
+
+    public function updateCompany($authorization, $params): array
+    {
+        // Set context
+        $authorization['company']['setting'] = $authorization['company']['setting'] ?? [
+            'general' => [],
+            'context' => [],
+            'package' => [
+                'package_id'  => $this->packageId,
+                'time_start'  => time(),
+                'time_renew'  => time(),
+                'time_expire' => strtotime($this->packageExpire),
+                'renew_count' => 1,
+            ],
+        ];
+
+        // Set default params
+        $authorization['company']['setting']['general'] = $params['general'] ?? $authorization['company']['setting']['general'] ?? [];
+        $authorization['company']['setting']['context'] = $params['context'] ?? $authorization['company']['setting']['context'] ?? [];
+
+        // Set update update
+        $companyParams = [
+            'time_update' => time(),
+            'title'       => $params['title'] ?? $authorization['company']['title'],
+            'industry_id' => $params['industry_id'] ?? $authorization['company']['industry_id'],
+        ];
+
+        // Set update
+        $companyParams['setting'] = json_encode(
+            $authorization['company']['setting'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK
+        );
+
+        // Update company
+        $this->companyRepository->updateCompany((int)$authorization['company_id'], $companyParams);
+
+        // Set company cache
+        $company = $this->getCompany((int)$authorization['company_id']);
+        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Company profile updated successfully !',
+            ],
+            'error'  => [],
+        ];
+    }
+
+    public function updateCompanyByAdmin($company, $params, $operator = []): array
+    {
+        // Set context
+        $company['setting'] = $company['setting'] ?? [
+            'general' => [],
+            'context' => [],
+            'package' => [
+                'package_id'  => $this->packageId,
+                'time_start'  => time(),
+                'time_renew'  => time(),
+                'time_expire' => strtotime($this->packageExpire),
+                'renew_count' => 1,
+            ],
+        ];
+
+        // Set default params
+        $company['setting']['general'] = $params['general'] ?? $company['setting']['general'] ?? [];
+        $company['setting']['context'] = $params['context'] ?? $company['setting']['context'] ?? [];
+
+        // Set update update
+        $companyParams = [
+            'time_update' => time(),
+            'title'       => $params['title'] ?? $company['title'],
+            'industry_id' => $params['industry_id'] ?? $company['industry_id'],
+        ];
+
+        // Set update
+        $companyParams['setting'] = json_encode($company['setting'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+
+        // Update company
+        $this->companyRepository->updateCompany((int)$company['id'], $companyParams);
+
+        // Set company cache
+        $company = $this->getCompany((int)$company['id']);
+        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Company data updated successfully !',
+                'key'     => 'company-data-updated-successfully',
+                'company' => $company,
+            ],
+            'error'  => [],
+        ];
+    }
+
+    public function updateCompanyPackageByAdmin($company, $params, $operator = []): array
+    {
+        // Set context
+        $company['setting'] = $company['setting'] ?? [
+            'general' => [],
+            'context' => [],
+            'package' => [
+                'package_id'  => $this->packageId,
+                'time_start'  => time(),
+                'time_renew'  => time(),
+                'time_expire' => strtotime($this->packageExpire),
+                'renew_count' => 1,
+            ],
+        ];
+
+        // Update package in setting
+        $company['setting']['package']['package_id']  = $params['package_id'] ?? $company['package_id'] ?? $this->packageId;
+        $company['setting']['package']['renew_count'] = $company['setting']['package']['renew_count'] + 1;
+        $company['setting']['package']['time_expire'] = $params['package_expire']
+            ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
+            : strtotime($this->packageExpire);
+
+        // Set update update
+        $companyParams = [
+            'time_update' => time(),
+            'package_id'  => $params['package_id'] ?? $company['package_id'] ?? $this->packageId,
+        ];
+
+        // Set update
+        $companyParams['setting'] = json_encode($company['setting'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+
+        // Update company
+        $this->companyRepository->updateCompany((int)$company['id'], $companyParams);
+
+        // Add package history
+        $this->loggerService->addHistoryLog([
+            'relation_module'  => 'company',
+            'relation_section' => 'package',
+            'relation_item'    => $params['package_id'] ?? $company['package_id'] ?? $this->packageId,
+            'company_id'       => $company['id'],
+            'user_id'          => $operator['id'] ?? 0,
+            'state'            => 'update',
+            'package'          => $company['setting']['package'],
+        ]);
+
+        // Set company cache
+        $company = $this->getCompany((int)$company['id']);
+        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
+        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
+
+        // Set result
+        return [
+            'result' => true,
+            'data'   => [
+                'message' => 'Company data updated successfully !',
+                'key'     => 'company-data-updated-successfully',
+                'company' => $company,
+            ],
+            'error'  => [],
+        ];
     }
 
     public function getCompany(int $companyId): array
@@ -546,185 +664,6 @@ class CompanyService implements ServiceInterface
 
         // Get count
         return $this->companyRepository->getCompanyCount($listParams);
-    }
-
-    public function updateCompany($authorization, $params): array
-    {
-        $profileParams = [];
-        foreach ($params as $key => $value) {
-            if (in_array($key, $this->profileFields)) {
-                if (is_numeric($value)) {
-                    $profileParams[$key] = (int)$value;
-                } elseif (is_string($value)) {
-                    $profileParams[$key] = $value;
-                } elseif (empty($value)) {
-                    $profileParams[$key] = null;
-                }
-            }
-        }
-
-        // Set time update
-        $profileParams['time_update'] = time();
-
-        // Update company
-        $this->companyRepository->updateCompany((int)$authorization['company_id'], $profileParams);
-
-        // Set company cache
-        $company = $this->getCompany((int)$authorization['company_id']);
-        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
-        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
-
-        // Set result
-        return [
-            'result' => true,
-            'data'   => [
-                'message' => 'Company profile updated successfully !',
-            ],
-            'error'  => [],
-        ];
-    }
-
-    public function updateCompanySetting($authorization, $params): array
-    {
-        // Set type
-        $type = $params['type'];
-        unset($params['type']);
-
-        // Set context
-        $setting = $authorization['company']['setting'] ?? [];
-
-        // Set default params
-        $setting['general'] = $setting['general'] ?? [];
-        $setting['context'] = $setting['context'] ?? [];
-        /* $setting['package'] = $setting['package'] ?? [
-            'time_start'  => time(),
-            'time_renew'  => time(),
-            'time_expire' => strtotime($this->packageExpire),
-            'renew_count' => 1,
-            'user_count'  => 100,
-        ]; */
-
-        switch ($type) {
-            case 'general':
-            case 'context':
-            default:
-                // Update data
-                foreach ($params as $key => $value) {
-                    $setting[$type][$key] = $value;
-                }
-                break;
-        }
-
-        // Set update update
-        $profileParams = [
-            'time_update' => time(),
-            'setting'     => json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
-        ];
-
-        // Update company
-        $this->companyRepository->updateCompany((int)$authorization['company_id'], $profileParams);
-
-        // Set company cache
-        $company = $this->getCompany((int)$authorization['company_id']);
-        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
-
-        // Set result
-        return [
-            'result' => true,
-            'data'   => [
-                'message' => 'Company data updated successfully !',
-                'company' => $company,
-            ],
-            'error'  => [],
-        ];
-    }
-
-    public function updateCompanyByAdmin($company, $params, $operator = [], $type = null): array
-    {
-        // Set update update
-        $companyParams = [
-            'time_update' => time(),
-        ];
-
-        // Update params
-        foreach ($params as $key => $value) {
-            if (in_array($key, $this->profileAdminFields)) {
-                if (is_numeric($value)) {
-                    $companyParams[$key] = (int)$value;
-                } elseif (is_string($value)) {
-                    $companyParams[$key] = $value;
-                } elseif (empty($value)) {
-                    $companyParams[$key] = null;
-                }
-            }
-        }
-
-        if (!is_null($type)) {
-            // Set context
-            $setting = $company['setting'] ?? [];
-
-            // Set default params
-            $setting['general'] = $setting['general'] ?? [];
-            $setting['context'] = $setting['context'] ?? [];
-            /* $setting['package'] = $setting['package'] ?? [
-                'time_start'  => time(),
-                'time_renew'  => time(),
-                'time_expire' => strtotime($this->packageExpire),
-                'renew_count' => 1,
-                'user_count'  => 100,
-            ]; */
-
-            switch ($type) {
-                case 'package':
-                    $setting['package']['renew_count'] = $setting['package']['renew_count'] + 1;
-                    $setting['package']['time_expire'] = $params['package_expire']
-                        ? strtotime(sprintf('%s 18:00:00', $params['package_expire']))
-                        : strtotime($this->packageExpire);
-
-                    // Add package history
-                    $this->loggerService->addHistoryLog([
-                        'relation_module'  => 'company',
-                        'relation_section' => 'package',
-                        'relation_item'    => $params['package_id'] ?? $company['package_id'] ?? $this->packageId,
-                        'company_id'       => $company['id'],
-                        'user_id'          => $operator['id'] ?? 0,
-                        'state'            => 'update',
-                        'package'          => $company['setting']['package'],
-                    ]);
-                    break;
-
-                case 'general':
-                case 'context':
-                default:
-                    // Update data
-                    foreach ($params as $key => $value) {
-                        $setting[$type][$key] = $value;
-                    }
-                    break;
-            }
-
-            // Set update
-            $companyParams['setting'] = json_encode($setting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-        }
-
-        // Update company
-        $this->companyRepository->updateCompany((int)$company['id'], $companyParams);
-
-        // Set company cache
-        $company = $this->getCompany((int)$company['id']);
-        $this->cacheService->deleteItem(sprintf($this->companyKeyPattern, (int)$company['id']));
-        $this->cacheService->setItem(sprintf($this->companyKeyPattern, (int)$company['id']), $company, $this->companyTtl);
-
-        // Set result
-        return [
-            'result' => true,
-            'data'   => [
-                'message' => 'Company data updated successfully !',
-                'key'     => 'company-data-updated-successfully',
-                'company' => $company,
-            ],
-            'error'  => [],
-        ];
     }
 
     public function getCompanyListByUser(int $userId): array
@@ -901,9 +840,8 @@ class CompanyService implements ServiceInterface
         }
 
         // Set company setup
-        $account['is_company_setup'] = true;
-        $account['company_id']       = $company['id'];
-        $account['company_title']    = $company['title'];
+        $account['company_id']    = $company['id'];
+        $account['company_title'] = $company['title'];
 
         // Set and clean user authorization cache
         $account['authorization'] = [
@@ -1327,8 +1265,8 @@ class CompanyService implements ServiceInterface
         if (is_object($company)) {
             $company = [
                 'id'               => $company->getId(),
+                'slug'             => $company->getSlug(),
                 'title'            => $company->getTitle(),
-                'text_description' => $company->getTextDescription(),
                 'user_id'          => $company->getUserId(),
                 'package_id'       => $company->getPackageId(),
                 'reseller_id'      => $company->getResellerId(),
@@ -1336,15 +1274,6 @@ class CompanyService implements ServiceInterface
                 'time_create'      => $company->getTimeCreate(),
                 'time_update'      => $company->getTimeUpdate(),
                 'status'           => $company->getStatus(),
-                'address_1'        => $company->getAddress1(),
-                'address_2'        => $company->getAddress2(),
-                'country'          => $company->getCountry(),
-                'state'            => $company->getState(),
-                'city'             => $company->getCity(),
-                'zip_code'         => $company->getZipCode(),
-                'phone'            => $company->getPhone(),
-                'website'          => $company->getWebsite(),
-                'email'            => $company->getEmail(),
                 'user_identity'    => $company->getUserIdentity(),
                 'user_name'        => $company->getUserName(),
                 'user_email'       => $company->getUserEmail(),
@@ -1356,22 +1285,13 @@ class CompanyService implements ServiceInterface
             $company = [
                 'id'               => $company['id'],
                 'title'            => $company['title'],
-                'text_description' => $company['text_description'],
+                'slug'             => $company['slug'],
                 'user_id'          => $company['user_id'],
                 'package_id'       => $company['package_id'],
                 'reseller_id'      => $company['reseller_id'],
                 'time_create'      => $company['time_create'],
                 'time_update'      => $company['time_update'],
                 'status'           => $company['status'],
-                'address_1'        => $company['address_1'],
-                'address_2'        => $company['address_2'],
-                'country'          => $company['country'],
-                'state'            => $company['state'],
-                'city'             => $company['city'],
-                'zip_code'         => $company['zip_code'],
-                'phone'            => $company['phone'],
-                'website'          => $company['website'],
-                'email'            => $company['email'],
                 'user_name'        => $company['user_name'],
                 'user_email'       => $company['user_email'],
                 'user_mobile'      => $company['user_mobile'],
@@ -1380,17 +1300,11 @@ class CompanyService implements ServiceInterface
             ];
         }
 
-        $company['setting']          = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
-        $company['hash']             = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
-        $company['slug']             = sprintf('company-%s-%s', $company['id'], $this->config['platform']);
-        $company['is_company_setup'] = true; // ToDo: remove it
+        $company['setting'] = !empty($company['setting']) ? json_decode($company['setting'], true) : [];
+        $company['hash']    = hash('sha256', sprintf('%s-%s', $company['id'], $company['time_create']));
+        $company['slug']    = empty($company['slug']) ? sprintf('company-%s-%s', $company['id'], $this->config['platform']) : $company['slug'];
 
-        // Set default params
-        //$company['setting']['general'] = $company['setting']['general'] ?? [];
-        //$company['setting']['context'] = $company['setting']['context'] ?? [];
-        //$company['setting']['package'] = $company['setting']['package'] ?? [];
-
-        if (isset($company['setting']['package']) && !empty($company['setting']['package'])) {
+        if (!empty($company['setting']['package'])) {
             // difference in days
             $daysLeft   = ($company['setting']['package']['time_expire'] - time()) / (60 * 60 * 24);
             $timeParams = ['pattern' => 'yyyy/MM/dd', 'format' => 'Y/m/d'];

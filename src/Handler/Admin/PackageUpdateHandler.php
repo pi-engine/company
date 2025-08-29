@@ -37,7 +37,7 @@ class PackageUpdateHandler implements RequestHandlerInterface
         $operator    = $request->getAttribute('account');
         $requestBody = $request->getParsedBody();
         $company     = $this->companyService->getCompany($requestBody['company_id']);
-        $result      = $this->companyService->updateCompanyByAdmin($company, $requestBody, $operator, 'package');
+        $result      = $this->companyService->updateCompanyPackageByAdmin($company, $requestBody, $operator);
 
         return new EscapingJsonResponse($result, $result['status'] ?? StatusCodeInterface::STATUS_OK);
     }

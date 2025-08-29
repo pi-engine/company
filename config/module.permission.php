@@ -245,30 +245,6 @@ return [
             ],
         ],
         [
-            'title'       => 'Company profile update context',
-            'module'      => 'company',
-            'section'     => 'api',
-            'package'     => 'profile',
-            'handler'     => 'context',
-            'permissions' => 'company-profile-context',
-            'role'        => [
-                'companyadmin',
-                'companysuperuser',
-            ],
-        ],
-        [
-            'title'       => 'Company profile update setting',
-            'module'      => 'company',
-            'section'     => 'api',
-            'package'     => 'profile',
-            'handler'     => 'setting',
-            'permissions' => 'company-profile-setting',
-            'role'        => [
-                'companyadmin',
-                'companysuperuser',
-            ],
-        ],
-        [
             'title'       => 'Company package current',
             'module'      => 'company',
             'section'     => 'api',

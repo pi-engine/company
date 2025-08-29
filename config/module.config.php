@@ -54,8 +54,6 @@ return [
             Handler\Api\Member\RoleHandler::class            => Factory\Handler\Api\Member\RoleHandlerFactory::class,
             Handler\Api\Profile\ViewHandler::class           => Factory\Handler\Api\Profile\ViewHandlerFactory::class,
             Handler\Api\Profile\UpdateHandler::class         => Factory\Handler\Api\Profile\UpdateHandlerFactory::class,
-            Handler\Api\Profile\ContextHandler::class        => Factory\Handler\Api\Profile\ContextHandlerFactory::class,
-            Handler\Api\Profile\SettingHandler::class        => Factory\Handler\Api\Profile\SettingHandlerFactory::class,
             Handler\Api\Package\CurrentHandler::class        => Factory\Handler\Api\Package\CurrentHandlerFactory::class,
             Handler\Api\Package\ListHandler::class           => Factory\Handler\Api\Package\ListHandlerFactory::class,
             Handler\Api\Team\ListHandler::class              => Factory\Handler\Api\Team\ListHandlerFactory::class,
@@ -370,56 +368,6 @@ return [
                                             LoggerRequestResponseMiddleware::class,
                                             ErrorMiddleware::class,
                                             Handler\Api\Profile\UpdateHandler::class
-                                        ),
-                                    ],
-                                ],
-                            ],
-                            'context' => [
-                                'type'    => Literal::class,
-                                'options' => [
-                                    'route'    => '/context',
-                                    'defaults' => [
-                                        'title'       => 'Company profile update context',
-                                        'module'      => 'company',
-                                        'section'     => 'api',
-                                        'package'     => 'profile',
-                                        'handler'     => 'context',
-                                        'permissions' => 'company-profile-context',
-                                        'controller'  => PipeSpec::class,
-                                        'middleware'  => new PipeSpec(
-                                            RequestPreparationMiddleware::class,
-                                            SecurityMiddleware::class,
-                                            AuthenticationMiddleware::class,
-                                            AuthorizationMiddleware::class,
-                                            CompanyMiddleware::class,
-                                            LoggerRequestResponseMiddleware::class,
-                                            ErrorMiddleware::class,
-                                            Handler\Api\Profile\ContextHandler::class
-                                        ),
-                                    ],
-                                ],
-                            ],
-                            'setting' => [
-                                'type'    => Literal::class,
-                                'options' => [
-                                    'route'    => '/setting',
-                                    'defaults' => [
-                                        'title'       => 'Company profile update setting',
-                                        'module'      => 'company',
-                                        'section'     => 'api',
-                                        'package'     => 'profile',
-                                        'handler'     => 'setting',
-                                        'permissions' => 'company-profile-setting',
-                                        'controller'  => PipeSpec::class,
-                                        'middleware'  => new PipeSpec(
-                                            RequestPreparationMiddleware::class,
-                                            SecurityMiddleware::class,
-                                            AuthenticationMiddleware::class,
-                                            AuthorizationMiddleware::class,
-                                            CompanyMiddleware::class,
-                                            LoggerRequestResponseMiddleware::class,
-                                            ErrorMiddleware::class,
-                                            Handler\Api\Profile\SettingHandler::class
                                         ),
                                     ],
                                 ],
