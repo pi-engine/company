@@ -43,10 +43,6 @@ class RoleHandler implements RequestHandlerInterface
                     'value' => 'Full Admin',
                 ],
                 [
-                    'key'   => $this->companyService->companySuperUserRole,
-                    'value' => 'Super User',
-                ],
-                [
                     'key'   => $this->companyService->companyGovernanceManager,
                     'value' => 'Governance Manager',
                 ],

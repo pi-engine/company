@@ -40,7 +40,6 @@ class CompanyService implements ServiceInterface
     protected string $companyKeyPattern = 'company_%s';
 
     public string $companyAdminRole         = 'companyadmin';
-    public string $companySuperUserRole     = 'companysuperuser';
     public string $companyGovernanceManager = 'companygovernancemanager';
     public string $companyGovernanceOfficer = 'companygovernanceofficer';
     public string $companyGovernanceViewer  = 'companygovernanceviewer';
@@ -187,9 +186,7 @@ class CompanyService implements ServiceInterface
 
         // Check admin access
         $result['data']['is_admin'] = 0;
-        if (in_array($this->companyAdminRole, $result['data']['roles'])
-            || in_array($this->companySuperUserRole, $result['data']['roles'])
-        ) {
+        if (in_array($this->companyAdminRole, $result['data']['roles'])        ) {
             $result['data']['is_admin'] = 1;
         }
 
@@ -834,7 +831,6 @@ class CompanyService implements ServiceInterface
         // Check admin for a cache
         $isAdmin = 0;
         if (in_array($this->companyAdminRole, $account['roles'])
-            || in_array($this->companySuperUserRole, $account['roles'])
         ) {
             $isAdmin = 1;
         }

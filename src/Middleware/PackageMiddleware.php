@@ -59,20 +59,6 @@ class PackageMiddleware implements MiddlewareInterface
             return $this->errorHandler->handle($request);
         }
 
-        // Check service permission
-        if (!isset($routeParams['permissions']) || empty($routeParams['permissions'])) {
-            $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
-            $request = $request->withAttribute(
-                'error',
-                [
-                    'message' => 'Apologies, but the selected service lacks proper permissions.',
-                    'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
-                    'type'    => 'package',
-                ]
-            );
-            return $this->errorHandler->handle($request);
-        }
-
         // Check package time
         if (
             !isset($authorization['company']['setting']['package']['time_expire'])
@@ -90,9 +76,23 @@ class PackageMiddleware implements MiddlewareInterface
             return $this->errorHandler->handle($request);
         }
 
+        // Check service permission
+        if (!isset($routeParams['package_key']) || empty($routeParams['package_key'])) {
+            $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
+            $request = $request->withAttribute(
+                'error',
+                [
+                    'message' => 'Apologies, but the selected service lacks proper permissions.',
+                    'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
+                    'type'    => 'package',
+                ]
+            );
+            return $this->errorHandler->handle($request);
+        }
+
         // Check package access
         if (!isset($package['information']['type']) || $package['information']['type'] != 'full') {
-            if (!in_array($routeParams['permissions'], $package['information']['access'])) {
+            if (!in_array($routeParams['package_key'], $package['information']['access'])) {
                 $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
                 $request = $request->withAttribute(
                     'error',

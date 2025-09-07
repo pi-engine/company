@@ -88,8 +88,7 @@ class TeamMemberAccessMiddleware implements MiddlewareInterface
 
         // Check access
         if (!in_array('companyadmin', $roles)) {
-            if (!in_array('companysuperuser', $roles)) {
-                if (!in_array('companyassessmentmanager', $roles)) {
+                    if (!in_array('companyassessmentmanager', $roles)) {
                     if (!in_array('companycompliancemanager', $roles)) {
                         if (!in_array('companyriskmanager', $roles)) {
                             if (!in_array('companyauditmanager', $roles)) {
@@ -103,7 +102,7 @@ class TeamMemberAccessMiddleware implements MiddlewareInterface
                                 );
                                 return $this->errorHandler->handle($request);
                             }
-                        }
+
                     }
                 }
             }

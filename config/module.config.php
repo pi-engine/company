@@ -191,7 +191,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'member',
                                         'handler'     => 'list',
-                                        'permissions' => 'company-member-list',
+                                        'permissions' => 'company-access',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -216,7 +216,8 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'member',
                                         'handler'     => 'add',
-                                        'permissions' => 'company-member-add',
+                                        'permissions' => 'company-manage',
+                                        'package_key' => 'company-member',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -242,7 +243,8 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'member',
                                         'handler'     => 'view',
-                                        'permissions' => 'company-member-view',
+                                        'permissions' => 'company-manage',
+                                        'package_key' => 'company-member',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -269,7 +271,8 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'member',
                                         'handler'     => 'update',
-                                        'permissions' => 'company-member-update',
+                                        'permissions' => 'company-manage',
+                                        'package_key' => 'company-member',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -296,7 +299,8 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'member',
                                         'handler'     => 'role',
-                                        'permissions' => 'company-member-role',
+                                        'permissions' => 'company-manage',
+                                        'package_key' => 'company-member',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -332,7 +336,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'profile',
                                         'handler'     => 'view',
-                                        'permissions' => 'company-profile-view',
+                                        'permissions' => 'company-manage',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -357,7 +361,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'profile',
                                         'handler'     => 'update',
-                                        'permissions' => 'company-profile-update',
+                                        'permissions' => 'company-manage',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -392,7 +396,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'package',
                                         'handler'     => 'current',
-                                        'permissions' => 'company-package-current',
+                                        'permissions' => 'company-access',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -417,7 +421,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'package',
                                         'handler'     => 'list',
-                                        'permissions' => 'company-package-list',
+                                        'permissions' => 'company-access',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -452,7 +456,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'team',
                                         'handler'     => 'list',
-                                        'permissions' => 'company-team-list',
+                                        'permissions' => 'company-access',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -477,7 +481,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'team',
                                         'handler'     => 'add',
-                                        'permissions' => 'company-team-add',
+                                        'permissions' => 'company-manage',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -502,7 +506,7 @@ return [
                                         'section'     => 'api',
                                         'package'     => 'team',
                                         'handler'     => 'update',
-                                        'permissions' => 'company-team-update',
+                                        'permissions' => 'company-manage',
                                         'controller'  => PipeSpec::class,
                                         'middleware'  => new PipeSpec(
                                             RequestPreparationMiddleware::class,
@@ -535,7 +539,7 @@ return [
                                                 'section'     => 'api',
                                                 'package'     => 'team-member',
                                                 'handler'     => 'list',
-                                                'permissions' => 'company-team-member-list',
+                                                'permissions' => 'company-access',
                                                 'controller'  => PipeSpec::class,
                                                 'middleware'  => new PipeSpec(
                                                     RequestPreparationMiddleware::class,
@@ -560,7 +564,7 @@ return [
                                                 'section'     => 'api',
                                                 'package'     => 'team-member',
                                                 'handler'     => 'add',
-                                                'permissions' => 'company-team-member-add',
+                                                'permissions' => 'company-manage',
                                                 'controller'  => PipeSpec::class,
                                                 'middleware'  => new PipeSpec(
                                                     RequestPreparationMiddleware::class,
@@ -585,7 +589,7 @@ return [
                                                 'section'     => 'api',
                                                 'package'     => 'team-member',
                                                 'handler'     => 'update',
-                                                'permissions' => 'company-team-member-update',
+                                                'permissions' => 'company-manage',
                                                 'controller'  => PipeSpec::class,
                                                 'middleware'  => new PipeSpec(
                                                     RequestPreparationMiddleware::class,
@@ -611,7 +615,7 @@ return [
                                                 'section'     => 'api',
                                                 'package'     => 'team-member',
                                                 'handler'     => 'delete',
-                                                'permissions' => 'company-team-member-delete',
+                                                'permissions' => 'company-manage',
                                                 'controller'  => PipeSpec::class,
                                                 'middleware'  => new PipeSpec(
                                                     RequestPreparationMiddleware::class,
