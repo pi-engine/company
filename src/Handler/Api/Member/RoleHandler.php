@@ -47,24 +47,12 @@ class RoleHandler implements RequestHandlerInterface
                     'value' => 'Governance Manager',
                 ],
                 [
-                    'key'   => $this->companyService->companyGovernanceOfficer,
-                    'value' => 'Governance Officer',
-                ],
-                [
-                    'key'   => $this->companyService->companyGovernanceViewer,
-                    'value' => 'Governance viewer',
-                ],
-                [
                     'key'   => $this->companyService->companyAssessmentManager,
                     'value' => 'Assessment Manager',
                 ],
                 [
                     'key'   => $this->companyService->companyAssessmentOfficer,
                     'value' => 'Assessment Officer',
-                ],
-                [
-                    'key'   => $this->companyService->companyAssessmentViewer,
-                    'value' => 'Assessment viewer',
                 ],
                 [
                     'key'   => $this->companyService->companyComplianceManager,
@@ -75,10 +63,6 @@ class RoleHandler implements RequestHandlerInterface
                     'value' => 'Compliance Officer',
                 ],
                 [
-                    'key'   => $this->companyService->companyComplianceViewer,
-                    'value' => 'Compliance viewer',
-                ],
-                [
                     'key'   => $this->companyService->companyRiskManager,
                     'value' => 'Risk Manager',
                 ],
@@ -87,32 +71,12 @@ class RoleHandler implements RequestHandlerInterface
                     'value' => 'Risk Officer',
                 ],
                 [
-                    'key'   => $this->companyService->companyRiskViewer,
-                    'value' => 'Risk viewer',
-                ],
-                [
                     'key'   => $this->companyService->companyAuditManager,
                     'value' => 'Audit Manager',
                 ],
                 [
                     'key'   => $this->companyService->companyAuditor,
                     'value' => 'Auditor',
-                ],
-                [
-                    'key'   => $this->companyService->companyAuditViewer,
-                    'value' => 'Audit viewer',
-                ],
-                [
-                    'key'   => $this->companyService->companyMemberRole,
-                    'value' => 'Internal Member',
-                ],
-                [
-                    'key'   => $this->companyService->companyExternalRole,
-                    'value' => 'External Member',
-                ],
-                [
-                    'key'   => $this->companyService->companyViewerRole,
-                    'value' => 'Viewer',
                 ],
             ],
             'error'  => [],
