@@ -39,22 +39,22 @@ class Inventory
         $package_title = null,
         $id = null
     ) {
-        $this->slug               = $slug;
-        $this->title              = $title;
-        $this->setting          = $setting;
-        $this->user_id          = $user_id;
-        $this->package_id       = $package_id;
-        $this->reseller_id      = $reseller_id;
-        $this->industry_id      = $industry_id;
-        $this->time_create      = $time_create;
-        $this->time_update      = $time_update;
-        $this->status           = $status;
-        $this->user_identity    = $user_identity;
-        $this->user_name        = $user_name;
-        $this->user_email       = $user_email;
-        $this->user_mobile      = $user_mobile;
-        $this->package_title    = $package_title;
-        $this->id               = $id;
+        $this->slug          = $slug;
+        $this->title         = $title;
+        $this->setting       = $setting;
+        $this->user_id       = $user_id;
+        $this->package_id    = $package_id;
+        $this->reseller_id   = $reseller_id;
+        $this->industry_id   = $industry_id;
+        $this->time_create   = $time_create;
+        $this->time_update   = $time_update;
+        $this->status        = $status;
+        $this->user_identity = $user_identity;
+        $this->user_name     = $user_name;
+        $this->user_email    = $user_email;
+        $this->user_mobile   = $user_mobile;
+        $this->package_title = $package_title;
+        $this->id            = $id;
     }
 
     public function getId(): ?int

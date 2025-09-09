@@ -161,19 +161,19 @@ class CompanyService implements ServiceInterface
         if (!in_array($this->companyAdminRole, $result['data']['roles'])
             && (int)$result['data']['member']['user_id'] === (int)$result['data']['company']['user_id']
         ) {
-                // Set roles
-                $this->roleService->addRoleAccount($account, $this->companyAdminRole);
+            // Set roles
+            $this->roleService->addRoleAccount($account, $this->companyAdminRole);
 
-                // Get cached user
-                $cacheUser = $this->accountService->getUserFromCache($account['id']);
+            // Get cached user
+            $cacheUser = $this->accountService->getUserFromCache($account['id']);
 
-                // Get user roles
-                $result['data']['roles'] = $cacheUser['roles'];
-            }
+            // Get user roles
+            $result['data']['roles'] = $cacheUser['roles'];
+        }
 
         // Check admin access
         $result['data']['is_admin'] = 0;
-        if (in_array($this->companyAdminRole, $result['data']['roles'])        ) {
+        if (in_array($this->companyAdminRole, $result['data']['roles'])) {
             $result['data']['is_admin'] = 1;
         }
 
@@ -1246,39 +1246,39 @@ class CompanyService implements ServiceInterface
 
         if (is_object($company)) {
             $company = [
-                'id'               => $company->getId(),
-                'slug'             => $company->getSlug(),
-                'title'            => $company->getTitle(),
-                'user_id'          => $company->getUserId(),
-                'package_id'       => $company->getPackageId(),
-                'reseller_id'      => $company->getResellerId(),
-                'industry_id'      => $company->getIndustryId(),
-                'time_create'      => $company->getTimeCreate(),
-                'time_update'      => $company->getTimeUpdate(),
-                'status'           => $company->getStatus(),
-                'user_identity'    => $company->getUserIdentity(),
-                'user_name'        => $company->getUserName(),
-                'user_email'       => $company->getUserEmail(),
-                'user_mobile'      => $company->getUserMobile(),
-                'package_title'    => $company->getPackageTitle(),
-                'setting'          => $company->getSetting(),
+                'id'            => $company->getId(),
+                'slug'          => $company->getSlug(),
+                'title'         => $company->getTitle(),
+                'user_id'       => $company->getUserId(),
+                'package_id'    => $company->getPackageId(),
+                'reseller_id'   => $company->getResellerId(),
+                'industry_id'   => $company->getIndustryId(),
+                'time_create'   => $company->getTimeCreate(),
+                'time_update'   => $company->getTimeUpdate(),
+                'status'        => $company->getStatus(),
+                'user_identity' => $company->getUserIdentity(),
+                'user_name'     => $company->getUserName(),
+                'user_email'    => $company->getUserEmail(),
+                'user_mobile'   => $company->getUserMobile(),
+                'package_title' => $company->getPackageTitle(),
+                'setting'       => $company->getSetting(),
             ];
         } else {
             $company = [
-                'id'               => $company['id'],
-                'title'            => $company['title'],
-                'slug'             => $company['slug'],
-                'user_id'          => $company['user_id'],
-                'package_id'       => $company['package_id'],
-                'reseller_id'      => $company['reseller_id'],
-                'time_create'      => $company['time_create'],
-                'time_update'      => $company['time_update'],
-                'status'           => $company['status'],
-                'user_name'        => $company['user_name'],
-                'user_email'       => $company['user_email'],
-                'user_mobile'      => $company['user_mobile'],
-                'package_title'    => $company['package_title'],
-                'setting'          => $company['setting'],
+                'id'            => $company['id'],
+                'title'         => $company['title'],
+                'slug'          => $company['slug'],
+                'user_id'       => $company['user_id'],
+                'package_id'    => $company['package_id'],
+                'reseller_id'   => $company['reseller_id'],
+                'time_create'   => $company['time_create'],
+                'time_update'   => $company['time_update'],
+                'status'        => $company['status'],
+                'user_name'     => $company['user_name'],
+                'user_email'    => $company['user_email'],
+                'user_mobile'   => $company['user_mobile'],
+                'package_title' => $company['package_title'],
+                'setting'       => $company['setting'],
             ];
         }
 

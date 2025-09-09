@@ -326,7 +326,7 @@ return [
                             'defaults' => [],
                         ],
                         'child_routes' => [
-                            'view'    => [
+                            'view'   => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/view',
@@ -351,7 +351,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'update'  => [
+                            'update' => [
                                 'type'    => Literal::class,
                                 'options' => [
                                     'route'    => '/update',

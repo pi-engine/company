@@ -89,20 +89,20 @@ class TeamAccessMiddleware implements MiddlewareInterface
         // Check access
         if (!in_array('companyadmin', $roles)) {
 
-                if (!in_array('companyassessmentmanager', $roles)) {
-                    if (!in_array('companycompliancemanager', $roles)) {
-                        if (!in_array('companyriskmanager', $roles)) {
-                            if (!in_array('companyauditmanager', $roles)) {
-                                $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
-                                $request = $request->withAttribute(
-                                    'error',
-                                    [
-                                        'message' => 'You are not authorized to update this item. Please contact admin for assistance.',
-                                        'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
-                                    ]
-                                );
-                                return $this->errorHandler->handle($request);
-                            }
+            if (!in_array('companyassessmentmanager', $roles)) {
+                if (!in_array('companycompliancemanager', $roles)) {
+                    if (!in_array('companyriskmanager', $roles)) {
+                        if (!in_array('companyauditmanager', $roles)) {
+                            $request = $request->withAttribute('status', StatusCodeInterface::STATUS_FORBIDDEN);
+                            $request = $request->withAttribute(
+                                'error',
+                                [
+                                    'message' => 'You are not authorized to update this item. Please contact admin for assistance.',
+                                    'code'    => StatusCodeInterface::STATUS_FORBIDDEN,
+                                ]
+                            );
+                            return $this->errorHandler->handle($request);
+                        }
 
                     }
                 }
