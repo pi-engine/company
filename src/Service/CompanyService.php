@@ -37,25 +37,31 @@ class CompanyService implements ServiceInterface
     /* @var array */
     protected array $config;
 
-    protected string $companyKeyPattern = 'company_%s';
-
-    public string $companyAdminRole         = 'companyadmin';
-    public string $companyGovernanceManager = 'companygovernancemanager';
-    public string $companyAssessmentManager = 'companyassessmentmanager';
-    public string $companyAssessmentOfficer = 'companyassessmentofficer';
-    public string $companyComplianceManager = 'companycompliancemanager';
-    public string $companyComplianceOfficer = 'companycomplianceofficer';
-    public string $companyRiskManager       = 'companyriskmanager';
-    public string $companyRiskOfficer       = 'companyriskofficer';
-    public string $companyAuditManager      = 'companyauditmanager';
-    public string $companyAuditor           = 'companyauditor';
-    public int    $industryId               = 1;
-    public int    $packageId                = 1;
-    public string $packageExpire            = '+1 month';
-
-    public int $companyTtl = 31536000;
-
-    public int $packageTtl = 31536000;
+    protected string $companyKeyPattern        = 'company_%s';
+    public int       $industryId               = 1;
+    public int       $packageId                = 1;
+    public string    $packageExpire            = '+1 month';
+    public int       $companyTtl               = 31536000;
+    public int       $packageTtl               = 31536000;
+    public string    $companyAdminRole         = 'companyadmin';
+    public string    $companyGovernanceManager = 'companygovernancemanager';
+    public string    $companyAssessmentManager = 'companyassessmentmanager';
+    public string    $companyAssessmentOfficer = 'companyassessmentofficer';
+    public string    $companyComplianceManager = 'companycompliancemanager';
+    public string    $companyComplianceOfficer = 'companycomplianceofficer';
+    public string    $companyRiskManager       = 'companyriskmanager';
+    public string    $companyRiskOfficer       = 'companyriskofficer';
+    public string    $companyAuditManager      = 'companyauditmanager';
+    public string    $companyAuditor           = 'companyauditor';
+    public array     $adminRoles
+                                               = [
+            'companyadmin',
+            'companygovernancemanager',
+            'companyassessmentmanager',
+            'companycompliancemanager',
+            'companyriskmanager',
+            'companyauditmanager',
+        ];
 
     public function __construct(
         CompanyRepositoryInterface $companyRepository,
@@ -173,7 +179,7 @@ class CompanyService implements ServiceInterface
 
         // Check admin access
         $result['data']['is_admin'] = 0;
-        if (in_array($this->companyAdminRole, $result['data']['roles'])) {
+        if (array_intersect($result['data']['roles'], $this->adminRoles)) {
             $result['data']['is_admin'] = 1;
         }
 
