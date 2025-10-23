@@ -244,7 +244,7 @@ class CompanyService implements ServiceInterface
         ];
     }
 
-    public function refreshToken($authorization, $tokenId): array
+    public function refreshToken($authorization, $tokenId, $params): array
     {
         // Set account
         $account = array_merge(
@@ -256,7 +256,7 @@ class CompanyService implements ServiceInterface
             ]
         );
 
-        return $this->accountService->refreshToken($account, $tokenId);
+        return $this->accountService->refreshToken($account, $tokenId, $params);
     }
 
     public function registerCompany($account): array
